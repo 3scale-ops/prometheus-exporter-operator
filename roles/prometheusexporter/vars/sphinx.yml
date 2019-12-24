@@ -1,0 +1,10 @@
+---
+
+# Exporter
+prometheus_exporter_port: 9247
+prometheus_exporter_image: "foxdalas/sphinx-exporter"
+prometheus_exporter_version: "master"
+
+# Custom
+db_host: "system-sphinx"
+db_port: "9306"

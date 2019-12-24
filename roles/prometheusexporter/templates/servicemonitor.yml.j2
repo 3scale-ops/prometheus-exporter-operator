@@ -1,0 +1,27 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: "prometheus-exporter-{{ type }}-{{ meta.name }}"
+  namespace: "{{ meta.namespace }}"
+  labels:
+    prometheus_exporter: "{{ meta.name }}"
+    prometheus_exporter_type: "{{ type }}"
+    app: "prometheus-exporter-{{ type }}-{{ meta.name }}"
+    environment: "{{ label_environment }}"
+{% if label_custom_key is defined %}
+    {{ label_custom_key }}: "{{ label_custom_value }}"
+{% endif %}
+    {{ service_monitor_label_key }}: {{ service_monitor_label_value }}
+spec:
+  selector:
+    matchLabels:
+      app: "prometheus-exporter-{{ type }}-{{ meta.name }}"
+  endpoints:
+  - interval: {{ service_monitor_interval }}
+    port: metrics
+    path: /metrics
+    relabelings:
+    - sourceLabels: [__meta_kubernetes_service_label_prometheus_exporter]
+      targetLabel: prometheus_exporter
+    - sourceLabels: [__meta_kubernetes_service_label_prometheus_exporter_type]
+      targetLabel: prometheus_exporter_type

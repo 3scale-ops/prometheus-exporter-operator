@@ -1,0 +1,10 @@
+---
+
+# Exporter
+prometheus_exporter_port: 9150
+prometheus_exporter_image: "prom/memcached-exporter"
+prometheus_exporter_version: "v0.6.0"
+
+# Custom
+db_host: "system-memcache"
+db_port: "11211"

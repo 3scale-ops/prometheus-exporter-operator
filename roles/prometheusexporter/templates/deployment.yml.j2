@@ -1,0 +1,131 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "prometheus-exporter-{{ type }}-{{ meta.name }}"
+  namespace: "{{ meta.namespace }}"
+  labels:
+    prometheus_exporter: "{{ meta.name }}"
+    prometheus_exporter_type: "{{ type }}"
+    app: "prometheus-exporter-{{ type }}-{{ meta.name }}"
+    environment: "{{ label_environment }}"
+{% if label_custom_key is defined %}
+    {{ label_custom_key }}: "{{ label_custom_value }}"
+{% endif %}
+spec:
+  replicas: {{ replicas }}
+  selector:
+    matchLabels:
+      app: "prometheus-exporter-{{ type }}-{{ meta.name }}"
+  template:
+    metadata:
+      labels:
+        prometheus_exporter: "{{ meta.name }}"
+        prometheus_exporter_type: "{{ type }}"
+        app: "prometheus-exporter-{{ type }}-{{ meta.name }}"
+        environment: "{{ label_environment }}"
+{% if label_custom_key is defined %}
+        {{ label_custom_key }}: "{{ label_custom_value }}"
+{% endif %}
+    spec:
+      containers:
+        - name: "prometheus-exporter-{{ type }}-{{ meta.name }}"
+          image: "{{ prometheus_exporter_image }}:{{ prometheus_exporter_version }}"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: metrics
+              containerPort: {{ prometheus_exporter_port }}
+              protocol: TCP
+{% if type == "memcached" %}
+          args:
+            - "--memcached.address={{ db_host }}:{{db_port }}"
+{% elif type == "redis" %}
+          env:
+            - name: REDIS_ADDR
+              value: "{{ db_host }}:{{ db_port }}"
+{% if db_check_keys is defined %}
+            - name: REDIS_EXPORTER_CHECK_KEYS
+              value: "{{ db_check_keys }}"
+{% endif %}
+{% elif type == "mysql" %}
+          env:
+            - name: DATA_SOURCE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ db_connection_string_secret_name }}"
+                  key: DATA_SOURCE_NAME
+{% elif type == "postgresql" %}
+          env:
+            - name: DATA_SOURCE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ db_connection_string_secret_name }}"
+                  key: DATA_SOURCE_NAME
+{% elif type == "sphinx" %}
+          args:
+            - "--sphinx.address={{ db_host }}"
+            - "--sphinx.port={{ db_port }}"
+{% elif type == "elasticsearch" %}
+          args:
+            - "-e"
+            - "{{ db_host }}:{{ db_port }}/"
+            - "-c"
+            - "/usr/src/app/user/es-exporter.cfg"
+          volumeMounts:
+           - mountPath: /usr/src/app/user/
+             name: config-volume
+             readOnly: true
+{% elif type == "cloudwatch" %}
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: "prometheus-exporter-{{ type }}-{{ meta.name }}"
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: "prometheus-exporter-{{ type }}-{{ meta.name }}"
+                  key: AWS_SECRET_ACCESS_KEY
+          volumeMounts:
+            - mountPath: /config/
+              name: config-volume
+              readOnly: true
+{% endif %}
+          livenessProbe:
+            tcpSocket:
+              port: metrics
+            timeoutSeconds: 2
+            periodSeconds: 15
+            successThreshold: 1
+            failureThreshold: 5
+          readinessProbe:
+            tcpSocket:
+              port: metrics
+            timeoutSeconds: 2
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 5
+          resources:
+            limits:
+              cpu: "{{ resources_limits_cpu }}"
+              memory: "{{ resources_limits_memory }}"
+            requests:
+              cpu: "{{ resources_requests_cpu }}"
+              memory: "{{ resources_requests_memory }}"
+{% if type == "elasticsearch" %}
+      volumes:
+      - name: config-volume
+        configMap:
+          name: "{{ configuration_configmap_name }}"
+          items:
+          - key: es-exporter.cfg
+            path: es-exporter.cfg
+{% elif type == "cloudwatch" %}
+      volumes:
+      - name: config-volume
+        configMap:
+          name: "{{ configuration_configmap_name }}"
+          items:
+          - key: config.yml
+            path: config.yml
+{% endif %}
