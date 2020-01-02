@@ -1,0 +1,61 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql-server
+spec:
+  selector:
+    matchLabels:
+      app: mysql-server
+  serviceName: mysql-server
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mysql-server
+    spec:
+      containers:
+        - name: mysql-server
+          image: mysql:5.6
+          env:
+            - name: MYSQL_USER
+              value: exporter
+            - name: MYSQL_PASSWORD
+              value: "123456789"
+            - name: MYSQL_ROOT_PASSWORD
+              value: "123456789"
+          readinessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - -i
+              - -c
+              - mysql -h localhost -u root -p123456789 -e 'SELECT 1'
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 200m
+              memory: 512Mi
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: mysql-vol
+      volumes:
+        - name: mysql-vol
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: system-mysql
+spec:
+  ports:
+  - name: mysql-server
+    port: 3306
+    targetPort: 3306
+    protocol: TCP
+  selector:
+    app: mysql-server

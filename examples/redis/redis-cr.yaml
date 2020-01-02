@@ -1,0 +1,15 @@
+apiVersion: ops.3scale.net/v1alpha1
+kind: PrometheusExporter
+metadata:
+  name: backend-redis-staging
+spec:
+  type: "redis"
+  serviceMonitorState: "present"
+  serviceMonitorLabelKey: "monitoring-key"
+  serviceMonitorLabelValue: "middleware"
+  labelEnvironment: "staging"
+  labelCustomKey: "threescale_component"
+  labelCustomValue: "backend"
+  dbHost: "backend-redis"
+  dbPort: "6379"
+  dbCheckKeys: "resque:queue:stats,resque:queue:priority,resque:queue:main,resque:failed"
