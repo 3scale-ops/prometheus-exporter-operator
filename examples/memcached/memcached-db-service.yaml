@@ -1,0 +1,44 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: memcached
+spec:
+  selector:
+    matchLabels:
+      app: memcached
+  serviceName: memcached
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: memcached
+    spec:
+      containers:
+        - name: memcached
+          image: memcached:1.5
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 200m
+              memory: 200Mi
+          ports:
+            - containerPort: 11211
+              name: memcached
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: system-memcache
+  labels:
+    app: memcached
+spec:
+  type: ClusterIP
+  ports:
+    - port: 11211
+      targetPort: 11211
+      name: memcached
+  selector:
+    app: memcached

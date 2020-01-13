@@ -1,0 +1,21 @@
+---
+
+# Exporter
+prometheus_exporter_port: 9187
+prometheus_exporter_image: "wrouesnel/postgres_exporter"
+prometheus_exporter_version: "v0.8.0"
+
+# Custom
+db_connection_string_secret_name: "prometheus-exporter-{{ type }}-{{ meta.name }}"
+
+###### Example of Secret
+#
+# If you don't specify CR field dbConnectionStringSecretName, it will be used default Secret name "prometheus-exporter-postgresql-{{ CR_NAME }}"
+#
+#apiVersion: v1
+#kind: Secret
+#metadata:
+#  name: "prometheus-exporter-postgresql-zync-database"
+#type: Opaque
+#stringData:
+#  DATA_SOURCE_NAME: "postgresql://postgres_exporter:123456789@zync-host:5432/postgres?sslmode=disable"

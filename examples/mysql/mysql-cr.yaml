@@ -1,0 +1,13 @@
+apiVersion: ops.3scale.net/v1alpha1
+kind: PrometheusExporter
+metadata:
+  name: system-mysql-staging
+spec:
+  type: "mysql"
+  serviceMonitorState: "present"
+  serviceMonitorLabelKey: "monitoring-key"
+  serviceMonitorLabelValue: "middleware"
+  labelEnvironment: "staging"
+  labelCustomKey: "threescale_component"
+  labelCustomValue: "system"
+  dbConnectionStringSecretName: "prometheus-exporter-mysql-system-mysql-staging"

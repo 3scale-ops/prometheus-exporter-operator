@@ -1,0 +1,14 @@
+---
+
+- name: Manage prometheus-exporter Deployment for CR {{ meta.name }} on namespace {{ meta.namespace }}
+  k8s:
+    definition: "{{ lookup('template', 'deployment.yml.j2') }}"
+
+- name: Manage prometheus-exporter Service for CR {{ meta.name }} on namespace {{ meta.namespace }}
+  k8s:
+    definition: "{{ lookup('template', 'service.yml.j2') }}"
+
+- name: Manage prometheus-exporter ServiceMonitor for CR {{ meta.name }} on namespace {{ meta.namespace }}
+  k8s:
+    state: "{{ service_monitor_state }}"
+    definition: "{{ lookup('template', 'servicemonitor.yml.j2') }}"

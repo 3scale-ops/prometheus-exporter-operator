@@ -1,0 +1,50 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    monitoring-key: middleware
+  name: prometheus-exporter-postgresql
+spec:
+  groups:
+    - name: prometheus-exporter-postgresql.rules
+      rules:
+      - alert: PostgreSQLDown
+        expr: pg_up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "PostgreSQL instance {{ $labels.prometheus_exporter }} is DOWN"
+          description: "PostgreSQL instance {{ $labels.prometheus_exporter }} is DOWN"
+      - alert: PostgreSQLHighConnectionWarn
+        expr: (sum(pg_stat_database_numbackends) by (namespace,service,prometheus_exporter)) / on (namespace,service,prometheus_exporter) (pg_settings_max_connections) > 0.7
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Postgres server total connections high on PostgreSQL instance {{ $labels.prometheus_exporter }}"
+          description: "Postgres total connections have been above 70% of the configured max_connections on PostgreSQL instance {{ $labels.prometheus_exporter }}"
+      - alert: PostgreSQLHighConnectionCritical
+        expr: (sum(pg_stat_database_numbackends) by (namespace,service,prometheus_exporter)) / on (namespace,service,prometheus_exporter) (pg_settings_max_connections) > 0.9
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Postgres server total connections high on PostgreSQL instance {{ $labels.prometheus_exporter }}"
+          description: "Postgres total connections have been above 90% of the configured max_connections on PostgreSQL instance {{ $labels.prometheus_exporter }}"
+      - alert: PostgreSQLHighQPS
+        expr: avg(rate(pg_stat_database_xact_commit[5m]) + rate(pg_stat_database_xact_rollback[5m])) by (namespace,service,prometheus_exporter,datname) > 10000
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "PostgreSQL high number of queries per second on PostgreSQL instance {{ $labels.prometheus_exporter }}"
+          description: "PostgreSQL high number of queries per second on PostgreSQL instance {{ $labels.prometheus_exporter }}"
+      - alert: PostgreSQLLowCacheHitRate
+        expr: (sum(irate(pg_stat_database_xact_commit[5m])) by (namespace,service,prometheus_exporter) + sum(irate(pg_stat_database_xact_rollback{datname!~"template.*|"}[5m])) by (namespace,service,prometheus_exporter)) > 10000
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "PostgreSQL low cache hit rate on PostgreSQL instance {{ $labels.prometheus_exporter }}"
+          description: "PostgreSQL low cache hit rate on PostgreSQL instance {{ $labels.prometheus_exporter }}"

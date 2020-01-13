@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-exporter-cloudwatch-aws-staging
+data:
+  config.yml: |
+    ---
+    region: us-east-1
+    metrics:
+     - aws_namespace: AWS/ELB
+       aws_metric_name: RequestCount
+       aws_dimensions: [AvailabilityZone, LoadBalancerName]
+       aws_tag_select:
+         tag_selections:
+           Monitoring: ["enabled"]
+         resource_type_selection: "elasticloadbalancing:loadbalancer"
+         resource_id_dimension: LoadBalancerName
+       aws_statistics: [Sum]

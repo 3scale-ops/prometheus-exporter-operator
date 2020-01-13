@@ -1,0 +1,16 @@
+---
+
+# Exporter
+prometheus_exporter_port: 9121
+prometheus_exporter_image: "oliver006/redis_exporter"
+prometheus_exporter_version: "v1.3.5"
+
+# Custom
+db_host: "backend-redis"
+db_port: "6379"
+
+## Optional:
+# Example 3scale backend:
+#db_check_keys: "resque:queue:stats,resque:queue:priority,resque:queue:main,resque:failed"
+# Example 3scale system:
+#db_check_keys: "queue:backend_sync,queue:billing,queue:critical,queue:default,queue:deletion,queue:events,queue:low,queue:priority,queue:web_hooks,queue_zync"

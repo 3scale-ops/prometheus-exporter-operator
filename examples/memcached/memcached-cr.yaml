@@ -1,0 +1,14 @@
+apiVersion: ops.3scale.net/v1alpha1
+kind: PrometheusExporter
+metadata:
+  name: system-memcached-staging
+spec:
+  type: "memcached"
+  serviceMonitorState: "present"
+  serviceMonitorLabelKey: "monitoring-key"
+  serviceMonitorLabelValue: "middleware"
+  labelEnvironment: "staging"
+  labelCustomKey: "threescale_component"
+  labelCustomValue: "system"
+  dbHost: "system-memcache"
+  dbPort: "11211"

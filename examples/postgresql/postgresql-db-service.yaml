@@ -1,0 +1,56 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgresql-server
+spec:
+  selector:
+    matchLabels:
+      app: postgresql-server
+  serviceName: postgresql-server
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: postgresql-server
+    spec:
+      containers:
+        - name: postgresql-server
+          image: postgres:9.6
+          env:
+            - name: POSTGRES_USER
+              value: postgres_exporter
+            - name: POSTGRES_PASSWORD
+              value: "123456789"
+            - name: POSTGRES_DB
+              value: postgres_exporter
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 200m
+              memory: 200Mi
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: pg-data
+      volumes:
+        - name: pg-data
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zync-database
+spec:
+  ports:
+  - name: postgresql-server
+    port: 5432
+    targetPort: 5432
+    protocol: TCP
+  selector:
+    app: postgresql-server

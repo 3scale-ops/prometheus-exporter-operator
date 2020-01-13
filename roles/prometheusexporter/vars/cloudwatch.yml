@@ -1,0 +1,46 @@
+---
+
+# Exporter
+prometheus_exporter_port: 9106
+prometheus_exporter_image: "prom/cloudwatch-exporter"
+prometheus_exporter_version: "cloudwatch_exporter-0.7.0"
+
+# Custom
+aws_credentials_secret_name: "prometheus-exporter-{{ type }}-{{ meta.name }}"
+configuration_configmap_name: "prometheus-exporter-{{ type }}-{{ meta.name }}"
+
+###### Example of Secret
+#
+# If you don't specify CR field awsCredentialsSecretName, it will be used default Secret name "prometheus-exporter-cloudwatch-{{ CR_NAME }}"
+#
+#apiVersion: v1
+#kind: Secret
+#metadata:
+#  name: "prometheus-exporter-cloudwatch-aws-example"
+#type: Opaque
+#stringData:
+#  AWS_ACCESS_KEY_ID: "XXX_YOUR_AWS_ACCESS_KEY_ID_XXX"
+#  AWS_SECRET_ACCESS_KEY: "XXXXXXXX-YOUR_AWS_SECRET_ACCESS_KEY-XXXXXXX"
+
+###### Example of ConfigMap
+#
+# If you don't specify CR field configurationConfigmapName, it will be used default ConfigMap name "prometheus-exporter-cloudwatch-{{ CR_NAME }}"
+#
+#apiVersion: v1
+#kind: ConfigMap
+#metadata:
+#  name: "prometheus-exporter-cloudwatch-aws-example"
+#data:
+#  config.yml: |
+#    ---
+#    region: us-east-1
+#    metrics:
+#     - aws_namespace: AWS/ELB
+#       aws_metric_name: RequestCount
+#       aws_dimensions: [AvailabilityZone, LoadBalancerName]
+#       aws_tag_select:
+#         tag_selections:
+#           Monitoring: ["enabled"]
+#         resource_type_selection: "elasticloadbalancing:loadbalancer"
+#         resource_id_dimension: LoadBalancerName
+#       aws_statistics: [Sum]

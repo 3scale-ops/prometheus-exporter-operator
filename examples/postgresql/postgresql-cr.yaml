@@ -1,0 +1,13 @@
+apiVersion: ops.3scale.net/v1alpha1
+kind: PrometheusExporter
+metadata:
+  name: zync-postgresql-staging
+spec:
+  type: "postgresql"
+  serviceMonitorState: "present"
+  serviceMonitorLabelKey: "monitoring-key"
+  serviceMonitorLabelValue: "middleware"
+  labelEnvironment: "staging"
+  labelCustomKey: "threescale_component"
+  labelCustomValue: "zync"
+  dbConnectionStringSecretName: "prometheus-exporter-postgresql-zync-postgresql-staging"
