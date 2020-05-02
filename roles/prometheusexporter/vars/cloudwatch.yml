@@ -3,7 +3,7 @@
 # Exporter
 prometheus_exporter_port: 9106
 prometheus_exporter_image: "prom/cloudwatch-exporter"
-prometheus_exporter_version: "cloudwatch_exporter-0.7.0"
+prometheus_exporter_version: "cloudwatch_exporter-0.8.0"
 
 # Custom
 aws_credentials_secret_name: "prometheus-exporter-{{ type }}-{{ meta.name }}"
