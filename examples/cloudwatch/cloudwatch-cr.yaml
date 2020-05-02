@@ -7,7 +7,6 @@ spec:
   serviceMonitorState: "present"
   serviceMonitorLabelKey: "monitoring-key"
   serviceMonitorLabelValue: "middleware"
-  labelEnvironment: "staging"
   resourcesLimitsMemory: "256Mi"
   awsCredentialsSecretName: "prometheus-exporter-cloudwatch-aws-staging"
   configurationConfigmapName: "prometheus-exporter-cloudwatch-aws-staging"

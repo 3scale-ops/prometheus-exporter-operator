@@ -62,7 +62,6 @@ spec:
   serviceMonitorState: "present"
   serviceMonitorLabelKey: "monitoring-key"
   serviceMonitorLabelValue: "middleware"
-  labelEnvironment: "staging"
   labelCustomKey: "tier"
   labelCustomValue: "backend"
   dbHost: "redis-service"
@@ -77,7 +76,6 @@ spec:
 | `serviceMonitorState` | No | `absent` | Create (`present`) or not (`absent`) ServiceMonitor object for each CR |
 | `serviceMonitorLabelKey` | No | `monitoring` | Possible label key to add to ServiceMonitor created for each CR used for prometheus scrapping (for example `monitoring-key`) |
 | `serviceMonitorLabelValue` | No | `enabled` | Possible label value to add to ServiceMonitor created for each CR used for prometheus scrapping (for example `middleware`) |
-| `labelEnvironment` | No | `dev` | Possible label value to add to label key `environment` that will inherit all created resources for each CR (for example `dev`, `test`, `staging`, `production`)|
 | `labelCustomKey` | No | - | Possible extra label key that will inherit all created resources for each CR (for example `tier`) |
 | `labelCustomValue` | No | - | Possible extra label value that will inherit all created resources for each CR (for example `backend`) |
 | `resourcesRequestsCpu` | No | `25m` | Possible custom resources CPU requests (for example `50m`) |

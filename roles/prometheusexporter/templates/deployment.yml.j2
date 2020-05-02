@@ -7,7 +7,6 @@ metadata:
     prometheus_exporter: "{{ meta.name }}"
     prometheus_exporter_type: "{{ type }}"
     app: "prometheus-exporter-{{ type }}-{{ meta.name }}"
-    environment: "{{ label_environment }}"
 {% if label_custom_key is defined %}
     {{ label_custom_key }}: "{{ label_custom_value }}"
 {% endif %}
@@ -22,7 +21,6 @@ spec:
         prometheus_exporter: "{{ meta.name }}"
         prometheus_exporter_type: "{{ type }}"
         app: "prometheus-exporter-{{ type }}-{{ meta.name }}"
-        environment: "{{ label_environment }}"
 {% if label_custom_key is defined %}
         {{ label_custom_key }}: "{{ label_custom_value }}"
 {% endif %}

@@ -7,7 +7,6 @@ spec:
   serviceMonitorState: "present"
   serviceMonitorLabelKey: "monitoring-key"
   serviceMonitorLabelValue: "middleware"
-  labelEnvironment: "staging"
   dbHost: "http://logging-es.openshift-logging.svc"
   dbPort: "9200"
   configurationConfigmapName: "prometheus-exporter-elasticsearch-es-staging"

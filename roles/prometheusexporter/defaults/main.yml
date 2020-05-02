@@ -10,7 +10,6 @@ service_monitor_label_key: "monitoring"
 service_monitor_label_value: "enabled"
 
 ## Generic config
-label_environment: "dev" # dev, test, staging, production...
 ## Optional, if you want to add a custom label to resources, you can choose a custom key/value. Example for 3scale:
 #label_custom_key": "threescale_component"
 #label_custom_value: "zync" # system, backend, zync, keycloak...

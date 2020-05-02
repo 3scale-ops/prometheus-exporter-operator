@@ -7,7 +7,6 @@ spec:
   serviceMonitorState: "present"
   serviceMonitorLabelKey: "monitoring-key"
   serviceMonitorLabelValue: "middleware"
-  labelEnvironment: "staging"
   labelCustomKey: "threescale_component"
   labelCustomValue: "system"
   dbHost: "system-memcache"
