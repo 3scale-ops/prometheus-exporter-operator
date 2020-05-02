@@ -37,7 +37,7 @@ spec:
               protocol: TCP
 {% if type == "memcached" %}
           args:
-            - "--memcached.address={{ db_host }}:{{db_port }}"
+            - "--memcached.address={{ db_host }}:{{ db_port }}"
 {% elif type == "redis" %}
           env:
             - name: REDIS_ADDR
@@ -79,12 +79,12 @@ spec:
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
-                  name: "prometheus-exporter-{{ type }}-{{ meta.name }}"
+                  name: "{{ aws_credentials_secret_name }}"
                   key: AWS_ACCESS_KEY_ID
             - name: AWS_SECRET_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
-                  name: "prometheus-exporter-{{ type }}-{{ meta.name }}"
+                  name: "{{ aws_credentials_secret_name }}"
                   key: AWS_SECRET_ACCESS_KEY
           volumeMounts:
             - mountPath: /config/
