@@ -12,7 +12,7 @@ metadata:
     {{ label_custom_key }}: "{{ label_custom_value }}"
 {% endif %}
 spec:
-  replicas: {{ replicas }}
+  replicas: 1
   selector:
     matchLabels:
       app: "prometheus-exporter-{{ type }}-{{ meta.name }}"

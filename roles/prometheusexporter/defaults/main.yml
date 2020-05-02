@@ -10,7 +10,6 @@ service_monitor_label_key: "monitoring"
 service_monitor_label_value: "enabled"
 
 ## Generic config
-replicas: 1
 resources_requests_cpu: "25m"
 resources_requests_memory: "32Mi"
 resources_limits_cpu: "50m"
