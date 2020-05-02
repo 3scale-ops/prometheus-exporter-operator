@@ -4,6 +4,10 @@
 prometheus_exporter_port: 9247
 prometheus_exporter_image: "foxdalas/sphinx-exporter"
 prometheus_exporter_version: "master"
+resources_requests_cpu: "25m"
+resources_requests_memory: "32Mi"
+resources_limits_cpu: "50m"
+resources_limits_memory: "64Mi"
 
 # Custom
 db_host: "system-sphinx"

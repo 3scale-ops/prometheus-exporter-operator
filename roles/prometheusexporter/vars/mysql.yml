@@ -4,6 +4,10 @@
 prometheus_exporter_port: 9104
 prometheus_exporter_image: "prom/mysqld-exporter"
 prometheus_exporter_version: "v0.12.1"
+resources_requests_cpu: "100m"
+resources_requests_memory: "32Mi"
+resources_limits_cpu: "200m"
+resources_limits_memory: "64Mi"
 
 # Custom
 db_connection_string_secret_name: "prometheus-exporter-{{ type }}-{{ meta.name }}"
