@@ -7,7 +7,7 @@ THISDIR_PATH := $(patsubst %/,%,$(abspath $(dir $(MKFILE_PATH))))
 
 KUBE_CLIENT ?= kubectl # It can be used "oc" or "kubectl"
 IMAGE ?= quay.io/3scale/prometheus-exporter-operator
-VERSION ?= v1.0.0
+VERSION ?= v1.1.0
 NAMESPACE ?= example-application-monitoring
 
 operator-image-build: # OPERATOR IMAGE - Build operator Docker image
@@ -23,7 +23,7 @@ namespace-create: # NAMESPACE MANAGEMENT - Create namespace for the operator
 	$(KUBE_CLIENT) label namespace $(NAMESPACE) monitoring-key=middleware || true
 
 operator-create: namespace-create ## OPERATOR MAIN - Create/Update Operator objects (remember to set correct image on deploy/operator.yaml)
-	$(KUBE_CLIENT) create -f deploy/crds/crd.yaml --validate=false || true
+	$(KUBE_CLIENT) create -f deploy/crds/ops.3scale.net_prometheusexporters_crd.yaml --validate=false || true
 	$(KUBE_CLIENT) apply -f deploy/service_account.yaml -n $(NAMESPACE)
 	$(KUBE_CLIENT) apply -f deploy/role.yaml -n $(NAMESPACE)
 	$(KUBE_CLIENT) apply -f deploy/role_binding.yaml -n $(NAMESPACE)

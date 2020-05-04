@@ -1,3 +1,4 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,8 +16,9 @@ spec:
       serviceAccountName: prometheus-exporter-operator
       containers:
         - name: prometheus-exporter-operator
-          image: "quay.io/3scale/prometheus-exporter-operator:v1.1.0"
-          imagePullPolicy: "Always"
+          # Replace this with the built image name
+          image: "{{ image }}"
+          imagePullPolicy: "{{ pull_policy }}"
           volumeMounts:
           - mountPath: /tmp/ansible-operator/runner
             name: runner

@@ -2,4 +2,4 @@
 - version: v1alpha1
   group: ops.3scale.net
   kind: PrometheusExporter
-  role: /opt/ansible/roles/prometheusexporter
+  role: prometheusexporter
