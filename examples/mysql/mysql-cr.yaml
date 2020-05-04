@@ -5,8 +5,6 @@ metadata:
 spec:
   type: "mysql"
   serviceMonitorState: "present"
-  serviceMonitorLabelKey: "monitoring-key"
-  serviceMonitorLabelValue: "middleware"
   labelCustomKey: "threescale_component"
   labelCustomValue: "system"
   dbConnectionStringSecretName: "prometheus-exporter-mysql-system-mysql-staging"

@@ -60,8 +60,6 @@ metadata:
 spec:
   type: "redis"
   serviceMonitorState: "present"
-  serviceMonitorLabelKey: "monitoring-key"
-  serviceMonitorLabelValue: "middleware"
   labelCustomKey: "tier"
   labelCustomValue: "backend"
   dbHost: "redis-service"
@@ -74,8 +72,6 @@ spec:
 |:---:|:---:|:---:|:---:|
 | `type` | Yes | `none` | Possible prometheus-exporters types to configure:  `memcached`, `redis`, `mysql`, `postgresql`, `sphinx`, `elasticsearch`, `cloudwatch` |
 | `serviceMonitorState` | No | `absent` | Create (`present`) or not (`absent`) ServiceMonitor object for each CR |
-| `serviceMonitorLabelKey` | No | `monitoring` | Possible label key to add to ServiceMonitor created for each CR used for prometheus scrapping (for example `monitoring-key`) |
-| `serviceMonitorLabelValue` | No | `enabled` | Possible label value to add to ServiceMonitor created for each CR used for prometheus scrapping (for example `middleware`) |
 | `labelCustomKey` | No | - | Possible extra label key that will inherit all created resources for each CR (for example `tier`) |
 | `labelCustomValue` | No | - | Possible extra label value that will inherit all created resources for each CR (for example `backend`) |
 | `resourcesRequestsCpu` | No | `25m` | Possible custom resources CPU requests (for example `50m`) |

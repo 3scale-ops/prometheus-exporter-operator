@@ -5,8 +5,6 @@ metadata:
 spec:
   type: "redis"
   serviceMonitorState: "present"
-  serviceMonitorLabelKey: "monitoring-key"
-  serviceMonitorLabelValue: "middleware"
   labelCustomKey: "threescale_component"
   labelCustomValue: "backend"
   dbHost: "backend-redis"

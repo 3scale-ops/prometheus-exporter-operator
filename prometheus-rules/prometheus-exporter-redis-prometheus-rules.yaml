@@ -1,8 +1,6 @@
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  labels:
-    monitoring-key: middleware
   name: prometheus-exporter-redis
 spec:
   groups:

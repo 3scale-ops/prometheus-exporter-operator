@@ -10,7 +10,6 @@ metadata:
 {% if label_custom_key is defined %}
     {{ label_custom_key }}: "{{ label_custom_value }}"
 {% endif %}
-    {{ service_monitor_label_key }}: {{ service_monitor_label_value }}
 spec:
   selector:
     matchLabels:
