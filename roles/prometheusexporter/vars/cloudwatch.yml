@@ -4,6 +4,14 @@
 prometheus_exporter_port: 9106
 prometheus_exporter_image: "prom/cloudwatch-exporter"
 prometheus_exporter_version: "cloudwatch_exporter-0.8.0"
+liveness_probe_timeout_seconds: 30
+liveness_probe_period_seconds: 60
+liveness_probe_success_threshold: 1
+liveness_probe_failure_threshold: 5
+readiness_probe_timeout_seconds: 30
+readiness_probe_period_seconds: 60
+readiness_probe_success_threshold: 1
+readiness_probe_failure_threshold: 5
 resources_requests_cpu: "50m"
 resources_requests_memory: "128Mi"
 resources_limits_cpu: "100m"

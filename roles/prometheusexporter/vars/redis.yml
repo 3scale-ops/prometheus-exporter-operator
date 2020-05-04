@@ -4,6 +4,14 @@
 prometheus_exporter_port: 9121
 prometheus_exporter_image: "oliver006/redis_exporter"
 prometheus_exporter_version: "v1.3.5"
+liveness_probe_timeout_seconds: 3
+liveness_probe_period_seconds: 15
+liveness_probe_success_threshold: 1
+liveness_probe_failure_threshold: 5
+readiness_probe_timeout_seconds: 3
+readiness_probe_period_seconds: 30
+readiness_probe_success_threshold: 1
+readiness_probe_failure_threshold: 5
 resources_requests_cpu: "25m"
 resources_requests_memory: "32Mi"
 resources_limits_cpu: "50m"

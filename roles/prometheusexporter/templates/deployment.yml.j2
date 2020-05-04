@@ -92,17 +92,17 @@ spec:
           livenessProbe:
             tcpSocket:
               port: metrics
-            timeoutSeconds: 2
-            periodSeconds: 15
-            successThreshold: 1
-            failureThreshold: 5
+            timeoutSeconds: {{ liveness_probe_timeout_seconds }}
+            periodSeconds: {{ liveness_probe_period_seconds }}
+            successThreshold: {{ liveness_probe_success_threshold }}
+            failureThreshold: {{ liveness_probe_failure_threshold }}
           readinessProbe:
             tcpSocket:
               port: metrics
-            timeoutSeconds: 2
-            periodSeconds: 30
-            successThreshold: 1
-            failureThreshold: 5
+            timeoutSeconds: {{ readiness_probe_timeout_seconds }}
+            periodSeconds: {{ readiness_probe_period_seconds }}
+            successThreshold: {{ readiness_probe_success_threshold }}
+            failureThreshold: {{ readiness_probe_failure_threshold }}
           resources:
             limits:
               cpu: "{{ resources_limits_cpu }}"

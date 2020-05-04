@@ -64,20 +64,32 @@ spec:
   labelCustomValue: "backend"
   dbHost: "redis-service"
   dbPort: "6379"
+  resourcesLimitsCpu: "75m"
+  resourcesLimitsMemory: "128Mi"
+  livenessProbeTimeoutSeconds: 4
+  readinessProbeTimeoutSeconds: 5
 ```
 
 ### CR Spec common
 
-| **Field** | **Required** | **Default value** | **Description** |
-|:---:|:---:|:---:|:---:|
-| `type` | Yes | `none` | Possible prometheus-exporters types to configure:  `memcached`, `redis`, `mysql`, `postgresql`, `sphinx`, `elasticsearch`, `cloudwatch` |
-| `serviceMonitorState` | No | `absent` | Create (`present`) or not (`absent`) ServiceMonitor object for each CR |
-| `labelCustomKey` | No | - | Possible extra label key that will inherit all created resources for each CR (for example `tier`) |
-| `labelCustomValue` | No | - | Possible extra label value that will inherit all created resources for each CR (for example `backend`) |
-| `resourcesRequestsCpu` | No | `25m` | Possible custom resources CPU requests (for example `50m`) |
-| `resourcesRequestsMemory` | No | `32Mi` | Possible custom resources Memory requests (for example `64Mi`) |
-| `resourcesLimitsCpu` | No | `50m` | Possible custom resources CPU limits (for example `100m`) |
-| `resourcesLimitsMemory` | No | `64Mi` | Possible custom resources Memory limits (for example `256Mi`) |
+| **Field** | **Type** | **Required** | **Default value (depends on type)** | **Description** |
+|:---:|:---:|:---:|:---:|:---:|
+| `type` | `string` | Yes | `none` | Possible prometheus-exporter types: `memcached`, `redis`, `mysql`, `postgresql`, `sphinx`, `elasticsearch`, `cloudwatch` |
+| `serviceMonitorState` | `string` | No | `absent` | Create (`present`) or not (`absent`) ServiceMonitor object |
+| `labelCustomKey` | `string` | No | - | Add extra label `key` to all created resources (example `tier`) |
+| `labelCustomValue` | `string` | No | - | Add extra label `value` to all created resources (example `backend`) |
+| `resourcesRequestsCpu` | `string` | No | `25m` | Override CPU requests |
+| `resourcesRequestsMemory` | `string` | No | `32Mi` | Override Memory requests |
+| `resourcesLimitsCpu` | `string` | No | `50m` | Override CPU limits |
+| `resourcesLimitsMemory` | `string` | No | `64Mi` | Override Memory limits |
+| `livenessProbeTimeoutSeconds` | `int` | No | `3` | Override liveness timeout (seconds) |
+| `livenessProbePeriodSeconds` | `int` | No | `15` | Override liveness period (seconds) |
+| `livenessProbeSuccessThreshold` | `int` | No | `1` | Override liveness success threshold |
+| `livenessProbeFailureThreshold` | `int` | No | `5` | Override liveness failure threshold |
+| `readinessProbeTimeoutSeconds` | `int` | No | `3` | Override readiness timeout (seconds) |
+| `readinessProbePeriodSeconds` | `int` | No | `30` | Override readiness period (seconds) |
+| `readinessProbeSuccessThreshold` | `int` | No | `1` | Override readiness success threshold |
+| `readinessProbeFailureThreshold` | `int` | No | `5` | Override readiness failure threshold |
 
 ### CR Spec custom
 
