@@ -4,7 +4,7 @@ metadata:
   name: system-memcached-staging
 spec:
   type: "memcached"
-  serviceMonitorState: "present"
+  serviceMonitorEnabled: true
   labelCustomKey: "threescale_component"
   labelCustomValue: "system"
   dbHost: "system-memcache"

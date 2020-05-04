@@ -4,7 +4,7 @@ metadata:
   name: aws-staging
 spec:
   type: "cloudwatch"
-  serviceMonitorState: "present"
+  serviceMonitorEnabled: true
   resourcesLimitsMemory: "256Mi"
   awsCredentialsSecretName: "prometheus-exporter-cloudwatch-aws-staging"
   configurationConfigmapName: "prometheus-exporter-cloudwatch-aws-staging"

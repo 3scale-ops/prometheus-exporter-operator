@@ -4,7 +4,7 @@ metadata:
   name: redis-staging
 spec:
   type: "redis"
-  serviceMonitorState: "present"
+  serviceMonitorEnabled: true
   labelCustomKey: "tier"
   labelCustomValue: "backend"
   dbHost: "redis-service"

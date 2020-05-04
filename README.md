@@ -14,7 +14,7 @@ Current prometheus exporters `types` supported, managed by same prometheus-expor
 The operator manages, for each CR, the lifecycle of the following objects:
 * Deployment
 * Service
-* ServiceMonitor (optional using `serviceMonitorState: "present"`)
+* ServiceMonitor (optional using `serviceMonitorEnabled: true`)
 
 > **NOTE**
 ><br /> Some exporters need some **extra objects to be previously manually created** in order to work (**manual objects names need to be specified on required CR fields**). This extra needed objects includes **Secrets (credentials) or Configmaps (configuration files) on specific formats**. Examples to help you create these extra objects are provided on [examples](examples/) directory for all exporter types.
@@ -59,7 +59,7 @@ metadata:
   name: redis-staging
 spec:
   type: "redis"
-  serviceMonitorState: "present"
+  serviceMonitorEnabled: true
   labelCustomKey: "tier"
   labelCustomValue: "backend"
   dbHost: "redis-service"
@@ -75,7 +75,7 @@ spec:
 | **Field** | **Type** | **Required** | **Default value (depends on type)** | **Description** |
 |:---:|:---:|:---:|:---:|:---:|
 | `type` | `string` | Yes | `none` | Possible prometheus-exporter types: `memcached`, `redis`, `mysql`, `postgresql`, `sphinx`, `elasticsearch`, `cloudwatch` |
-| `serviceMonitorState` | `string` | No | `absent` | Create (`present`) or not (`absent`) ServiceMonitor object |
+| `serviceMonitorEnabled` | `bool` | No | `false` | Create (`true`) or not (`false`) ServiceMonitor object |
 | `labelCustomKey` | `string` | No | - | Add extra label `key` to all created resources (example `tier`) |
 | `labelCustomValue` | `string` | No | - | Add extra label `value` to all created resources (example `backend`) |
 | `resourcesRequestsCpu` | `string` | No | `25m` | Override CPU requests |

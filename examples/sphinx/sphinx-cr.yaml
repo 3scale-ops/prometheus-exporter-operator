@@ -4,7 +4,7 @@ metadata:
   name: system-sphinx-staging
 spec:
   type: "sphinx"
-  serviceMonitorState: "present"
+  serviceMonitorEnabled: true
   labelCustomKey: "threescale_component"
   labelCustomValue: "system"
   dbHost: "system-sphinx"

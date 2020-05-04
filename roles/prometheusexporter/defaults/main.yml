@@ -4,7 +4,8 @@
 type: "none" # memcached, redis, mysql, postgresql, sphinx, elasticsearch, cloudwatch
 
 ## ServiceMonitor config
-service_monitor_state: "absent" # Or "present"  (ansible state var)
+service_monitor_enabled: false # Boolean true/false
+service_monitor_state: "absent" # Converted to ansible state "present"/"absent" var with an ansible set_fact Task depending on previous CR boolean var
 service_monitor_interval: "30s"
 
 ## Generic config

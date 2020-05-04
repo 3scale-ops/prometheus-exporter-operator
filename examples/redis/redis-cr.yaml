@@ -4,7 +4,7 @@ metadata:
   name: backend-redis-staging
 spec:
   type: "redis"
-  serviceMonitorState: "present"
+  serviceMonitorEnabled: true
   labelCustomKey: "threescale_component"
   labelCustomValue: "backend"
   dbHost: "backend-redis"

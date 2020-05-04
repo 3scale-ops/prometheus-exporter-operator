@@ -4,7 +4,7 @@ metadata:
   name: system-mysql-staging
 spec:
   type: "mysql"
-  serviceMonitorState: "present"
+  serviceMonitorEnabled: true
   labelCustomKey: "threescale_component"
   labelCustomValue: "system"
   dbConnectionStringSecretName: "prometheus-exporter-mysql-system-mysql-staging"
