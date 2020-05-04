@@ -8,12 +8,20 @@
   k8s:
     definition: "{{ lookup('template', 'service.yml.j2') }}"
 
+- name: Get information about existing api-groups in the cluster for PrometheusExporter {{ meta.name }} on Namespace {{ meta.namespace }}
+  set_fact:
+    api_groups: "{{ lookup('k8s', cluster_info='api_groups') }}"
+
 - name: Convert serviceMonitorEnabled boolean var into ansible service_monitor_state state var for PrometheusExporter {{ meta.name }} on Namespace {{ meta.namespace }}
   set_fact:
     service_monitor_state: "present"
   when: service_monitor_enabled|bool == true
 
-- name: Manage ServiceMonitor for PrometheusExporter {{ meta.name }} on Namespace {{ meta.namespace }}
+- name: Manage ServiceMonitor (if monitoring.coreos.com api-group exists) for PrometheusExporter {{ meta.name }} on Namespace {{ meta.namespace }}
   k8s:
     state: "{{ service_monitor_state }}"
-    definition: "{{ lookup('template', 'servicemonitor.yml.j2') }}"
+    definition: "{{ lookup('template', item.name) | from_yaml }}"
+  when: item.api_exists | default(True)
+  loop:
+    - name: servicemonitor.yml.j2
+      api_exists: "{{ True if 'monitoring.coreos.com' in api_groups else False }}"
