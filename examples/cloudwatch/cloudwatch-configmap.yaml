@@ -1,3 +1,4 @@
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -6,13 +7,166 @@ data:
   config.yml: |
     ---
     region: us-east-1
+    delay_seconds: 120
+    range_seconds: 120
     metrics:
+     - aws_namespace: AWS/ElastiCache
+       aws_metric_name: CPUUtilization
+       aws_dimensions: [CacheClusterId]
+       aws_statistics: [Average]
+     - aws_namespace: AWS/ElastiCache
+       aws_metric_name: FreeableMemory
+       aws_dimensions: [CacheClusterId]
+       aws_statistics: [Average]
+     - aws_namespace: AWS/ElastiCache
+       aws_metric_name: NetworkBytesIn
+       aws_dimensions: [CacheClusterId]
+       aws_statistics: [Average]
+     - aws_namespace: AWS/ElastiCache
+       aws_metric_name: NetworkBytesOut
+       aws_dimensions: [CacheClusterId]
+       aws_statistics: [Average]
+     - aws_namespace: AWS/ElastiCache
+       aws_metric_name: SwapUsage
+       aws_dimensions: [CacheClusterId]
+       aws_statistics: [Average]
+     - aws_namespace: AWS/ElastiCache
+       aws_metric_name: CurrConnections
+       aws_dimensions: [CacheClusterId]
+       aws_statistics: [Average]
+     - aws_namespace: AWS/ElastiCache
+       aws_metric_name: Evictions
+       aws_dimensions: [CacheClusterId]
+       aws_statistics: [Average]
+     - aws_namespace: AWS/ElastiCache
+       aws_metric_name: CurrItems
+       aws_dimensions: [CacheClusterId]
+       aws_statistics: [Average]
+     - aws_namespace: AWS/RDS
+       aws_metric_name: FreeStorageSpace
+       aws_dimensions: [DBInstanceIdentifier]
+       aws_statistics: [Average]
+     - aws_namespace: AWS/RDS
+       aws_metric_name: CPUUtilization
+       aws_dimensions: [DBInstanceIdentifier]
+       aws_statistics: [Average]
+     - aws_namespace: AWS/RDS
+       aws_metric_name: FreeableMemory
+       aws_dimensions: [DBInstanceIdentifier]
+       aws_statistics: [Average]
+     - aws_namespace: AWS/RDS
+       aws_metric_name: DatabaseConnections
+       aws_dimensions: [DBInstanceIdentifier]
+       aws_statistics: [Average]
+     - aws_namespace: AWS/ES
+       aws_metric_name: ClusterStatus.green
+       aws_dimensions: [DomainName, ClientId]
+       aws_statistics: [Maximum]
+     - aws_namespace: AWS/ES
+       aws_metric_name: ClusterStatus.yellow
+       aws_dimensions: [DomainName, ClientId]
+       aws_statistics: [Maximum]
+     - aws_namespace: AWS/ES
+       aws_metric_name: ClusterStatus.red
+       aws_dimensions: [DomainName, ClientId]
+       aws_statistics: [Maximum]
+     - aws_namespace: AWS/ES
+       aws_metric_name: Nodes
+       aws_dimensions: [DomainName, ClientId]
+       aws_statistics: [Maximum]
+     - aws_namespace: AWS/ES
+       aws_metric_name: AutomatedSnapshotFailure
+       aws_dimensions: [DomainName, ClientId]
+       aws_statistics: [Maximum]
+     - aws_namespace: AWS/ES
+       aws_metric_name: FreeStorageSpace
+       aws_dimensions: [DomainName, ClientId]
+       aws_statistics: [Minimum]
+     - aws_namespace: AWS/ES
+       aws_metric_name: CPUUtilization
+       aws_dimensions: [DomainName, ClientId]
+       aws_statistics: [Maximum]
+     - aws_namespace: AWS/ES
+       aws_metric_name: JVMMemoryPressure
+       aws_dimensions: [DomainName, ClientId]
+       aws_statistics: [Maximum]
+     - aws_namespace: AWS/ApplicationELB
+       aws_metric_name: HealthyHostCount
+       aws_dimensions: [LoadBalancer, TargetGroup]
+       aws_statistics: [Average]
+     - aws_namespace: AWS/ApplicationELB
+       aws_metric_name: UnHealthyHostCount
+       aws_dimensions: [LoadBalancer, TargetGroup]
+       aws_statistics: [Average]
+     - aws_namespace: AWS/ApplicationELB
+       aws_metric_name: HTTPCode_Target_2XX_Count
+       aws_dimensions: [LoadBalancer, TargetGroup]
+       aws_statistics: [Sum]
+     - aws_namespace: AWS/ApplicationELB
+       aws_metric_name: HTTPCode_Target_3XX_Count
+       aws_dimensions: [LoadBalancer, TargetGroup]
+       aws_statistics: [Sum]
+     - aws_namespace: AWS/ApplicationELB
+       aws_metric_name: HTTPCode_Target_4XX_Count
+       aws_dimensions: [LoadBalancer, TargetGroup]
+       aws_statistics: [Sum]
+     - aws_namespace: AWS/ApplicationELB
+       aws_metric_name: HTTPCode_Target_5XX_Count
+       aws_dimensions: [LoadBalancer, TargetGroup]
+       aws_statistics: [Sum]
+     - aws_namespace: AWS/ApplicationELB
+       aws_metric_name: TargetResponseTime
+       aws_dimensions: [LoadBalancer, TargetGroup]
+       aws_statistics: [Average]
+     - aws_namespace: AWS/ApplicationELB
+       aws_metric_name: RequestCount
+       aws_dimensions: [LoadBalancer, TargetGroup]
+       aws_statistics: [Sum]
+     - aws_namespace: AWS/NetworkELB
+       aws_metric_name: HealthyHostCount
+       aws_dimensions: [LoadBalancer, TargetGroup]
+       aws_statistics: [Average]
+     - aws_namespace: AWS/NetworkELB
+       aws_metric_name: UnHealthyHostCount
+       aws_dimensions: [LoadBalancer, TargetGroup]
+       aws_statistics: [Average]
+     - aws_namespace: AWS/NetworkELB
+       aws_metric_name: ActiveFlowCount
+       aws_dimensions: [LoadBalancer]
+       aws_statistics: [Sum]
+     - aws_namespace: AWS/NetworkELB
+       aws_metric_name: NewFlowCount
+       aws_dimensions: [LoadBalancer]
+       aws_statistics: [Sum]
+     - aws_namespace: AWS/ELB
+       aws_metric_name: HealthyHostCount
+       aws_dimensions: [LoadBalancerName]
+       aws_statistics: [Average]
+     - aws_namespace: AWS/ELB
+       aws_metric_name: UnHealthyHostCount
+       aws_dimensions: [LoadBalancerName]
+       aws_statistics: [Average]
      - aws_namespace: AWS/ELB
        aws_metric_name: RequestCount
-       aws_dimensions: [AvailabilityZone, LoadBalancerName]
-       aws_tag_select:
-         tag_selections:
-           Monitoring: ["enabled"]
-         resource_type_selection: "elasticloadbalancing:loadbalancer"
-         resource_id_dimension: LoadBalancerName
+       aws_dimensions: [LoadBalancerName]
+       aws_statistics: [Sum]
+     - aws_namespace: AWS/ELB
+       aws_metric_name: Latency
+       aws_dimensions: [LoadBalancerName]
+       aws_statistics: [Average]
+     - aws_namespace: AWS/ELB
+       aws_metric_name: HTTPCode_Backend_2XX
+       aws_dimensions: [LoadBalancerName]
+       aws_statistics: [Sum]
+     - aws_namespace: AWS/ELB
+       aws_metric_name: HTTPCode_Backend_3XX
+       aws_dimensions: [LoadBalancerName]
+       aws_statistics: [Sum]
+     - aws_namespace: AWS/ELB
+       aws_metric_name: HTTPCode_Backend_4XX
+       aws_dimensions: [LoadBalancerName]
+       aws_statistics: [Sum]
+     - aws_namespace: AWS/ELB
+       aws_metric_name: HTTPCode_Backend_5XX
+       aws_dimensions: [LoadBalancerName]
        aws_statistics: [Sum]
