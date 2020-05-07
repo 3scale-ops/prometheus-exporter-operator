@@ -1,0 +1,64 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: prometheus-exporter-cloudwatch
+spec:
+  groups:
+    - name: prometheus-exporter-cloudwatch.rules
+      rules:
+      - alert: AWSElastiCacheCPUHigh
+        expr: aws_elasticache_cpuutilization_average > 80
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "AWS ElastiCache instance {{ $labels.cache_cluster_id }} from {{ $labels.prometheus_exporter }} has High CPU usage (%)"
+          description: "AWS ElastiCache instance {{ $labels.cache_cluster_id }} from {{ $labels.prometheus_exporter }} has High CPU usage (%)"
+      - alert: AWSElastiCacheFreeableMemoryLow 
+        expr: aws_elasticache_freeable_memory_average < 1000000000
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "AWS ElastiCache instance {{ $labels.cache_cluster_id }} from {{ $labels.prometheus_exporter }} has Low Freeable Memory usage (bytes)"
+          description: "AWS ElastiCache instance {{ $labels.cache_cluster_id }} from {{ $labels.prometheus_exporter }} has Low Freeable Memory usage (bytes)"
+      - alert: AWSElastiCacheSwapMemoryHigh
+        expr: aws_elasticache_swap_usage_average > 250000000
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "AWS ElastiCache instance {{ $labels.cache_cluster_id }} from {{ $labels.prometheus_exporter }} has High Swap Memory usage (bytes)"
+          description: "AWS ElastiCache instance {{ $labels.cache_cluster_id }} from {{ $labels.prometheus_exporter }} has High Swap Memory usage (bytes)"
+      - alert: AWSElastiCacheEvictionsHigh
+        expr: aws_elasticache_evictions_average > 500
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "AWS ElastiCache instance {{ $labels.cache_cluster_id }} from {{ $labels.prometheus_exporter }} has High number of Evictions"
+          description: "AWS ElastiCache instance {{ $labels.cache_cluster_id }} from {{ $labels.prometheus_exporter }} has High number of Evictions"
+      - alert: AWSRDSCPUHigh
+        expr: aws_rds_cpuutilization_average > 80
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "AWS RDS instance {{ $labels.dbinstance_identifier }} from {{ $labels.prometheus_exporter }} has High CPU usage (%)"
+          description: "AWS RDS instance {{ $labels.dbinstance_identifier }} from {{ $labels.prometheus_exporter }} has High CPU usage (%)"
+      - alert: AWSRDSFreeableMemoryLow
+        expr: aws_rds_freeable_memory_average < 1000000000
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "AWS RDS instance {{ $labels.dbinstance_identifier }} from {{ $labels.prometheus_exporter }} has Low Freeable Memory usage (bytes)"
+          description: "AWS RDS instance {{ $labels.dbinstance_identifier }} from {{ $labels.prometheus_exporter }} has Low Freeable Memory usage (bytes)"
+      - alert: AWSRDSFreeStorageSpaceLow
+        expr: aws_rds_free_storage_space_average < 5000000000
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "AWS RDS instance {{ $labels.dbinstance_identifier }} from {{ $labels.prometheus_exporter }} has Low Free Storage Space usage (bytes)"
+          description: "AWS RDS instance {{ $labels.dbinstance_identifier }} from {{ $labels.prometheus_exporter }} has Low Free Storage Space usage (bytes)"
