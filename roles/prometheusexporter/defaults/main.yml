@@ -8,6 +8,12 @@ service_monitor_enabled: false # Boolean true/false
 service_monitor_state: "absent" # Converted to ansible state "present"/"absent" var with an ansible set_fact Task depending on previous CR boolean var
 service_monitor_interval: "30s"
 
+## GrafanaDashboard config
+grafana_dashboard_enabled: false # Boolean true/false
+grafana_dashboard_state: "absent" # Converted to ansible state "present"/"absent" var with an ansible set_fact Task depending on previous CR boolean var
+grafana_dashboard_label_key: "discovery"
+grafana_dashboard_label_value: "enabled"
+
 ## Generic config
 ## Optional, if you want to add a custom label to resources, you can choose a custom key/value. Example for 3scale:
 #label_custom_key": "threescale_component"

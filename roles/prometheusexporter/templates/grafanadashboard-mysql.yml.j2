@@ -1,11 +1,12 @@
 apiVersion: integreatly.org/v1alpha1
 kind: GrafanaDashboard
 metadata:
+  name: "prometheus-exporter-{{ type }}"
+  namespace: "{{ meta.namespace }}"
   labels:
-    monitoring-key: middleware
-  name: prometheus-exporter-mysql
+    "{{ grafana_dashboard_label_key }}": "{{ grafana_dashboard_label_value }}"
 spec:
-  name: prometheus-exporter-mysql.json
+  name: "{{ meta.namespace }}-prometheus-exporter-{{ type }}.json"
   json: >
     {
       "annotations": {
@@ -91,7 +92,7 @@ spec:
           "tableColumn": "",
           "targets": [
             {
-              "expr": "mysql_up{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "mysql_up{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
               "refId": "A",
@@ -182,7 +183,7 @@ spec:
           "tableColumn": "",
           "targets": [
             {
-              "expr": "mysql_global_status_uptime{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "mysql_global_status_uptime{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "",
@@ -268,10 +269,10 @@ spec:
           "tableColumn": "",
           "targets": [
             {
-              "expr": "mysql_version_info {prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "mysql_version_info {namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ innodb_version }}",
+              "legendFormat": "{{ '{{' }} innodb_version {{ '}}' }}",
               "refId": "A",
               "step": 300
             }
@@ -357,7 +358,7 @@ spec:
           "tableColumn": "",
           "targets": [
             {
-              "expr": "rate(mysql_global_status_queries{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_queries{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(mysql_global_status_queries{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_queries{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -451,7 +452,7 @@ spec:
           "tableColumn": "",
           "targets": [
             {
-              "expr": "mysql_global_variables_innodb_buffer_pool_size{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "mysql_global_variables_innodb_buffer_pool_size{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "",
@@ -536,7 +537,7 @@ spec:
           "tableColumn": "",
           "targets": [
             {
-              "expr": "max(max_over_time(mysql_global_status_threads_connected{prometheus_exporter=\"$prometheus_exporter\"}[$interval])  or mysql_global_status_threads_connected{prometheus_exporter=\"$prometheus_exporter\"} )",
+              "expr": "max(max_over_time(mysql_global_status_threads_connected{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval])  or mysql_global_status_threads_connected{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"} )",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -599,7 +600,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "max(max_over_time(mysql_global_status_threads_connected{prometheus_exporter=\"$prometheus_exporter\"}[$interval])  or mysql_global_status_threads_connected{prometheus_exporter=\"$prometheus_exporter\"} )",
+              "expr": "max(max_over_time(mysql_global_status_threads_connected{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval])  or mysql_global_status_threads_connected{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"} )",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -608,7 +609,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "mysql_global_status_max_used_connections{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "mysql_global_status_max_used_connections{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -617,7 +618,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "mysql_global_variables_max_connections{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "mysql_global_variables_max_connections{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -633,7 +634,7 @@ spec:
           "title": "MySQL Connections",
           "tooltip": {
             "shared": true,
-            "sort": 0,
+            "sort": 2,
             "value_type": "individual"
           },
           "type": "graph",
@@ -708,7 +709,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "max_over_time(mysql_global_status_threads_connected{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or max_over_time(mysql_global_status_threads_connected{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "max_over_time(mysql_global_status_threads_connected{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or max_over_time(mysql_global_status_threads_connected{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -717,7 +718,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "max_over_time(mysql_global_status_threads_running{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or max_over_time(mysql_global_status_threads_running{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "max_over_time(mysql_global_status_threads_running{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or max_over_time(mysql_global_status_threads_running{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -726,7 +727,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "avg_over_time(mysql_global_status_threads_running{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or avg_over_time(mysql_global_status_threads_running{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "avg_over_time(mysql_global_status_threads_running{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or avg_over_time(mysql_global_status_threads_running{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -742,7 +743,7 @@ spec:
           "title": "MySQL Client Thread Activity",
           "tooltip": {
             "shared": true,
-            "sort": 0,
+            "sort": 2,
             "value_type": "individual"
           },
           "type": "graph",
@@ -816,7 +817,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "rate(mysql_global_status_queries{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_queries{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(mysql_global_status_queries{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_queries{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -905,7 +906,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(mysql_info_schema_table_size{component=\"data_length\",prometheus_exporter=\"$prometheus_exporter\"})",
+              "expr": "sum(mysql_info_schema_table_size{component=\"data_length\",namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"})",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -914,7 +915,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "sum(mysql_info_schema_table_size{component=\"index_length\",prometheus_exporter=\"$prometheus_exporter\"})",
+              "expr": "sum(mysql_info_schema_table_size{component=\"index_length\",namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"})",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -930,7 +931,7 @@ spec:
           "title": "Disk usage tables / indexes",
           "tooltip": {
             "shared": true,
-            "sort": 0,
+            "sort": 2,
             "value_type": "individual"
           },
           "type": "graph",
@@ -1003,7 +1004,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(mysql_info_schema_table_rows{prometheus_exporter=\"$prometheus_exporter\"})",
+              "expr": "sum(mysql_info_schema_table_rows{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"})",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -1094,7 +1095,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "rate(mysql_global_status_created_tmp_tables{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_created_tmp_tables{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(mysql_global_status_created_tmp_tables{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_created_tmp_tables{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -1103,7 +1104,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "rate(mysql_global_status_created_tmp_disk_tables{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_created_tmp_disk_tables{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(mysql_global_status_created_tmp_disk_tables{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_created_tmp_disk_tables{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -1112,7 +1113,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "rate(mysql_global_status_created_tmp_files{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_created_tmp_files{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(mysql_global_status_created_tmp_files{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_created_tmp_files{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -1128,7 +1129,7 @@ spec:
           "title": "MySQL Temporary Objects",
           "tooltip": {
             "shared": true,
-            "sort": 0,
+            "sort": 2,
             "value_type": "individual"
           },
           "type": "graph",
@@ -1203,7 +1204,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "rate(mysql_global_status_select_full_join{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_select_full_join{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(mysql_global_status_select_full_join{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_select_full_join{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -1212,7 +1213,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "rate(mysql_global_status_select_full_range_join{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_select_full_range_join{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(mysql_global_status_select_full_range_join{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_select_full_range_join{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -1221,7 +1222,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "rate(mysql_global_status_select_range{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_select_range{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(mysql_global_status_select_range{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_select_range{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -1230,7 +1231,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "rate(mysql_global_status_select_range_check{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_select_range_check{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(mysql_global_status_select_range_check{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_select_range_check{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -1239,7 +1240,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "rate(mysql_global_status_select_scan{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_select_scan{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(mysql_global_status_select_scan{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_select_scan{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -1255,7 +1256,7 @@ spec:
           "title": "MySQL Select Types",
           "tooltip": {
             "shared": true,
-            "sort": 0,
+            "sort": 2,
             "value_type": "individual"
           },
           "type": "graph",
@@ -1330,7 +1331,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "rate(mysql_global_status_sort_rows{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_sort_rows{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(mysql_global_status_sort_rows{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_sort_rows{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -1339,7 +1340,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "rate(mysql_global_status_sort_range{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_sort_range{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(mysql_global_status_sort_range{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_sort_range{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -1348,7 +1349,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "rate(mysql_global_status_sort_merge_passes{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_sort_merge_passes{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(mysql_global_status_sort_merge_passes{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_sort_merge_passes{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -1357,7 +1358,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "rate(mysql_global_status_sort_scan{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_sort_scan{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(mysql_global_status_sort_scan{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_sort_scan{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -1373,7 +1374,7 @@ spec:
           "title": "MySQL Sorts",
           "tooltip": {
             "shared": true,
-            "sort": 0,
+            "sort": 2,
             "value_type": "individual"
           },
           "type": "graph",
@@ -1447,7 +1448,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "rate(mysql_global_status_slow_queries{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_slow_queries{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(mysql_global_status_slow_queries{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_slow_queries{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -1539,7 +1540,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "rate(mysql_global_status_aborted_connects{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_aborted_connects{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(mysql_global_status_aborted_connects{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_aborted_connects{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -1548,7 +1549,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "rate(mysql_global_status_aborted_clients{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_aborted_clients{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(mysql_global_status_aborted_clients{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_aborted_clients{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -1564,7 +1565,7 @@ spec:
           "title": "MySQL Aborted Connections",
           "tooltip": {
             "shared": true,
-            "sort": 0,
+            "sort": 2,
             "value_type": "individual"
           },
           "type": "graph",
@@ -1639,7 +1640,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "rate(mysql_global_status_table_locks_immediate{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_table_locks_immediate{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(mysql_global_status_table_locks_immediate{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_table_locks_immediate{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -1648,7 +1649,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "rate(mysql_global_status_table_locks_waited{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_table_locks_waited{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(mysql_global_status_table_locks_waited{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_table_locks_waited{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -1664,7 +1665,7 @@ spec:
           "title": "MySQL Table Locks",
           "tooltip": {
             "shared": true,
-            "sort": 0,
+            "sort": 2,
             "value_type": "individual"
           },
           "type": "graph",
@@ -1742,7 +1743,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "mysql_global_status_innodb_page_size{prometheus_exporter=\"$prometheus_exporter\"} * on (instance) mysql_global_status_buffer_pool_pages{prometheus_exporter=\"$prometheus_exporter\",state=\"data\"}",
+              "expr": "mysql_global_status_innodb_page_size{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"} * on (instance) mysql_global_status_buffer_pool_pages{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\",state=\"data\"}",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -1751,7 +1752,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "mysql_global_variables_innodb_log_buffer_size{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "mysql_global_variables_innodb_log_buffer_size{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -1760,7 +1761,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "mysql_global_variables_innodb_additional_mem_pool_size{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "mysql_global_variables_innodb_additional_mem_pool_size{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -1769,7 +1770,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "mysql_global_status_innodb_mem_dictionary{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "mysql_global_status_innodb_mem_dictionary{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -1778,7 +1779,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "mysql_global_variables_key_buffer_size{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "mysql_global_variables_key_buffer_size{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -1787,7 +1788,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "mysql_global_variables_query_cache_size{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "mysql_global_variables_query_cache_size{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -1796,7 +1797,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "mysql_global_status_innodb_mem_adaptive_hash{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "mysql_global_status_innodb_mem_adaptive_hash{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -1805,7 +1806,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "mysql_global_variables_tokudb_cache_size{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "mysql_global_variables_tokudb_cache_size{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -1821,7 +1822,7 @@ spec:
           "title": "MySQL Internal Memory Overview",
           "tooltip": {
             "shared": true,
-            "sort": 0,
+            "sort": 2,
             "value_type": "individual"
           },
           "type": "graph",
@@ -1896,7 +1897,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "rate(mysql_global_status_bytes_received{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_bytes_received{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(mysql_global_status_bytes_received{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_bytes_received{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -1905,7 +1906,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "rate(mysql_global_status_bytes_sent{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_bytes_sent{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(mysql_global_status_bytes_sent{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_bytes_sent{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -1921,7 +1922,7 @@ spec:
           "title": "MySQL Network Traffic",
           "tooltip": {
             "shared": true,
-            "sort": 0,
+            "sort": 2,
             "value_type": "individual"
           },
           "type": "graph",
@@ -1996,7 +1997,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "increase(mysql_global_status_bytes_received{prometheus_exporter=\"$prometheus_exporter\"}[1h])",
+              "expr": "increase(mysql_global_status_bytes_received{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[1h])",
               "format": "time_series",
               "interval": "1h",
               "intervalFactor": 1,
@@ -2005,7 +2006,7 @@ spec:
               "step": 3600
             },
             {
-              "expr": "increase(mysql_global_status_bytes_sent{prometheus_exporter=\"$prometheus_exporter\"}[1h])",
+              "expr": "increase(mysql_global_status_bytes_sent{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[1h])",
               "format": "time_series",
               "interval": "1h",
               "intervalFactor": 1,
@@ -2021,7 +2022,7 @@ spec:
           "title": "MySQL Network Usage Hourly",
           "tooltip": {
             "shared": true,
-            "sort": 0,
+            "sort": 2,
             "value_type": "individual"
           },
           "type": "graph",
@@ -2062,7 +2063,7 @@ spec:
           "dashes": false,
           "datasource": "$datasource",
           "decimals": 2,
-          "description": "**Top Command Counters**\n\nThe Com_{{xxx}} statement counter variables indicate the number of times each xxx statement has been executed. There is one status variable for each type of statement. For example, Com_delete and Com_update count [``DELETE``](https://dev.mysql.com/doc/refman/5.7/en/delete.html) and [``UPDATE``](https://dev.mysql.com/doc/refman/5.7/en/update.html) statements, respectively. Com_delete_multi and Com_update_multi are similar but apply to [``DELETE``](https://dev.mysql.com/doc/refman/5.7/en/delete.html) and [``UPDATE``](https://dev.mysql.com/doc/refman/5.7/en/update.html) statements that use multiple-table syntax.",
+          "description": "**Top Command Counters**\n\nThe Com_{{ '{{' }}xxx{{ '}}' }} statement counter variables indicate the number of times each xxx statement has been executed. There is one status variable for each type of statement. For example, Com_delete and Com_update count [``DELETE``](https://dev.mysql.com/doc/refman/5.7/en/delete.html) and [``UPDATE``](https://dev.mysql.com/doc/refman/5.7/en/update.html) statements, respectively. Com_delete_multi and Com_update_multi are similar but apply to [``DELETE``](https://dev.mysql.com/doc/refman/5.7/en/delete.html) and [``UPDATE``](https://dev.mysql.com/doc/refman/5.7/en/update.html) statements that use multiple-table syntax.",
           "fill": 2,
           "gridPos": {
             "h": 7,
@@ -2097,11 +2098,11 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "topk(5, rate(mysql_global_status_commands_total{prometheus_exporter=\"$prometheus_exporter\"}[$interval])>0) or topk(5, irate(mysql_global_status_commands_total{prometheus_exporter=\"$prometheus_exporter\"}[5m])>0)",
+              "expr": "topk(5, rate(mysql_global_status_commands_total{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval])>0) or topk(5, irate(mysql_global_status_commands_total{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])>0)",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
-              "legendFormat": "Com_{{ command }}",
+              "legendFormat": "Com_{{ '{{' }} command {{ '}}' }}",
               "refId": "A",
               "step": 300
             }
@@ -2113,7 +2114,7 @@ spec:
           "title": "Top Command Counters",
           "tooltip": {
             "shared": true,
-            "sort": 0,
+            "sort": 2,
             "value_type": "individual"
           },
           "type": "graph",
@@ -2154,7 +2155,7 @@ spec:
           "dashes": false,
           "datasource": "$datasource",
           "decimals": 2,
-          "description": "**Top Command Counters Hourly**\n\nThe Com_{{xxx}} statement counter variables indicate the number of times each xxx statement has been executed. There is one status variable for each type of statement. For example, Com_delete and Com_update count [``DELETE``](https://dev.mysql.com/doc/refman/5.7/en/delete.html) and [``UPDATE``](https://dev.mysql.com/doc/refman/5.7/en/update.html) statements, respectively. Com_delete_multi and Com_update_multi are similar but apply to [``DELETE``](https://dev.mysql.com/doc/refman/5.7/en/delete.html) and [``UPDATE``](https://dev.mysql.com/doc/refman/5.7/en/update.html) statements that use multiple-table syntax.",
+          "description": "**Top Command Counters Hourly**\n\nThe Com_{{ '{{' }}xxx{{ '}}' }} statement counter variables indicate the number of times each xxx statement has been executed. There is one status variable for each type of statement. For example, Com_delete and Com_update count [``DELETE``](https://dev.mysql.com/doc/refman/5.7/en/delete.html) and [``UPDATE``](https://dev.mysql.com/doc/refman/5.7/en/update.html) statements, respectively. Com_delete_multi and Com_update_multi are similar but apply to [``DELETE``](https://dev.mysql.com/doc/refman/5.7/en/delete.html) and [``UPDATE``](https://dev.mysql.com/doc/refman/5.7/en/update.html) statements that use multiple-table syntax.",
           "fill": 1,
           "gridPos": {
             "h": 7,
@@ -2189,11 +2190,11 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "topk(5, increase(mysql_global_status_commands_total{prometheus_exporter=\"$prometheus_exporter\"}[1h])>0)",
+              "expr": "topk(5, increase(mysql_global_status_commands_total{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[1h])>0)",
               "format": "time_series",
               "interval": "1h",
               "intervalFactor": 1,
-              "legendFormat": "Com_{{ command }}",
+              "legendFormat": "Com_{{ '{{' }} command {{ '}}' }}",
               "refId": "A",
               "step": 3600
             }
@@ -2205,7 +2206,7 @@ spec:
           "title": "Top Command Counters Hourly",
           "tooltip": {
             "shared": true,
-            "sort": 0,
+            "sort": 2,
             "value_type": "individual"
           },
           "type": "graph",
@@ -2282,11 +2283,11 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "rate(mysql_global_status_handlers_total{prometheus_exporter=\"$prometheus_exporter\", handler!~\"commit|rollback|savepoint.*|prepare\"}[$interval]) or irate(mysql_global_status_handlers_total{prometheus_exporter=\"$prometheus_exporter\", handler!~\"commit|rollback|savepoint.*|prepare\"}[5m])",
+              "expr": "rate(mysql_global_status_handlers_total{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\", handler!~\"commit|rollback|savepoint.*|prepare\"}[$interval]) or irate(mysql_global_status_handlers_total{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\", handler!~\"commit|rollback|savepoint.*|prepare\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
-              "legendFormat": "{{ handler }}",
+              "legendFormat": "{{ '{{' }} handler {{ '}}' }}",
               "refId": "A",
               "step": 300
             }
@@ -2298,7 +2299,7 @@ spec:
           "title": "MySQL Handlers",
           "tooltip": {
             "shared": true,
-            "sort": 0,
+            "sort": 2,
             "value_type": "individual"
           },
           "type": "graph",
@@ -2374,11 +2375,11 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "rate(mysql_global_status_handlers_total{prometheus_exporter=\"$prometheus_exporter\", handler=~\"commit|rollback|savepoint.*|prepare\"}[$interval]) or irate(mysql_global_status_handlers_total{prometheus_exporter=\"$prometheus_exporter\", handler=~\"commit|rollback|savepoint.*|prepare\"}[5m])",
+              "expr": "rate(mysql_global_status_handlers_total{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\", handler=~\"commit|rollback|savepoint.*|prepare\"}[$interval]) or irate(mysql_global_status_handlers_total{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\", handler=~\"commit|rollback|savepoint.*|prepare\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
-              "legendFormat": "{{ handler }}",
+              "legendFormat": "{{ '{{' }} handler {{ '}}' }}",
               "refId": "A",
               "step": 300
             }
@@ -2390,7 +2391,7 @@ spec:
           "title": "MySQL Transaction Handlers",
           "tooltip": {
             "shared": true,
-            "sort": 0,
+            "sort": 2,
             "value_type": "individual"
           },
           "type": "graph",
@@ -2465,7 +2466,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "mysql_global_status_qcache_free_memory{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "mysql_global_status_qcache_free_memory{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -2474,7 +2475,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "mysql_global_variables_query_cache_size{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "mysql_global_variables_query_cache_size{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -2490,7 +2491,7 @@ spec:
           "title": "MySQL Query Cache Memory",
           "tooltip": {
             "shared": true,
-            "sort": 0,
+            "sort": 2,
             "value_type": "individual"
           },
           "type": "graph",
@@ -2565,7 +2566,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "rate(mysql_global_status_qcache_hits{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_qcache_hits{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(mysql_global_status_qcache_hits{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_qcache_hits{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -2574,7 +2575,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "rate(mysql_global_status_qcache_inserts{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_qcache_inserts{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(mysql_global_status_qcache_inserts{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_qcache_inserts{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -2583,7 +2584,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "rate(mysql_global_status_qcache_not_cached{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_qcache_not_cached{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(mysql_global_status_qcache_not_cached{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_qcache_not_cached{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -2592,7 +2593,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "rate(mysql_global_status_qcache_lowmem_prunes{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_qcache_lowmem_prunes{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(mysql_global_status_qcache_lowmem_prunes{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_qcache_lowmem_prunes{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -2601,7 +2602,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "mysql_global_status_qcache_queries_in_cache{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "mysql_global_status_qcache_queries_in_cache{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -2617,7 +2618,7 @@ spec:
           "title": "MySQL Query Cache Activity",
           "tooltip": {
             "shared": true,
-            "sort": 0,
+            "sort": 2,
             "value_type": "individual"
           },
           "type": "graph",
@@ -2690,7 +2691,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "rate(mysql_global_status_opened_files{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_opened_files{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(mysql_global_status_opened_files{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_opened_files{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -2780,7 +2781,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "mysql_global_status_open_files{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "mysql_global_status_open_files{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -2789,7 +2790,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "mysql_global_variables_open_files_limit{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "mysql_global_variables_open_files_limit{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -2798,7 +2799,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "mysql_global_status_innodb_num_open_files{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "mysql_global_status_innodb_num_open_files{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -2814,7 +2815,7 @@ spec:
           "title": "MySQL Open Files",
           "tooltip": {
             "shared": true,
-            "sort": 0,
+            "sort": 2,
             "value_type": "individual"
           },
           "type": "graph",
@@ -2894,7 +2895,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "rate(mysql_global_status_opened_tables{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_opened_tables{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(mysql_global_status_opened_tables{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_opened_tables{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -2903,7 +2904,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "rate(mysql_global_status_table_open_cache_hits{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_table_open_cache_hits{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(mysql_global_status_table_open_cache_hits{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_table_open_cache_hits{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -2912,7 +2913,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "rate(mysql_global_status_table_open_cache_misses{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_table_open_cache_misses{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(mysql_global_status_table_open_cache_misses{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_table_open_cache_misses{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -2921,7 +2922,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "rate(mysql_global_status_table_open_cache_overflows{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_table_open_cache_overflows{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(mysql_global_status_table_open_cache_overflows{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_table_open_cache_overflows{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -2930,7 +2931,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "(rate(mysql_global_status_table_open_cache_hits{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_table_open_cache_hits{prometheus_exporter=\"$prometheus_exporter\"}[5m]))/((rate(mysql_global_status_table_open_cache_hits{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_table_open_cache_hits{prometheus_exporter=\"$prometheus_exporter\"}[5m]))+(rate(mysql_global_status_table_open_cache_misses{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_table_open_cache_misses{prometheus_exporter=\"$prometheus_exporter\"}[5m])))",
+              "expr": "(rate(mysql_global_status_table_open_cache_hits{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_table_open_cache_hits{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m]))/((rate(mysql_global_status_table_open_cache_hits{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_table_open_cache_hits{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m]))+(rate(mysql_global_status_table_open_cache_misses{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_table_open_cache_misses{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])))",
               "format": "time_series",
               "hide": false,
               "interval": "$interval",
@@ -2947,7 +2948,7 @@ spec:
           "title": "MySQL Table Open Cache Status",
           "tooltip": {
             "shared": true,
-            "sort": 0,
+            "sort": 2,
             "value_type": "individual"
           },
           "type": "graph",
@@ -3022,7 +3023,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "mysql_global_status_open_tables{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "mysql_global_status_open_tables{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -3031,7 +3032,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "mysql_global_variables_table_open_cache{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "mysql_global_variables_table_open_cache{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -3047,7 +3048,7 @@ spec:
           "title": "MySQL Open Tables",
           "tooltip": {
             "shared": true,
-            "sort": 0,
+            "sort": 2,
             "value_type": "individual"
           },
           "type": "graph",
@@ -3121,7 +3122,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "mysql_global_status_open_table_definitions{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "mysql_global_status_open_table_definitions{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -3130,7 +3131,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "mysql_global_variables_table_definition_cache{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "mysql_global_variables_table_definition_cache{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -3139,7 +3140,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "rate(mysql_global_status_opened_table_definitions{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_opened_table_definitions{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(mysql_global_status_opened_table_definitions{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_opened_table_definitions{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -3155,7 +3156,7 @@ spec:
           "title": "MySQL Table Definition Cache",
           "tooltip": {
             "shared": true,
-            "sort": 0,
+            "sort": 2,
             "value_type": "individual"
           },
           "type": "graph",
@@ -3214,15 +3215,37 @@ spec:
           },
           {
             "allValue": null,
+            "current": {
+              "text": "{{ meta.namespace }}",
+              "value": "{{ meta.namespace }}"
+            },
+            "hide": 0,
+            "includeAll": false,
+            "label": "namespace",
+            "multi": false,
+            "name": "namespace",
+            "options": [
+              {
+                "selected": true,
+                "text": "{{ meta.namespace }}",
+                "value": "{{ meta.namespace }}"
+              }
+            ],
+            "query": "{{ meta.namespace }}",
+            "skipUrlSync": false,
+            "type": "custom"
+          },
+          {
+            "allValue": null,
             "datasource": "$datasource",
-            "definition": "label_values(mysql_up, prometheus_exporter)",
+            "definition": "label_values(mysql_up{namespace=\"$namespace\"}, prometheus_exporter)",
             "hide": 0,
             "includeAll": false,
             "label": "Prometheus Exporter",
             "multi": false,
             "name": "prometheus_exporter",
             "options": [],
-            "query": "label_values(mysql_up, prometheus_exporter)",
+            "query": "label_values(mysql_up{namespace=\"$namespace\"}, prometheus_exporter)",
             "refresh": 1,
             "regex": "",
             "skipUrlSync": false,
@@ -3239,8 +3262,8 @@ spec:
             "auto_min": "1s",
             "current": {
               "tags": [],
-              "text": "5m",
-              "value": "5m"
+              "text": "1m",
+              "value": "1m"
             },
             "hide": 0,
             "label": "interval",
@@ -3324,6 +3347,6 @@ spec:
         ]
       },
       "timezone": "browser",
-      "title": "PrometheusExporter MySQL",
+      "title": "{{ meta.namespace }} / PrometheusExporter MySQL",
       "version": 1
     }

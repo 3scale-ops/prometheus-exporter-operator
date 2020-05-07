@@ -5,6 +5,9 @@ metadata:
 spec:
   type: "cloudwatch"
   serviceMonitorEnabled: true
+  grafanaDashboardEnabled: true
+  grafanaDashboardLabelKey: "monitoring-key"
+  grafanaDashboardLabelValue: "middleware"
   resourcesLimitsMemory: "256Mi"
   awsCredentialsSecretName: "prometheus-exporter-cloudwatch-aws-staging"
   configurationConfigmapName: "prometheus-exporter-cloudwatch-aws-staging"

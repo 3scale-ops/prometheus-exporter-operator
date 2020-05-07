@@ -1,11 +1,12 @@
 apiVersion: integreatly.org/v1alpha1
 kind: GrafanaDashboard
 metadata:
+  name: "prometheus-exporter-{{ type }}"
+  namespace: "{{ meta.namespace }}"
   labels:
-    monitoring-key: middleware
-  name: prometheus-exporter-postgresql
+    "{{ grafana_dashboard_label_key }}": "{{ grafana_dashboard_label_value }}"
 spec:
-  name: prometheus-exporter-postgresql.json
+  name: "{{ meta.namespace }}-prometheus-exporter-{{ type }}.json"
   json: >
     {
       "annotations": {
@@ -91,7 +92,7 @@ spec:
           "tableColumn": "",
           "targets": [
             {
-              "expr": "pg_up{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "pg_up{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
               "refId": "A"
@@ -180,10 +181,10 @@ spec:
           "tableColumn": "",
           "targets": [
             {
-              "expr": "pg_static{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "pg_static{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ short_version }}",
+              "legendFormat": "{{ '{{' }} short_version {{ '}}' }}",
               "refId": "A",
               "step": 300
             }
@@ -266,7 +267,7 @@ spec:
           "tableColumn": "",
           "targets": [
             {
-              "expr": "pg_settings_max_connections{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "pg_settings_max_connections{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "",
@@ -353,7 +354,7 @@ spec:
           "tableColumn": "",
           "targets": [
             {
-              "expr": "pg_settings_max_wal_size_bytes{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "pg_settings_max_wal_size_bytes{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "",
@@ -439,7 +440,7 @@ spec:
           "tableColumn": "",
           "targets": [
             {
-              "expr": "pg_settings_max_worker_processes{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "pg_settings_max_worker_processes{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "",
@@ -525,7 +526,7 @@ spec:
           "tableColumn": "",
           "targets": [
             {
-              "expr": "pg_settings_max_parallel_workers_per_gather{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "pg_settings_max_parallel_workers_per_gather{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "",
@@ -611,7 +612,7 @@ spec:
           "tableColumn": "",
           "targets": [
             {
-              "expr": "pg_settings_shared_buffers_bytes{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "pg_settings_shared_buffers_bytes{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "",
@@ -697,7 +698,7 @@ spec:
           "tableColumn": "",
           "targets": [
             {
-              "expr": "pg_settings_effective_cache_size_bytes{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "pg_settings_effective_cache_size_bytes{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "",
@@ -783,7 +784,7 @@ spec:
           "tableColumn": "",
           "targets": [
             {
-              "expr": "pg_settings_maintenance_work_mem_bytes{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "pg_settings_maintenance_work_mem_bytes{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "",
@@ -869,7 +870,7 @@ spec:
           "tableColumn": "",
           "targets": [
             {
-              "expr": "pg_settings_work_mem_bytes{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "pg_settings_work_mem_bytes{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "",
@@ -955,7 +956,7 @@ spec:
           "tableColumn": "",
           "targets": [
             {
-              "expr": "pg_settings_random_page_cost{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "pg_settings_random_page_cost{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "",
@@ -1041,7 +1042,7 @@ spec:
           "tableColumn": "",
           "targets": [
             {
-              "expr": "pg_settings_seq_page_cost{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "pg_settings_seq_page_cost{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
               "refId": "A",
@@ -1104,10 +1105,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "pg_stat_database_numbackends{prometheus_exporter=\"$prometheus_exporter\", datname=\"$db\"}",
+              "expr": "pg_stat_database_numbackends{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\", datname=\"$db\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{__name__}}",
+              "legendFormat": "{{ '{{' }}__name__{{ '}}' }}",
               "refId": "A",
               "step": 20
             }
@@ -1192,7 +1193,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "irate(pg_stat_database_xact_commit{prometheus_exporter=\"$prometheus_exporter\", datname=\"$db\"}[$interval])",
+              "expr": "irate(pg_stat_database_xact_commit{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\", datname=\"$db\"}[$interval])",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "commits",
@@ -1200,7 +1201,7 @@ spec:
               "step": 20
             },
             {
-              "expr": "irate(pg_stat_database_xact_rollback{prometheus_exporter=\"$prometheus_exporter\", datname=\"$db\"}[$interval])",
+              "expr": "irate(pg_stat_database_xact_rollback{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\", datname=\"$db\"}[$interval])",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "rollbacks",
@@ -1287,7 +1288,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(irate(pg_stat_database_xact_commit{prometheus_exporter=\"$prometheus_exporter\",datname=~\"$db\"}[$interval])) + sum(irate(pg_stat_database_xact_rollback{prometheus_exporter=\"$prometheus_exporter\",datname=~\"$db\"}[$interval]))",
+              "expr": "sum(irate(pg_stat_database_xact_commit{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\",datname=~\"$db\"}[$interval])) + sum(irate(pg_stat_database_xact_rollback{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\",datname=~\"$db\"}[$interval]))",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "qps",
@@ -1374,7 +1375,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "irate(pg_stat_database_tup_fetched{prometheus_exporter=\"$prometheus_exporter\", datname=\"$db\"}[$interval])",
+              "expr": "irate(pg_stat_database_tup_fetched{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\", datname=\"$db\"}[$interval])",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "SELECT (index scan)",
@@ -1382,7 +1383,7 @@ spec:
               "step": 20
             },
             {
-              "expr": "irate(pg_stat_database_tup_returned{prometheus_exporter=\"$prometheus_exporter\", datname=\"$db\"}[$interval])",
+              "expr": "irate(pg_stat_database_tup_returned{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\", datname=\"$db\"}[$interval])",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "SELECT (table scan)",
@@ -1469,7 +1470,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "irate(pg_stat_database_tup_inserted{prometheus_exporter=\"$prometheus_exporter\",datname=\"$db\"}[$interval])",
+              "expr": "irate(pg_stat_database_tup_inserted{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\",datname=\"$db\"}[$interval])",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "INSERT",
@@ -1477,7 +1478,7 @@ spec:
               "step": 20
             },
             {
-              "expr": "irate(pg_stat_database_tup_updated{prometheus_exporter=\"$prometheus_exporter\",datname=\"$db\"}[$interval])",
+              "expr": "irate(pg_stat_database_tup_updated{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\",datname=\"$db\"}[$interval])",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "UPDATE",
@@ -1485,7 +1486,7 @@ spec:
               "step": 20
             },
             {
-              "expr": "irate(pg_stat_database_tup_deleted{prometheus_exporter=\"$prometheus_exporter\",datname=\"$db\"}[$interval])",
+              "expr": "irate(pg_stat_database_tup_deleted{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\",datname=\"$db\"}[$interval])",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "DELETE",
@@ -1572,10 +1573,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "pg_stat_activity_max_tx_duration{prometheus_exporter=\"$prometheus_exporter\", datname=\"$db\"}",
+              "expr": "pg_stat_activity_max_tx_duration{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\", datname=\"$db\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "max_tx_duration [{{state}}]",
+              "legendFormat": "max_tx_duration[{{ '{{' }} state {{ '}}' }}]",
               "refId": "A",
               "step": 20
             }
@@ -1659,7 +1660,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "pg_stat_database_blks_hit{prometheus_exporter=\"$prometheus_exporter\", datname=\"$db\"} / (pg_stat_database_blks_read{prometheus_exporter=\"$prometheus_exporter\", datname=\"$db\"} + pg_stat_database_blks_hit{prometheus_exporter=\"$prometheus_exporter\", datname=\"$db\"})",
+              "expr": "pg_stat_database_blks_hit{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\", datname=\"$db\"} / (pg_stat_database_blks_read{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\", datname=\"$db\"} + pg_stat_database_blks_hit{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\", datname=\"$db\"})",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "Cache Hit Rate",
@@ -1748,7 +1749,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "irate(pg_stat_bgwriter_buffers_backend{prometheus_exporter=\"$prometheus_exporter\"}[$interval])",
+              "expr": "irate(pg_stat_bgwriter_buffers_backend{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval])",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "buffers_backend",
@@ -1756,7 +1757,7 @@ spec:
               "step": 20
             },
             {
-              "expr": "irate(pg_stat_bgwriter_buffers_alloc{prometheus_exporter=\"$prometheus_exporter\"}[$interval])",
+              "expr": "irate(pg_stat_bgwriter_buffers_alloc{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval])",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "buffers_alloc",
@@ -1764,7 +1765,7 @@ spec:
               "step": 20
             },
             {
-              "expr": "irate(pg_stat_bgwriter_buffers_fsync{prometheus_exporter=\"$prometheus_exporter\"}[$interval])",
+              "expr": "irate(pg_stat_bgwriter_buffers_fsync{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval])",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "backend_fsync",
@@ -1772,7 +1773,7 @@ spec:
               "step": 20
             },
             {
-              "expr": "irate(pg_stat_bgwriter_buffers_checkpoint{prometheus_exporter=\"$prometheus_exporter\"}[$interval])",
+              "expr": "irate(pg_stat_bgwriter_buffers_checkpoint{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval])",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "buffers_checkpoint",
@@ -1780,7 +1781,7 @@ spec:
               "step": 20
             },
             {
-              "expr": "irate(pg_stat_bgwriter_buffers_clean{prometheus_exporter=\"$prometheus_exporter\"}[$interval])",
+              "expr": "irate(pg_stat_bgwriter_buffers_clean{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval])",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "buffers_clean",
@@ -1867,7 +1868,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "irate(pg_stat_database_conflicts{prometheus_exporter=\"$prometheus_exporter\", datname=\"$db\"}[$interval])",
+              "expr": "irate(pg_stat_database_conflicts{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\", datname=\"$db\"}[$interval])",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "conflicts",
@@ -1875,7 +1876,7 @@ spec:
               "step": 30
             },
             {
-              "expr": "irate(pg_stat_database_deadlocks{prometheus_exporter=\"$prometheus_exporter\", datname=\"$db\"}[$interval])",
+              "expr": "irate(pg_stat_database_deadlocks{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\", datname=\"$db\"}[$interval])",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "deadlocks",
@@ -1964,10 +1965,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "pg_locks_count{prometheus_exporter=\"$prometheus_exporter\",datname=\"$db\"}",
+              "expr": "pg_locks_count{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\",datname=\"$db\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{mode}}",
+              "legendFormat": "{{ '{{' }} mode {{ '}}' }}",
               "refId": "A",
               "step": 20
             }
@@ -2052,7 +2053,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "rate(pg_stat_database_temp_bytes{prometheus_exporter=\"$prometheus_exporter\", datname=\"$db\"}[$interval])",
+              "expr": "rate(pg_stat_database_temp_bytes{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\", datname=\"$db\"}[$interval])",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "Temp Bytes",
@@ -2139,7 +2140,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "irate(pg_stat_bgwriter_checkpoint_write_time{prometheus_exporter=\"$prometheus_exporter\"}[$interval])",
+              "expr": "irate(pg_stat_bgwriter_checkpoint_write_time{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval])",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "write_time - Total amount of time that has been spent in the portion of checkpoint processing where files are written to disk.",
@@ -2147,7 +2148,7 @@ spec:
               "step": 10
             },
             {
-              "expr": "irate(pg_stat_bgwriter_checkpoint_sync_time{prometheus_exporter=\"$prometheus_exporter\"}[$interval])",
+              "expr": "irate(pg_stat_bgwriter_checkpoint_sync_time{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval])",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "sync_time - Total amount of time that has been spent in the portion of checkpoint processing where files are synchronized to disk.",
@@ -2221,15 +2222,37 @@ spec:
           },
           {
             "allValue": null,
+            "current": {
+              "text": "{{ meta.namespace }}",
+              "value": "{{ meta.namespace }}"
+            },
+            "hide": 0,
+            "includeAll": false,
+            "label": "namespace",
+            "multi": false,
+            "name": "namespace",
+            "options": [
+              {
+                "selected": true,
+                "text": "{{ meta.namespace }}",
+                "value": "{{ meta.namespace }}"
+              }
+            ],
+            "query": "{{ meta.namespace }}",
+            "skipUrlSync": false,
+            "type": "custom"
+          },
+          {
+            "allValue": null,
             "datasource": "$datasource",
-            "definition": "label_values(pg_up, prometheus_exporter)",
+            "definition": "label_values(pg_up{namespace=\"$namespace\"}, prometheus_exporter)",
             "hide": 0,
             "includeAll": false,
             "label": "Prometheus Exporter",
             "multi": false,
             "name": "prometheus_exporter",
             "options": [],
-            "query": "label_values(pg_up, prometheus_exporter)",
+            "query": "label_values(pg_up{namespace=\"$namespace\"}, prometheus_exporter)",
             "refresh": 1,
             "regex": "",
             "skipUrlSync": false,
@@ -2243,14 +2266,14 @@ spec:
           {
             "allValue": null,
             "datasource": "$datasource",
-            "definition": "label_values(pg_stat_database_tup_fetched{prometheus_exporter=\"$prometheus_exporter\",datname!~\"template.*\"},datname)",
+            "definition": "label_values(pg_stat_database_tup_fetched{namespace=\"$namespace\",prometheus_exporter=\"$prometheus_exporter\",datname!~\"template.*\"},datname)",
             "hide": 0,
             "includeAll": false,
             "label": "Database",
             "multi": false,
             "name": "db",
             "options": [],
-            "query": "label_values(pg_stat_database_tup_fetched{prometheus_exporter=\"$prometheus_exporter\",datname!~\"template.*\"},datname)",
+            "query": "label_values(pg_stat_database_tup_fetched{namespace=\"$namespace\",prometheus_exporter=\"$prometheus_exporter\",datname!~\"template.*\"},datname)",
             "refresh": 1,
             "regex": "",
             "skipUrlSync": false,
@@ -2266,8 +2289,8 @@ spec:
             "auto_count": 200,
             "auto_min": "1s",
             "current": {
-              "text": "5m",
-              "value": "5m"
+              "text": "1m",
+              "value": "1m"
             },
             "hide": 0,
             "label": "interval",
@@ -2351,6 +2374,6 @@ spec:
         ]
       },
       "timezone": "browser",
-      "title": "PrometheusExporter PostgreSQL",
+      "title": "{{ meta.namespace }} / PrometheusExporter PostgreSQL",
       "version": 1
     }

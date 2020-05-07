@@ -5,6 +5,6 @@ metadata:
 spec:
   type: "elasticsearch"
   serviceMonitorEnabled: true
+  grafanaDashboardEnabled: false
   dbHost: "http://logging-es.openshift-logging.svc"
   dbPort: "9200"
-  configurationConfigmapName: "prometheus-exporter-elasticsearch-es-staging"

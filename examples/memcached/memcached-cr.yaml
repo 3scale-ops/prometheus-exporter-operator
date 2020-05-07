@@ -5,6 +5,9 @@ metadata:
 spec:
   type: "memcached"
   serviceMonitorEnabled: true
+  grafanaDashboardEnabled: true
+  grafanaDashboardLabelKey: "monitoring-key"
+  grafanaDashboardLabelValue: "middleware"
   labelCustomKey: "threescale_component"
   labelCustomValue: "system"
   dbHost: "system-memcache"

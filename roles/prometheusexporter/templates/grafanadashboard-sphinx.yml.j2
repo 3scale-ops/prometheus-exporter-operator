@@ -1,11 +1,12 @@
 apiVersion: integreatly.org/v1alpha1
 kind: GrafanaDashboard
 metadata:
+  name: "prometheus-exporter-{{ type }}"
+  namespace: "{{ meta.namespace }}"
   labels:
-    monitoring-key: middleware
-  name: prometheus-exporter-sphinx
+    "{{ grafana_dashboard_label_key }}": "{{ grafana_dashboard_label_value }}"
 spec:
-  name: prometheus-exporter-sphinx.json
+  name: "{{ meta.namespace }}-prometheus-exporter-{{ type }}.json"
   json: >
     {
       "annotations": {
@@ -94,7 +95,7 @@ spec:
               "aggregator": "sum",
               "downsampleAggregator": "avg",
               "downsampleFillPolicy": "none",
-              "expr": "sphinx_up{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "sphinx_up{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 1,
@@ -190,7 +191,7 @@ spec:
               "aggregator": "sum",
               "downsampleAggregator": "avg",
               "downsampleFillPolicy": "none",
-              "expr": "sphinx_uptime{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "sphinx_uptime{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "",
@@ -280,7 +281,7 @@ spec:
               "aggregator": "sum",
               "downsampleAggregator": "avg",
               "downsampleFillPolicy": "none",
-              "expr": "sum(sphinx_threads_count{prometheus_exporter=\"$prometheus_exporter\"})",
+              "expr": "sum(sphinx_threads_count{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"})",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "",
@@ -369,7 +370,7 @@ spec:
               "aggregator": "sum",
               "downsampleAggregator": "avg",
               "downsampleFillPolicy": "none",
-              "expr": "rate(sphinx_queries{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(sphinx_queries{prometheus_exporter=\"$prometheus_exporter\"}[$interval])",
+              "expr": "rate(sphinx_queries{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(sphinx_queries{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval])",
               "format": "time_series",
               "intervalFactor": 1,
               "refId": "A",
@@ -458,7 +459,7 @@ spec:
               "aggregator": "sum",
               "downsampleAggregator": "avg",
               "downsampleFillPolicy": "none",
-              "expr": "(sphinx_query_wall{prometheus_exporter=\"$prometheus_exporter\"} / sphinx_queries{prometheus_exporter=\"$prometheus_exporter\"})*1000",
+              "expr": "(sphinx_query_wall{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"} / sphinx_queries{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"})*1000",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -507,6 +508,7 @@ spec:
             "x": 20,
             "y": 0
           },
+          "hideTimeOverride": true,
           "id": 5,
           "interval": null,
           "links": [],
@@ -548,7 +550,7 @@ spec:
               "aggregator": "sum",
               "downsampleAggregator": "avg",
               "downsampleFillPolicy": "none",
-              "expr": "sphinx_index_count{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "sphinx_index_count{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "",
@@ -621,7 +623,7 @@ spec:
               "aggregator": "sum",
               "downsampleAggregator": "avg",
               "downsampleFillPolicy": "none",
-              "expr": "rate(sphinx_command_delete{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(sphinx_command_delete{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(sphinx_command_delete{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(sphinx_command_delete{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -631,7 +633,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "rate(sphinx_command_flushattrs{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(sphinx_command_flushattrs{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(sphinx_command_flushattrs{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(sphinx_command_flushattrs{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -640,7 +642,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "rate(sphinx_command_keywords{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(sphinx_command_keywords{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(sphinx_command_keywords{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(sphinx_command_keywords{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -649,7 +651,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "rate(sphinx_command_persist{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(sphinx_command_persist{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(sphinx_command_persist{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(sphinx_command_persist{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -658,7 +660,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "rate(sphinx_command_search{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(sphinx_command_search{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(sphinx_command_search{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(sphinx_command_search{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -667,7 +669,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "rate(sphinx_command_status{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(sphinx_command_status{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(sphinx_command_status{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(sphinx_command_status{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -676,7 +678,7 @@ spec:
               "step": 300
             },
             {
-              "expr": "rate(sphinx_command_update{prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(sphinx_command_update{prometheus_exporter=\"$prometheus_exporter\"}[5m])",
+              "expr": "rate(sphinx_command_update{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(sphinx_command_update{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
               "format": "time_series",
               "interval": "$interval",
               "intervalFactor": 1,
@@ -692,7 +694,7 @@ spec:
           "title": "Command Operation",
           "tooltip": {
             "shared": true,
-            "sort": 1,
+            "sort": 2,
             "value_type": "individual"
           },
           "type": "graph",
@@ -705,6 +707,7 @@ spec:
           },
           "yaxes": [
             {
+              "decimals": 2,
               "format": "short",
               "label": null,
               "logBase": 1,
@@ -772,11 +775,11 @@ spec:
               "aggregator": "sum",
               "downsampleAggregator": "avg",
               "downsampleFillPolicy": "none",
-              "expr": "sphinx_indexed_documents{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "sphinx_indexed_documents{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 1,
-              "legendFormat": "{{index}}",
+              "legendFormat": "{{ '{{' }} index {{ '}}' }}",
               "refId": "A",
               "step": 20
             }
@@ -801,6 +804,7 @@ spec:
           },
           "yaxes": [
             {
+              "decimals": 0,
               "format": "none",
               "label": null,
               "logBase": 1,
@@ -868,10 +872,10 @@ spec:
               "aggregator": "sum",
               "downsampleAggregator": "avg",
               "downsampleFillPolicy": "none",
-              "expr": "sphinx_indexed_bytes{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "sphinx_indexed_bytes{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{index}}",
+              "legendFormat": "{{ '{{' }} index {{ '}}' }}",
               "refId": "A",
               "step": 20
             }
@@ -896,6 +900,7 @@ spec:
           },
           "yaxes": [
             {
+              "decimals": 0,
               "format": "bytes",
               "label": null,
               "logBase": 1,
@@ -960,10 +965,10 @@ spec:
               "aggregator": "sum",
               "downsampleAggregator": "avg",
               "downsampleFillPolicy": "none",
-              "expr": "sphinx_ram_bytes{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "sphinx_ram_bytes{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{index}}",
+              "legendFormat": "{{ '{{' }} index {{ '}}' }}",
               "refId": "A",
               "step": 10
             }
@@ -988,6 +993,7 @@ spec:
           },
           "yaxes": [
             {
+              "decimals": 1,
               "format": "bytes",
               "label": null,
               "logBase": 1,
@@ -1034,15 +1040,37 @@ spec:
           },
           {
             "allValue": null,
+            "current": {
+              "text": "{{ meta.namespace }}",
+              "value": "{{ meta.namespace }}"
+            },
+            "hide": 0,
+            "includeAll": false,
+            "label": "namespace",
+            "multi": false,
+            "name": "namespace",
+            "options": [
+              {
+                "selected": true,
+                "text": "{{ meta.namespace }}",
+                "value": "{{ meta.namespace }}"
+              }
+            ],
+            "query": "{{ meta.namespace }}",
+            "skipUrlSync": false,
+            "type": "custom"
+          },
+          {
+            "allValue": null,
             "datasource": "$datasource",
-            "definition": "label_values(sphinx_up, prometheus_exporter)",
+            "definition": "label_values(sphinx_up{namespace=\"$namespace\"}, prometheus_exporter)",
             "hide": 0,
             "includeAll": false,
             "label": "Prometheus Exporter",
             "multi": false,
             "name": "prometheus_exporter",
             "options": [],
-            "query": "label_values(sphinx_up, prometheus_exporter)",
+            "query": "label_values(sphinx_up{namespace=\"$namespace\"}, prometheus_exporter)",
             "refresh": 1,
             "regex": "",
             "skipUrlSync": false,
@@ -1058,8 +1086,8 @@ spec:
             "auto_count": 200,
             "auto_min": "1s",
             "current": {
-              "text": "5m",
-              "value": "5m"
+              "text": "1m",
+              "value": "1m"
             },
             "hide": 0,
             "label": "interval",
@@ -1143,6 +1171,6 @@ spec:
         ]
       },
       "timezone": "browser",
-      "title": "PrometheusExporter Sphinx",
+      "title": "{{ meta.namespace }} / PrometheusExporter Sphinx",
       "version": 1
     }

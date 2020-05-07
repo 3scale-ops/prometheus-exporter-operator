@@ -15,7 +15,7 @@ spec:
       serviceAccountName: prometheus-exporter-operator
       containers:
         - name: prometheus-exporter-operator
-          image: "quay.io/3scale/prometheus-exporter-operator:v1.1.0"
+          image: "quay.io/3scale/prometheus-exporter-operator:v2.0.0"
           imagePullPolicy: "Always"
           volumeMounts:
           - mountPath: /tmp/ansible-operator/runner

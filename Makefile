@@ -1,4 +1,4 @@
-.PHONY: operator-image-update operator-create operator-delete grafana-dashboards-create grafana-dashboards-delete prometheus-rules-create prometheus-rules-delete help
+.PHONY: operator-image-update operator-create operator-delete prometheus-rules-create prometheus-rules-delete help
 
 .DEFAULT_GOAL := help
 
@@ -7,7 +7,7 @@ THISDIR_PATH := $(patsubst %/,%,$(abspath $(dir $(MKFILE_PATH))))
 
 KUBE_CLIENT ?= kubectl # It can be used "oc" or "kubectl"
 IMAGE ?= quay.io/3scale/prometheus-exporter-operator
-VERSION ?= v1.1.0
+VERSION ?= v2.0.0
 NAMESPACE ?= example-application-monitoring
 
 operator-image-build: # OPERATOR IMAGE - Build operator Docker image
@@ -34,12 +34,6 @@ operator-delete: ## OPERATOR MAIN - Delete Operator objects
 	$(KUBE_CLIENT) delete -f deploy/role_binding.yaml -n $(NAMESPACE) || true
 	$(KUBE_CLIENT) delete -f deploy/role.yaml -n $(NAMESPACE) || true
 	$(KUBE_CLIENT) delete -f deploy/service_account.yaml -n $(NAMESPACE) || true
-
-grafana-dashboards-create: namespace-create ## GRAFANA DASHBOARDS - Create Grafana Dashboards (Memcached, Redis, MySQL, PostgreSQL, Sphinx)
-	$(KUBE_CLIENT) apply -f grafana-dashboards/ -n $(NAMESPACE)
-
-grafana-dashboards-delete: ## GRAFANA DASHBOARDS - Delete Grafana Dashboards (Memcached, Redis, MySQL, PostgreSQL, Sphinx)
-	$(KUBE_CLIENT) delete -f grafana-dashboards/ -n $(NAMESPACE) || true
 
 prometheus-rules-create: namespace-create ## PROMETHEUS RULES - Create Prometheus Rules (Memcached, Redis, MySQL, PostgreSQL, Sphinx)
 	$(KUBE_CLIENT) apply -f prometheus-rules/ -n $(NAMESPACE)

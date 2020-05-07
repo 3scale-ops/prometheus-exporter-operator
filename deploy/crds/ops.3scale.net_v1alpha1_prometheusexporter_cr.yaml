@@ -5,6 +5,9 @@ metadata:
 spec:
   type: "redis"
   serviceMonitorEnabled: true
+  grafanaDashboardEnabled: true
+  grafanaDashboardLabelKey: "monitoring-key"
+  grafanaDashboardLabelValue: "middleware"
   labelCustomKey: "tier"
   labelCustomValue: "backend"
   dbHost: "redis-service"

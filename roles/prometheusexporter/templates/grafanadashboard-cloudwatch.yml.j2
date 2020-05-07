@@ -1,11 +1,12 @@
 apiVersion: integreatly.org/v1alpha1
 kind: GrafanaDashboard
 metadata:
+  name: "prometheus-exporter-{{ type }}"
+  namespace: "{{ meta.namespace }}"
   labels:
-    monitoring-key: middleware
-  name: prometheus-exporter-cloudwatch
+    "{{ grafana_dashboard_label_key }}": "{{ grafana_dashboard_label_value }}"
 spec:
-  name: prometheus-exporter-cloudwatch.json
+  name: "{{ meta.namespace }}-prometheus-exporter-{{ type }}.json"
   json: >
     {
       "annotations": {
@@ -87,7 +88,7 @@ spec:
           "pluginVersion": "6.2.4",
           "targets": [
             {
-              "expr": "(sum(increase(cloudwatch_requests_total{prometheus_exporter=\"$prometheus_exporter\"}[1h])) * 24) * 30 * 10 / 1000000",
+              "expr": "(sum(increase(cloudwatch_requests_total{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[1h])) * 24) * 30 * 10 / 1000000",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "",
@@ -164,7 +165,7 @@ spec:
           "tableColumn": "",
           "targets": [
             {
-              "expr": "max(cloudwatch_exporter_scrape_duration_seconds{prometheus_exporter=\"stg-saas-cw\"}) by (prometheus_exporter)",
+              "expr": "max(cloudwatch_exporter_scrape_duration_seconds{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}) by (prometheus_exporter)",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "",
@@ -227,10 +228,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "cloudwatch_exporter_scrape_duration_seconds{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "cloudwatch_exporter_scrape_duration_seconds{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ prometheus_exporter }}",
+              "legendFormat": "{{ '{{' }} prometheus_exporter {{ '}}' }}",
               "refId": "A",
               "step": 30,
               "target": ""
@@ -342,7 +343,7 @@ spec:
           "tableColumn": "",
           "targets": [
             {
-              "expr": "max(cloudwatch_exporter_scrape_error{prometheus_exporter=\"stg-saas-cw\"}) by (prometheus_exporter)",
+              "expr": "max(cloudwatch_exporter_scrape_error{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}) by (prometheus_exporter)",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "",
@@ -405,7 +406,7 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(increase(cloudwatch_requests_total{prometheus_exporter=\"$prometheus_exporter\"}[5m]))",
+              "expr": "sum(increase(cloudwatch_requests_total{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m]))",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "TOTAL",
@@ -414,10 +415,10 @@ spec:
               "target": ""
             },
             {
-              "expr": "sum(increase(cloudwatch_requests_total{prometheus_exporter=\"$prometheus_exporter\"}[5m])) by (exported_namespace)",
+              "expr": "sum(increase(cloudwatch_requests_total{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])) by (exported_namespace)",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ exported_namespace }}",
+              "legendFormat": "{{ '{{' }} exported_namespace {{ '}}' }}",
               "refId": "B",
               "step": 30,
               "target": ""
@@ -505,10 +506,10 @@ spec:
           },
           "targets": [
             {
-              "expr": "sum(increase(cloudwatch_requests_total{prometheus_exporter=\"$prometheus_exporter\"}[5m])) by (exported_namespace)",
+              "expr": "sum(increase(cloudwatch_requests_total{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])) by (exported_namespace)",
               "format": "time_series",
               "intervalFactor": 3,
-              "legendFormat": "{{ exported_namespace }}",
+              "legendFormat": "{{ '{{' }} exported_namespace {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -568,10 +569,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_elasticache_cpuutilization_average{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_elasticache_cpuutilization_average{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ cache_cluster_id }}",
+              "legendFormat": "{{ '{{' }} cache_cluster_id {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -655,10 +656,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_elasticache_curr_connections_average{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_elasticache_curr_connections_average{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ cache_cluster_id }}",
+              "legendFormat": "{{ '{{' }} cache_cluster_id {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -742,10 +743,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_elasticache_freeable_memory_average{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_elasticache_freeable_memory_average{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ cache_cluster_id }}",
+              "legendFormat": "{{ '{{' }} cache_cluster_id {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -829,10 +830,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_elasticache_swap_usage_average{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_elasticache_swap_usage_average{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ cache_cluster_id }}",
+              "legendFormat": "{{ '{{' }} cache_cluster_id {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -916,10 +917,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_elasticache_network_bytes_in_average{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_elasticache_network_bytes_in_average{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ cache_cluster_id }}",
+              "legendFormat": "{{ '{{' }} cache_cluster_id {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -1003,10 +1004,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_elasticache_network_bytes_out_average{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_elasticache_network_bytes_out_average{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ cache_cluster_id }}",
+              "legendFormat": "{{ '{{' }} cache_cluster_id {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -1090,10 +1091,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_elasticache_curr_items_average{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_elasticache_curr_items_average{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ cache_cluster_id }}",
+              "legendFormat": "{{ '{{' }} cache_cluster_id {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -1176,10 +1177,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_elasticache_evictions_average{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_elasticache_evictions_average{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ cache_cluster_id }}",
+              "legendFormat": "{{ '{{' }} cache_cluster_id {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -1275,10 +1276,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_rds_cpuutilization_average{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_rds_cpuutilization_average{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ dbinstance_identifier }}",
+              "legendFormat": "{{ '{{' }} dbinstance_identifier {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -1362,10 +1363,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_rds_database_connections_average{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_rds_database_connections_average{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ dbinstance_identifier }}",
+              "legendFormat": "{{ '{{' }} dbinstance_identifier {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -1449,10 +1450,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_rds_freeable_memory_average{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_rds_freeable_memory_average{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ dbinstance_identifier }}",
+              "legendFormat": "{{ '{{' }} dbinstance_identifier {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -1536,10 +1537,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_rds_free_storage_space_average{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_rds_free_storage_space_average{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ dbinstance_identifier }}",
+              "legendFormat": "{{ '{{' }} dbinstance_identifier {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -1637,10 +1638,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_applicationelb_healthy_host_count_average{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_applicationelb_healthy_host_count_average{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ target_group }}",
+              "legendFormat": "{{ '{{' }} target_group {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -1725,10 +1726,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_applicationelb_un_healthy_host_count_average{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_applicationelb_un_healthy_host_count_average{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ target_group }}",
+              "legendFormat": "{{ '{{' }} target_group {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -1813,10 +1814,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_applicationelb_request_count_sum{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_applicationelb_request_count_sum{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ load_balancer }}",
+              "legendFormat": "{{ '{{' }} load_balancer {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -1901,10 +1902,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_applicationelb_target_response_time_average{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_applicationelb_target_response_time_average{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ target_group }}",
+              "legendFormat": "{{ '{{' }} target_group {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -1989,10 +1990,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_applicationelb_httpcode_target_2_xx_count_sum{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_applicationelb_httpcode_target_2_xx_count_sum{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ target_group }}",
+              "legendFormat": "{{ '{{' }} target_group {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -2077,10 +2078,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_applicationelb_httpcode_target_5_xx_count_sum{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_applicationelb_httpcode_target_5_xx_count_sum{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ target_group }}",
+              "legendFormat": "{{ '{{' }} target_group {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -2165,10 +2166,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_applicationelb_httpcode_target_3_xx_count_sum{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_applicationelb_httpcode_target_3_xx_count_sum{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ target_group }}",
+              "legendFormat": "{{ '{{' }} target_group {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -2253,10 +2254,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_applicationelb_httpcode_target_4_xx_count_sum{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_applicationelb_httpcode_target_4_xx_count_sum{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ target_group }}",
+              "legendFormat": "{{ '{{' }} target_group {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -2354,10 +2355,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_networkelb_healthy_host_count_average{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_networkelb_healthy_host_count_average{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ target_group }}",
+              "legendFormat": "{{ '{{' }} target_group {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -2442,10 +2443,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_networkelb_un_healthy_host_count_average{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_networkelb_un_healthy_host_count_average{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ target_group }}",
+              "legendFormat": "{{ '{{' }} target_group {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -2530,10 +2531,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_networkelb_active_flow_count_sum{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_networkelb_active_flow_count_sum{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ load_balancer }}",
+              "legendFormat": "{{ '{{' }} load_balancer {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -2618,10 +2619,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_networkelb_new_flow_count_sum{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_networkelb_new_flow_count_sum{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ load_balancer }}",
+              "legendFormat": "{{ '{{' }} load_balancer {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -2719,10 +2720,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_elb_healthy_host_count_average{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_elb_healthy_host_count_average{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ load_balancer_name }}",
+              "legendFormat": "{{ '{{' }} load_balancer_name {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -2807,10 +2808,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_elb_un_healthy_host_count_average{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_elb_un_healthy_host_count_average{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ load_balancer_name }}",
+              "legendFormat": "{{ '{{' }} load_balancer_name {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -2895,10 +2896,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_elb_request_count_sum{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_elb_request_count_sum{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ load_balancer_name }}",
+              "legendFormat": "{{ '{{' }} load_balancer_name {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -2983,10 +2984,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_elb_latency_average{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_elb_latency_average{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ load_balancer_name }}",
+              "legendFormat": "{{ '{{' }} load_balancer_name {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -3071,10 +3072,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_elb_httpcode_backend_2_xx_sum{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_elb_httpcode_backend_2_xx_sum{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ load_balancer_name }}",
+              "legendFormat": "{{ '{{' }} load_balancer_name {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -3159,10 +3160,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_elb_httpcode_backend_5_xx_sum{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_elb_httpcode_backend_5_xx_sum{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ load_balancer_name }}",
+              "legendFormat": "{{ '{{' }} load_balancer_name {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -3247,10 +3248,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_elb_httpcode_backend_3_xx_sum{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_elb_httpcode_backend_3_xx_sum{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ load_balancer_name }}",
+              "legendFormat": "{{ '{{' }} load_balancer_name {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -3335,10 +3336,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_elb_httpcode_backend_4_xx_sum{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_elb_httpcode_backend_4_xx_sum{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ load_balancer_name }}",
+              "legendFormat": "{{ '{{' }} load_balancer_name {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -3439,10 +3440,10 @@ spec:
           "pluginVersion": "6.2.4",
           "targets": [
             {
-              "expr": "aws_es_cluster_status_green_maximum{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_es_cluster_status_green_maximum{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ domain_name }}",
+              "legendFormat": "{{ '{{' }} domain_name {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -3493,10 +3494,10 @@ spec:
           "pluginVersion": "6.2.4",
           "targets": [
             {
-              "expr": "aws_es_cluster_status_yellow_maximum{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_es_cluster_status_yellow_maximum{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ domain_name }}",
+              "legendFormat": "{{ '{{' }} domain_name {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -3547,10 +3548,10 @@ spec:
           "pluginVersion": "6.2.4",
           "targets": [
             {
-              "expr": "aws_es_cluster_status_red_maximum{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_es_cluster_status_red_maximum{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ domain_name }}",
+              "legendFormat": "{{ '{{' }} domain_name {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -3601,10 +3602,10 @@ spec:
           "pluginVersion": "6.2.4",
           "targets": [
             {
-              "expr": "aws_es_automated_snapshot_failure_maximum{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_es_automated_snapshot_failure_maximum{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ domain_name }}",
+              "legendFormat": "{{ '{{' }} domain_name {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -3651,10 +3652,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_es_nodes_maximum{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_es_nodes_maximum{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ domain_name }}",
+              "legendFormat": "{{ '{{' }} domain_name {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -3738,10 +3739,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_es_free_storage_space_minimum{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_es_free_storage_space_minimum{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ domain_name }}",
+              "legendFormat": "{{ '{{' }} domain_name {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -3825,10 +3826,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_es_cpuutilization_maximum{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_es_cpuutilization_maximum{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ domain_name }}",
+              "legendFormat": "{{ '{{' }} domain_name {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -3912,10 +3913,10 @@ spec:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "aws_es_jvmmemory_pressure_maximum{prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "aws_es_jvmmemory_pressure_maximum{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ domain_name }}",
+              "legendFormat": "{{ '{{' }} domain_name {{ '}}' }}",
               "refId": "A"
             }
           ],
@@ -3986,15 +3987,37 @@ spec:
           },
           {
             "allValue": null,
+            "current": {
+              "text": "{{ meta.namespace }}",
+              "value": "{{ meta.namespace }}"
+            },
+            "hide": 0,
+            "includeAll": false,
+            "label": "namespace",
+            "multi": false,
+            "name": "namespace",
+            "options": [
+              {
+                "selected": true,
+                "text": "{{ meta.namespace }}",
+                "value": "{{ meta.namespace }}"
+              }
+            ],
+            "query": "{{ meta.namespace }}",
+            "skipUrlSync": false,
+            "type": "custom"
+          },
+          {
+            "allValue": null,
             "datasource": "$datasource",
-            "definition": "label_values(cloudwatch_exporter_scrape_duration_seconds,prometheus_exporter)",
+            "definition": "label_values(cloudwatch_exporter_scrape_duration_seconds{namespace=\"$namespace\"},prometheus_exporter)",
             "hide": 0,
             "includeAll": false,
             "label": "Prometheus Exporter",
             "multi": false,
             "name": "prometheus_exporter",
             "options": [],
-            "query": "label_values(cloudwatch_exporter_scrape_duration_seconds,prometheus_exporter)",
+            "query": "label_values(cloudwatch_exporter_scrape_duration_seconds{namespace=\"$namespace\"},prometheus_exporter)",
             "refresh": 1,
             "regex": "",
             "skipUrlSync": false,
@@ -4037,6 +4060,6 @@ spec:
         ]
       },
       "timezone": "browser",
-      "title": "PrometheusExporter CloudWatch",
+      "title": "{{ meta.namespace }} / PrometheusExporter CloudWatch",
       "version": 1
     }

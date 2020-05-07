@@ -5,6 +5,9 @@ metadata:
 spec:
   type: "mysql"
   serviceMonitorEnabled: true
+  grafanaDashboardEnabled: true
+  grafanaDashboardLabelKey: "monitoring-key"
+  grafanaDashboardLabelValue: "middleware"
   labelCustomKey: "threescale_component"
   labelCustomValue: "system"
   dbConnectionStringSecretName: "prometheus-exporter-mysql-system-mysql-staging"
