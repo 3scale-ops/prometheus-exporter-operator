@@ -53,10 +53,10 @@ sphinx-delete: ## SPHINX EXAMPLE - Delete: CR
 
 ## ElasticSearch ##
 
-elasticsearch-extra:  ## ELASTICSEARCH EXAMPLE - Create: CR-configmap (ES exporter conf file), CR (you need to provide a ES cluster in advance)
+elasticsearch-create:  ## ELASTICSEARCH EXAMPLE - Create: CR (you need to provide a ES cluster in advance)
 	$(KUBE_CLIENT) apply -f elasticsearch/ --validate=false -n $(NAMESPACE)
 
-elasticsearch-delete: ## ELASTICSEARCH EXAMPLE - Delete: CR, CR-configmap
+elasticsearch-delete: ## ELASTICSEARCH EXAMPLE - Delete: CR
 	$(KUBE_CLIENT) delete -f elasticsearch/ -n $(NAMESPACE) || true
 
 ## CloudWatch ##

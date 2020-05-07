@@ -174,25 +174,19 @@ $ make sphinx-delete
 
 ## ElasticSearch prometheus exporter
 
-* Official doc: https://github.com/braedon/prometheus-es-exporter
+* Official doc: https://github.com/justwatchcom/elasticsearch_exporter
 
 ### CR Spec custom
 
 | **Field** | **Required** | **Default value** | **Description** |
 |:---:|:---:|:---:|:---:|
-| `dbHost` | Yes | `http://logging-es.openshift-logging.svc` | Elasticsearch Host (could be k8s service or any internal/external DNS endpoint) |
+| `dbHost` | Yes | `http://elasticsearch` | Elasticsearch Host (could be k8s service or any internal/external DNS endpoint) |
 | `dbPort` | Yes | `9200` | Elasticsearch  Port |
-| `configurationConfigmapName` | Yes | `prometheus-exporter-elasticsearch-${CR_NAME}` | ConfigMap name containing ElasticSearch `es_exporter.cfg` with defined queries to run |
-
-### CR needed extra object
-
-* **The ConfigMap should have been previously created as the operator expects it**:
-  * **[es-configmap-example](elasticsearch/elasticsearch-configmap.yaml) (Remember to set the object name on the CR field `configurationConfigmapName`)**
 
 ### Deploy example
 
 * **Make sure you have an ElasticSearch cluster available and that dbHost/dbPort are correctly set on CR example file**
-* Create `elasticsearch-exporter` example ([example-configmap](elasticsearch/elasticsearch-configmap.yaml), [example-CR](elasticsearch/elasticsearch-cr.yaml)):
+* Create `elasticsearch-exporter` example ([example-CR](elasticsearch/es-cr.yaml)):
 ```bash
 $ make elasticsearch-create
 ```

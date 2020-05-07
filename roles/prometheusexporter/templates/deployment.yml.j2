@@ -62,16 +62,11 @@ spec:
           args:
             - "--sphinx.address={{ db_host }}"
             - "--sphinx.port={{ db_port }}"
-{% elif type == "elasticsearch" %}
-          args:
-            - "-e"
-            - "{{ db_host }}:{{ db_port }}/"
-            - "-c"
-            - "/usr/src/app/user/es-exporter.cfg"
-          volumeMounts:
-           - mountPath: /usr/src/app/user/
-             name: config-volume
-             readOnly: true
+{% elif type == "es" %}
+          command:
+            - "/bin/elasticsearch_exporter"
+            - "--es.uri={{ db_host }}:{{ db_port }}"
+            - "--es.all"
 {% elif type == "cloudwatch" %}
           env:
             - name: AWS_ACCESS_KEY_ID
@@ -110,15 +105,7 @@ spec:
             requests:
               cpu: "{{ resources_requests_cpu }}"
               memory: "{{ resources_requests_memory }}"
-{% if type == "elasticsearch" %}
-      volumes:
-      - name: config-volume
-        configMap:
-          name: "{{ configuration_configmap_name }}"
-          items:
-          - key: es-exporter.cfg
-            path: es-exporter.cfg
-{% elif type == "cloudwatch" %}
+{% if type == "cloudwatch" %}
       volumes:
       - name: config-volume
         configMap:

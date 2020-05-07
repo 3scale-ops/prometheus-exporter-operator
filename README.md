@@ -8,7 +8,7 @@ Current prometheus exporters `types` supported, managed by same prometheus-expor
 * mysql
 * postgresql
 * sphinx
-* elasticsearch
+* es (elasticsearch)
 * cloudwatch
 
 The operator manages, for each CR, the lifecycle of the following objects:
@@ -80,7 +80,7 @@ spec:
 
 | **Field** | **Type** | **Required** | **Default value (depends on type)** | **Description** |
 |:---:|:---:|:---:|:---:|:---:|
-| `type` | `string` | Yes | `none` | Possible prometheus-exporter types: `memcached`, `redis`, `mysql`, `postgresql`, `sphinx`, `elasticsearch`, `cloudwatch` |
+| `type` | `string` | Yes | `none` | Possible prometheus-exporter types: `memcached`, `redis`, `mysql`, `postgresql`, `sphinx`, `es`, `cloudwatch` |
 | `serviceMonitorEnabled` | `bool` | No | `false` | Create (`true`) or not (`false`) ServiceMonitor object |
 | `grafanaDashboardEnabled` | `bool` | No | `false` | Create (`true`) or not (`false`) GrafanaDashboard object |
 | `grafanaDashboardLabelKey` | `string` | No | discovery | Label `key` used by grafana-operator for dashboard discovery |

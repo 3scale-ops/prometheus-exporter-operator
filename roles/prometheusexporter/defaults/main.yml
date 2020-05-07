@@ -1,7 +1,7 @@
 ---
 
 ## Main
-type: "none" # memcached, redis, mysql, postgresql, sphinx, elasticsearch, cloudwatch
+type: "none" # memcached, redis, mysql, postgresql, sphinx, es, cloudwatch
 
 ## ServiceMonitor config
 service_monitor_enabled: false # Boolean true/false

@@ -1,7 +1,7 @@
 ---
 
 - include_vars: "{{ type }}.yml"
-  when: type == "memcached" or type == "redis" or type == "mysql" or type == "postgresql" or type == "sphinx" or type == "elasticsearch" or type == "cloudwatch"
+  when: type == "memcached" or type == "redis" or type == "mysql" or type == "postgresql" or type == "sphinx" or type == "es" or type == "cloudwatch"
 
 - include_tasks: resources.yml
-  when: type == "memcached" or type == "redis" or type == "mysql" or type == "postgresql" or type == "sphinx" or type == "elasticsearch" or type == "cloudwatch"
+  when: type == "memcached" or type == "redis" or type == "mysql" or type == "postgresql" or type == "sphinx" or type == "es" or type == "cloudwatch"
