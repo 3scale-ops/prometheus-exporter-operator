@@ -15,7 +15,104 @@ spec:
   validation:
     openAPIV3Schema:
       type: object
-      x-kubernetes-preserve-unknown-fields: true
+      properties:
+        apiVersion:
+          type: string
+        kind:
+          type: string
+        metadata:
+          type: object
+        spec:
+          type: object
+          required: ["type"]
+          properties:
+            type:
+              type: string
+              description: "Possible prometheus-exporter types: memcached, redis, mysql, postgresql, sphinx, es, cloudwatch"
+            serviceMonitorEnabled:
+              type: boolean
+              description: "Create (true) or not (false) ServiceMonitor object"
+            serviceMonitorInterval:
+              type: string
+              description: "Prometheus scrape interval (example 30s)"
+            grafanaDashboardEnabled:
+              type: boolean
+              description: "Create (true) or not (false) GrafanaDashboard object"
+            grafanaDashboardLabelKey:
+              type: string
+              description: "Label key used by grafana-operator for dashboard discovery"
+            grafanaDashboardLabelValue:
+              type: string
+              description: "Label value used by grafana-operator for dashboard discovery"
+            labelCustomKey:
+              type: string
+              description: "Add extra label key to all created resources (example tier)"
+            labelCustomValue:
+              type: string
+              description: "Add extra label value to all created resources (example backend)"
+            resourcesRequestsCpu:
+              type: string
+              description: "Override CPU requests (example 50m)"
+            resourcesRequestsMemory:
+              type: string
+              description: "Override Memory requests (example 64Mi)"
+            resourcesLimitsCpu:
+              type: string
+              description: "Override CPU limits (example 100m)"
+            resourcesLimitsMemory:
+              type: string
+              description: "Override Memory limits (example 256Mi)"
+            livenessProbeTimeoutSeconds:
+              type: integer
+              description: "Override liveness probe timeout (seconds)"
+            livenessProbePeriodSeconds:
+              type: integer
+              description: "Override liveness probe period (seconds)"
+            livenessProbeSuccessThreshold:
+              type: integer
+              description: "Override liveness probe success threshold"
+            livenessProbeFailureThreshold:
+              type: integer
+              description: "Override liveness probe failure threshold"
+            readinessProbeTimeoutSeconds:
+              type: integer
+              description: "Override readiness probe timeout (seconds)"
+            readinessProbePeriodSeconds:
+              type: integer
+              description: "Override readiness probe period (seconds)"
+            readinessProbeSuccessThreshold:
+              type: integer
+              description: "Override readiness probe success threshold"
+            readinessProbeFailureThreshold:
+              type: integer
+              description: "Override readiness probe failure threshold"
+            prometheusExporterImage:
+              type: string
+              description: "Prometheus exporter docker image name (example prom/mysqld-exporter)"
+            prometheusExporterVersion:
+              type: string
+              description: "Prometheus exporter docker image version (example v0.12.1)"
+            prometheusExporterPort:
+              type: string
+              description: "Prometheus exporter port where metrics are available (example 9104)"
+            dbHost:
+              type: string
+              description: "On redis, memcached, sphinx and es exporters, db host to monitor"
+            dbPort:
+              type: string
+              description: "On redis, memcached, sphinx and es exporters, db port to monitor"
+            dbCheckKeys:
+              type: string
+              description: "On redis exporter, redis keys to monitor (example: resque:queue:stats,resque:queue:priority,resque:queue:main,resque:failed)"
+            dbConnectionStringSecretName:
+              type: string
+              description: "On mysql and postgresql exporters, Secret name containing connection string definition (DSN)"
+            awsCredentialsSecretName:
+              type: string
+              description: "On cloudwatch exporter, Secret name containing AWS IAM credentials (AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY)"
+            configurationConfigmapName:
+              type: string
+              description: "On cloudwatch exporter, ConfigMap name containing Cloudwatch config.yml (Services, Dimensions, Tags used for autodiscovery...)"
   versions:
   - name: v1alpha1
     served: true

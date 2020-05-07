@@ -23,7 +23,7 @@ namespace-create: # NAMESPACE MANAGEMENT - Create namespace for the operator
 	$(KUBE_CLIENT) label namespace $(NAMESPACE) monitoring-key=middleware || true
 
 operator-create: namespace-create ## OPERATOR MAIN - Create/Update Operator objects (remember to set correct image on deploy/operator.yaml)
-	$(KUBE_CLIENT) create -f deploy/crds/ops.3scale.net_prometheusexporters_crd.yaml --validate=false || true
+	$(KUBE_CLIENT) apply -f deploy/crds/ops.3scale.net_prometheusexporters_crd.yaml --validate=false || true
 	$(KUBE_CLIENT) apply -f deploy/service_account.yaml -n $(NAMESPACE)
 	$(KUBE_CLIENT) apply -f deploy/role.yaml -n $(NAMESPACE)
 	$(KUBE_CLIENT) apply -f deploy/role_binding.yaml -n $(NAMESPACE)
