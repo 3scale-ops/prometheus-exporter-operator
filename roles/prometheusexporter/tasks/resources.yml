@@ -14,8 +14,8 @@
 
 - name: Convert serviceMonitorEnabled boolean var into ansible service_monitor_state state var for PrometheusExporter {{ meta.name }} on Namespace {{ meta.namespace }}
   set_fact:
-    service_monitor_state: "present"
-  when: service_monitor_enabled|bool == true
+    service_monitor_state: "absent"
+  when: service_monitor_enabled|bool == false
 
 - name: Manage ServiceMonitor (if monitoring.coreos.com api-group exists) for PrometheusExporter {{ meta.name }} on Namespace {{ meta.namespace }}
   k8s:
@@ -28,8 +28,8 @@
 
 - name: Convert grafanaDashboardEnabled boolean var into ansible grafana_dashboard_state state var for PrometheusExporter {{ meta.name }} on Namespace {{ meta.namespace }}
   set_fact:
-    grafana_dashboard_state: "present"
-  when: grafana_dashboard_enabled|bool == true
+    grafana_dashboard_state: "absent"
+  when: grafana_dashboard_enabled|bool == false
 
 - name: Manage GrafanaDashboard (if integreatly.org api-group exists) for PrometheusExporter {{ meta.name }} on Namespace {{ meta.namespace }}
   k8s:

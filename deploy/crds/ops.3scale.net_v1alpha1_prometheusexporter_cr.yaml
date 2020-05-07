@@ -4,8 +4,6 @@ metadata:
   name: redis-staging
 spec:
   type: "redis"
-  serviceMonitorEnabled: true
-  grafanaDashboardEnabled: true
   grafanaDashboardLabelKey: "monitoring-key"
   grafanaDashboardLabelValue: "middleware"
   labelCustomKey: "tier"

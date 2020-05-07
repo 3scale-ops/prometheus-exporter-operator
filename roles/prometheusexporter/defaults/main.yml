@@ -4,13 +4,13 @@
 type: "none" # memcached, redis, mysql, postgresql, sphinx, es, cloudwatch
 
 ## ServiceMonitor config
-service_monitor_enabled: false # Boolean true/false
-service_monitor_state: "absent" # Converted to ansible state "present"/"absent" var with an ansible set_fact Task depending on previous CR boolean var
+service_monitor_enabled: true # Boolean true/false
+service_monitor_state: "present" # Converted to ansible state "present"/"absent" var with an ansible set_fact Task depending on previous CR boolean var
 service_monitor_interval: "30s"
 
 ## GrafanaDashboard config
-grafana_dashboard_enabled: false # Boolean true/false
-grafana_dashboard_state: "absent" # Converted to ansible state "present"/"absent" var with an ansible set_fact Task depending on previous CR boolean var
+grafana_dashboard_enabled: true # Boolean true/false
+grafana_dashboard_state: "present" # Converted to ansible state "present"/"absent" var with an ansible set_fact Task depending on previous CR boolean var
 grafana_dashboard_label_key: "discovery"
 grafana_dashboard_label_value: "enabled"
 

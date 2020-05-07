@@ -4,8 +4,6 @@ metadata:
   name: backend-redis-staging
 spec:
   type: "redis"
-  serviceMonitorEnabled: true
-  grafanaDashboardEnabled: true
   grafanaDashboardLabelKey: "monitoring-key"
   grafanaDashboardLabelValue: "middleware"
   labelCustomKey: "threescale_component"

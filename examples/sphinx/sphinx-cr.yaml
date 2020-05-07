@@ -4,8 +4,6 @@ metadata:
   name: system-sphinx-staging
 spec:
   type: "sphinx"
-  serviceMonitorEnabled: true
-  grafanaDashboardEnabled: true
   grafanaDashboardLabelKey: "monitoring-key"
   grafanaDashboardLabelValue: "middleware"
   labelCustomKey: "threescale_component"

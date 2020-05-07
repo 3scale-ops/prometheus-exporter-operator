@@ -14,9 +14,9 @@ Current prometheus exporters `types` supported, managed by same prometheus-expor
 The operator manages, for each CR, the lifecycle of the following objects:
 * Deployment
 * Service
-* ServiceMonitor (optional using `serviceMonitorEnabled: true`)
+* ServiceMonitor (optional, enabled by default `serviceMonitorEnabled: true`)
 
-In addition, the operator for each CR manages a GrafanaDashboard (optional using `grafanaDashboardEnabled: true`), but in reality it manages a single dashboard type per Namespace (not per CR), so:
+In addition, the operator for each CR manages a GrafanaDashboard (optional, enabled by default `grafanaDashboardEnabled: true`), but in reality it manages a single dashboard type per Namespace (not per CR), so:
 * If you deploy for example different redis CRs, and you want to have the redis dashboard created, you need to enabled it on every redis CR with the same grafana-operator label selector (but in reality it will just manage a single dashboard per Namespace shared accross all CRs from the same type)
 * You can deploy the prometheus-exporter-operator with different operator versions on different Namespaces, so it will create separate dashboards per Namespace (they won't collision, that's why dashboard name includes the Namespace)
 * All grafana dashboards are preconfigured to use `CR_NAME` as the filter of all possible dashboards of every type (for example `staging-bakend-redis`)
@@ -62,8 +62,6 @@ metadata:
   name: redis-staging
 spec:
   type: "redis"
-  serviceMonitorEnabled: true
-  grafanaDashboardEnabled: true
   grafanaDashboardLabelKey: "discovery"
   grafanaDashboardLabelValue: "enabled"
   labelCustomKey: "tier"
@@ -81,8 +79,8 @@ spec:
 | **Field** | **Type** | **Required** | **Default value (depends on type)** | **Description** |
 |:---:|:---:|:---:|:---:|:---:|
 | `type` | `string` | Yes | `none` | Possible prometheus-exporter types: `memcached`, `redis`, `mysql`, `postgresql`, `sphinx`, `es`, `cloudwatch` |
-| `serviceMonitorEnabled` | `bool` | No | `false` | Create (`true`) or not (`false`) ServiceMonitor object |
-| `grafanaDashboardEnabled` | `bool` | No | `false` | Create (`true`) or not (`false`) GrafanaDashboard object |
+| `serviceMonitorEnabled` | `bool` | No | `true` | Create (`true`) or not (`false`) ServiceMonitor object |
+| `grafanaDashboardEnabled` | `bool` | No | `true` | Create (`true`) or not (`false`) GrafanaDashboard object |
 | `grafanaDashboardLabelKey` | `string` | No | discovery | Label `key` used by grafana-operator for dashboard discovery |
 | `grafanaDashboardLabelValue` | `string` | No | enabled | Label `value` used by grafana-operator for dashboard discovery |
 | `labelCustomKey` | `string` | No | - | Add extra label `key` to all created resources (example `tier`) |

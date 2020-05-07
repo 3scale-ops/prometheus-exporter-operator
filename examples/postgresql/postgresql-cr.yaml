@@ -4,8 +4,6 @@ metadata:
   name: zync-postgresql-staging
 spec:
   type: "postgresql"
-  serviceMonitorEnabled: true
-  grafanaDashboardEnabled: true
   grafanaDashboardLabelKey: "monitoring-key"
   grafanaDashboardLabelValue: "middleware"
   labelCustomKey: "threescale_component"

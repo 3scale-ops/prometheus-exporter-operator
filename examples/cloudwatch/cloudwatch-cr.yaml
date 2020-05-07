@@ -4,8 +4,6 @@ metadata:
   name: aws-staging
 spec:
   type: "cloudwatch"
-  serviceMonitorEnabled: true
-  grafanaDashboardEnabled: true
   grafanaDashboardLabelKey: "monitoring-key"
   grafanaDashboardLabelValue: "middleware"
   resourcesLimitsMemory: "256Mi"

@@ -4,8 +4,6 @@ metadata:
   name: staging-es
 spec:
   type: "es"
-  serviceMonitorEnabled: true
-  grafanaDashboardEnabled: true
   grafanaDashboardLabelKey: "monitoring-key"
   grafanaDashboardLabelValue: "middleware"
   dbHost: "https://vpc-staging-es.us-east-1.es.amazonaws.com"
