@@ -1,5 +1,9 @@
 # Prometheus-exporter Operator
 
+[![build status](https://circleci.com/gh/3scale/prometheus-exporter-operator.svg?style=shield)](https://circleci.com/gh/3scale/prometheus-exporter-operator)
+[![release](https://badgen.net/github/release/3scale/prometheus-exporter-operator)](https://github.com/3scale/prometheus-exporter-operator/releases)
+[![license](https://badgen.net/github/license/3scale/prometheus-exporter-operator)](https://github.com/3scale/prometheus-exporter-operator/blob/master/LICENSE)
+
 A Kubernetes Operator based on the Operator SDK (`ansible` version) to centralize the setup of 3rd party prometheus exporters on **Kubernetes/OpenShift**.
 
 Current prometheus exporters `types` supported, managed by same prometheus-exporter operator:
