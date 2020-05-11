@@ -1,0 +1,64 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: prometheus-exporter-mysql
+spec:
+  groups:
+    - name: prometheus-exporter-mysql.rules
+      rules:
+      - alert: MySQLDown
+        expr: mysql_up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          message: "MySQL instance {{ $labels.prometheus_exporter }} is DOWN"
+      - alert: MySQLInnoDBRowLockTimeHigh
+        expr: increase(mysql_global_status_innodb_row_lock_time [5m]) > 600000
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          message: "MySQL instance {{ $labels.prometheus_exporter }} InnoDB Row Lock Time is High during last 5 minutes"
+      - alert: MySQLInnoDBRowLockWaitsHigh
+        expr: increase(mysql_global_status_innodb_row_lock_waits [5m]) > 4500
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          message: "MySQL instance {{ $labels.prometheus_exporter }} InnoDB Row Lock Wait is High during last 5 minutes"
+      - alert: MySQLSlowQueriesHigh
+        expr: increase(mysql_global_status_slow_queries [5m]) > 150000
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          message: "MySQL instance {{ $labels.prometheus_exporter }} Slow Queries is High during last 5 minutes"
+      - alert: MySQLTableLocksWaitedHigh
+        expr: increase(mysql_global_status_table_locks_waited [5m]) > 9000
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          message: "MySQL instance {{ $labels.prometheus_exporter }} Table Locks Waited is High during last 5 minutes"
+      - alert: MySQLTableLocksImmediateHigh
+        expr: increase(mysql_global_status_table_locks_immediate [5m]) > 150000
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          message: "MySQL instance {{ $labels.prometheus_exporter }} Table Locks Immediate is High during last 5 minutes"
+      - alert: MySQLTableLockWaitHigh
+        expr: 100 * mysql_global_status_table_locks_waited / (mysql_global_status_table_locks_waited + mysql_global_status_table_locks_immediate ) > 30
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          message: "MySQL instance {{ $labels.prometheus_exporter }} Table Lock Waited % is High"
+      - alert: MySQLQueriesDoingTableScansNotIndexHigh
+        expr: increase(mysql_global_status_handlers_total{handler="read_rnd_next"}[5m]) > 500000000
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          message: "MySQL instance {{ $labels.prometheus_exporter }} has High number of queries doing table scans (not using indexes or tables not indexed) during last 5 minutes"

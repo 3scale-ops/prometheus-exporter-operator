@@ -12,5 +12,4 @@ spec:
         labels:
           severity: critical
         annotations:
-          summary: "Prometheus Exporter Job {{ $labels.job }} is DOWN"
-          description: "Prometheus Exporter Job {{ $labels.job }} is DOWN, maybe connection to DB is lost"
+          message: "Prometheus Exporter Job {{ $labels.job }} is DOWN, maybe connection to monitored host is lost"

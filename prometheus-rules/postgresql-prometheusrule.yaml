@@ -1,0 +1,36 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: prometheus-exporter-postgresql
+spec:
+  groups:
+    - name: prometheus-exporter-postgresql.rules
+      rules:
+      - alert: PostgreSQLDown
+        expr: pg_up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          message: "PostgreSQL instance {{ $labels.prometheus_exporter }} is DOWN"
+      - alert: PostgreSQLConnectionsHigh
+        expr: (sum(pg_stat_database_numbackends) by (namespace,service,prometheus_exporter)) / on (namespace,service,prometheus_exporter) (pg_settings_max_connections) > 0.8
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          message: "PostgreSQL instance {{ $labels.prometheus_exporter }} has High number of connections"
+      - alert: PostgreSQLQueriesPerSecondHigh
+        expr: avg(rate(pg_stat_database_xact_commit[5m]) + rate(pg_stat_database_xact_rollback[5m])) by (namespace,service,prometheus_exporter,datname) > 10000
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          message: "PostgreSQL instance {{ $labels.prometheus_exporter }} has High number of queries per second"
+      - alert: PostgreSQLCacheHitRateLow
+        expr: (sum(irate(pg_stat_database_xact_commit[5m])) by (namespace,service,prometheus_exporter) + sum(irate(pg_stat_database_xact_rollback{datname!~"template.*|"}[5m])) by (namespace,service,prometheus_exporter)) > 10000
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          message: "PostgreSQL instance {{ $labels.prometheus_exporter }} has Low cache hit rate"

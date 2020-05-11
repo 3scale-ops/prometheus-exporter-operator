@@ -1,0 +1,36 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: prometheus-exporter-redis
+spec:
+  groups:
+    - name: prometheus-exporter-redis.rules
+      rules:
+      - alert: RedisDown
+        expr: redis_up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          message: "Redis instance {{ $labels.prometheus_exporter }} is DOWN"
+      - alert: RedisQueueSizeHigh
+        expr: redis_key_size > 120000
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          message: "Redis instance {{ $labels.prometheus_exporter }} has {{ $labels.key }} queue size increasing, probably workers are failing"
+      - alert: RedisMemoryHigh
+        expr: 100 * (redis_memory_used_bytes / redis_memory_max_bytes ) > 85
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          message: "Redis instance {{ $labels.prometheus_exporter }} Memory usage is High"
+      - alert: RedisEvictionsHigh
+        expr: sum(rate(redis_evicted_keys_total[5m])) by (prometheus_exporter) > 500
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          message: "Redis instance {{ $labels.prometheus_exporter }} number of Evictions is High"

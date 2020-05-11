@@ -12,37 +12,32 @@ spec:
         labels:
           severity: critical
         annotations:
-          summary: "ElasticSearch {{ $labels.prometheus_exporter }} is DOWN"
-          description: "ElasticSearch {{ $labels.prometheus_exporter }} is DOWN"
+          message: "ElasticSearch {{ $labels.prometheus_exporter }} is DOWN"
       - alert: ElasticSearchClusterStatusYellow
         expr: elasticsearch_cluster_health_status {color="yellow"} == 1
         for: 1m
         labels:
           severity: warning
         annotations:
-          summary: "ElasticSearch {{ $labels.prometheus_exporter }} Cluster Status is Yellow"
-          description: "ElasticSearch {{ $labels.prometheus_exporter }} Cluster Status is Yellow"
+          message: "ElasticSearch {{ $labels.prometheus_exporter }} Cluster Status is Yellow"
       - alert: ElasticSearchClusterStatusRed
         expr: elasticsearch_cluster_health_status {color="red"} == 1
         for: 1m
         labels:
           severity: critical
         annotations:
-          summary: "ElasticSearch {{ $labels.prometheus_exporter }} Cluster Status is Red"
-          description: "ElasticSearch {{ $labels.prometheus_exporter }} Cluster Status is Red"
+          message: "ElasticSearch {{ $labels.prometheus_exporter }} Cluster Status is Red"
       - alert: ElasticSearchHeapMemoryHigh
         expr: 100* elasticsearch_jvm_memory_used_bytes{area="heap"} / elasticsearch_jvm_memory_max_bytes{area="heap"} > 85
         for: 1m
         labels:
           severity: critical
         annotations:
-          summary: "ElasticSearch {{ $labels.prometheus_exporter }} Heap Memory usage is High"
-          description: "ElasticSearch {{ $labels.prometheus_exporter }} Heap Memory usage is High"
+          message: "ElasticSearch {{ $labels.prometheus_exporter }} Heap Memory usage is High"
       - alert: ElasticSearchFreeSpaceLow
         expr: 100 -( 100 * (elasticsearch_filesystem_data_size_bytes - elasticsearch_filesystem_data_free_bytes)/ elasticsearch_filesystem_data_size_bytes) < 15
         for: 1m
         labels:
           severity: critical
         annotations:
-          summary: "ElasticSearch {{ $labels.prometheus_exporter }}  has Low Free space"
-          description: "ElasticSearch {{ $labels.prometheus_exporter }}  has Low Free space"
+          message: "ElasticSearch {{ $labels.prometheus_exporter }} has Low Free space"

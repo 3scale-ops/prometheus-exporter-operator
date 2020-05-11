@@ -20,7 +20,7 @@ The operator manages, for each CR, the lifecycle of the following objects:
 * Service
 * ServiceMonitor (optional, enabled by default `serviceMonitor.enabled: true`)
 
-In addition, the operator for each CR manages a GrafanaDashboard (optional, enabled by default `grafanaDashboard.enabled: true`), but in reality it manages a single dashboard type per Namespace (not per CR), so:
+In addition, the operator manages, for each CR, a GrafanaDashboard (optional, enabled by default `grafanaDashboard.enabled: true`), but in reality it manages a single dashboard type per Namespace (not per CR), so:
 * If you deploy for example different redis CRs, and you want to have the redis dashboard created, you need to enabled it on every redis CR with the same grafana-operator label selector (but in reality it will just manage a single dashboard per Namespace shared accross all CRs from the same type)
 * You can deploy the prometheus-exporter-operator with different operator versions on different Namespaces, so it will create separate dashboards per Namespace (they won't collision, that's why dashboard name includes the Namespace)
 * All grafana dashboards are preconfigured to use `CR_NAME` as the filter of all possible dashboards of every type (for example `staging-system-memcached`)
@@ -138,8 +138,13 @@ Specific CR fields per exporter type, extra objects needed, database permissions
 
 ## Prometheus Rules
 
-* Some examples of prometheus rules can be found on [prometheus-rules](prometheus-rules/) directory. ***Take into account that alert thresholds depend on your monitored servers dimensions, so you may need to customize them.***
-* Create all example Prometheus Rules (General, Memcached, Redis, MySQL, PostgreSQL, Sphinx):
+PrometheusRules management is not included inside the operator, because it depends on:
+* What you need to monitor (maybe ones just need basic cpu/mem alerts, while others may be interested on specific alerts checking internals of a database)
+* Why you want to be paged (severity warning/critical, minutes duration before firing an alert...)
+* Customizable thresholds definition (it is something that depends on infrastructure dimensions...)
+
+However, some examples of prometheus rules can be found on [prometheus-rules](prometheus-rules/) directory.
+* Create all example Prometheus Rules (General, Memcached, Redis, MySQL, PostgreSQL, Sphinx, ElasticSearch, Cloudwatch):
 ```bash
 $ make prometheus-rules-create:
 ```
