@@ -1,4 +1,4 @@
-.PHONY: help
+.PHONY: help all clean
 
 .DEFAULT_GOAL := help
 
@@ -7,6 +7,12 @@ THISDIR_PATH := $(patsubst %/,%,$(abspath $(dir $(MKFILE_PATH))))
 
 KUBE_CLIENT ?= kubectl # It can be used "oc" or "kubectl"
 NAMESPACE ?= example-application-monitoring
+
+## General ##
+
+all: memcached-create redis-create mysql-create postgresql-create sphinx-create elasticsearch-create cloudwatch-create ## GENERAL - Create all examples
+
+clean: memcached-delete redis-delete mysql-delete postgresql-delete sphinx-delete elasticsearch-delete cloudwatch-delete ## GENERAL - Delete all examples
 
 ## Memcached ##
 

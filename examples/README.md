@@ -41,7 +41,7 @@ $ make memcached-delete
 |:---:|:---:|:---:|:---:|
 | `dbHost` | Yes | `backend-redis` | Redis Host (could be a k8s service or any internal/external DNS endpoint) |
 | `dbPort` | Yes | `6379` | Redis Port |
-| `dbCheckKeys` | No | - | Redis specific keys to check |
+| `dbCheckKeys` | No | - | Optional redis specific keys to check |
 
 ### Deploy example
 

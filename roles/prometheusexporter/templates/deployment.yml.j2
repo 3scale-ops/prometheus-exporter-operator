@@ -7,8 +7,8 @@ metadata:
     prometheus_exporter: "{{ meta.name }}"
     prometheus_exporter_type: "{{ type }}"
     app: "prometheus-exporter-{{ type }}-{{ meta.name }}"
-{% if label_custom_key is defined %}
-    {{ label_custom_key }}: "{{ label_custom_value }}"
+{% if extra_label.key is defined and extra_label.value is defined %}
+    {{ extra_label.key }}: "{{ extra_label.value }}"
 {% endif %}
 spec:
   replicas: 1
@@ -21,17 +21,17 @@ spec:
         prometheus_exporter: "{{ meta.name }}"
         prometheus_exporter_type: "{{ type }}"
         app: "prometheus-exporter-{{ type }}-{{ meta.name }}"
-{% if label_custom_key is defined %}
-        {{ label_custom_key }}: "{{ label_custom_value }}"
+{% if extra_label.key is defined and extra_label.value is defined %}
+        {{ extra_label.key }}: "{{ extra_label.value }}"
 {% endif %}
     spec:
       containers:
         - name: "prometheus-exporter-{{ type }}-{{ meta.name }}"
-          image: "{{ prometheus_exporter_image }}:{{ prometheus_exporter_version }}"
+          image: "{{ image.name | default(image_name) }}:{{ image.version | default(image_version) }}"
           imagePullPolicy: IfNotPresent
           ports:
             - name: metrics
-              containerPort: {{ prometheus_exporter_port }}
+              containerPort: {{ port }}
               protocol: TCP
 {% if type == "memcached" %}
           args:
@@ -87,24 +87,24 @@ spec:
           livenessProbe:
             tcpSocket:
               port: metrics
-            timeoutSeconds: {{ liveness_probe_timeout_seconds }}
-            periodSeconds: {{ liveness_probe_period_seconds }}
-            successThreshold: {{ liveness_probe_success_threshold }}
-            failureThreshold: {{ liveness_probe_failure_threshold }}
+            timeoutSeconds: {{ liveness_probe.timeout_seconds | default(liveness_probe_timeout_seconds) }}
+            periodSeconds: {{ liveness_probe.period_seconds | default (liveness_probe_period_seconds) }}
+            successThreshold: {{ liveness_probe.success_threshold | default(liveness_probe_success_threshold) }}
+            failureThreshold: {{ liveness_probe.failure_threshold | default(liveness_probe_failure_threshold) }}
           readinessProbe:
             tcpSocket:
               port: metrics
-            timeoutSeconds: {{ readiness_probe_timeout_seconds }}
-            periodSeconds: {{ readiness_probe_period_seconds }}
-            successThreshold: {{ readiness_probe_success_threshold }}
-            failureThreshold: {{ readiness_probe_failure_threshold }}
+            timeoutSeconds: {{ readiness_probe.timeout_seconds | default(readiness_probe_timeout_seconds) }}
+            periodSeconds: {{ readiness_probe.period_seconds | default(readiness_probe_period_seconds) }}
+            successThreshold: {{ readiness_probe.success_threshold | default(readiness_probe_success_threshold) }}
+            failureThreshold: {{ readiness_probe.failure_threshold | default(readiness_probe_failure_threshold) }}
           resources:
             limits:
-              cpu: "{{ resources_limits_cpu }}"
-              memory: "{{ resources_limits_memory }}"
+              cpu: "{{ resources.limits.cpu | default(resources_limits_cpu) }}"
+              memory: "{{ resources.limits.memory | default(resources_limits_memory) }}"
             requests:
-              cpu: "{{ resources_requests_cpu }}"
-              memory: "{{ resources_requests_memory }}"
+              cpu: "{{ resources.requests.cpu | default(resources_requests_cpu) }}"
+              memory: "{{ resources.requests.memory | default(resources_requests_memory) }}"
 {% if type == "cloudwatch" %}
       volumes:
       - name: config-volume

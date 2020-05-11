@@ -1,9 +1,9 @@
 ---
 
 # Exporter
-prometheus_exporter_port: 9247
-prometheus_exporter_image: "foxdalas/sphinx-exporter"
-prometheus_exporter_version: "master"
+image_name: "foxdalas/sphinx-exporter"
+image_version: "master"
+port: 9247
 liveness_probe_timeout_seconds: 3
 liveness_probe_period_seconds: 15
 liveness_probe_success_threshold: 1
@@ -19,4 +19,4 @@ resources_limits_memory: "64Mi"
 
 # Custom
 db_host: "system-sphinx"
-db_port: "9306"
+db_port: 9306

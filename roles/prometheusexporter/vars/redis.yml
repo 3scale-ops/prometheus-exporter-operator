@@ -1,9 +1,9 @@
 ---
 
 # Exporter
-prometheus_exporter_port: 9121
-prometheus_exporter_image: "oliver006/redis_exporter"
-prometheus_exporter_version: "v1.3.5"
+image_name: "oliver006/redis_exporter"
+image_version: "v1.3.5"
+port: 9121
 liveness_probe_timeout_seconds: 3
 liveness_probe_period_seconds: 15
 liveness_probe_success_threshold: 1
@@ -19,7 +19,7 @@ resources_limits_memory: "64Mi"
 
 # Custom
 db_host: "backend-redis"
-db_port: "6379"
+db_port: 6379
 
 ## Optional:
 # Example 3scale backend:

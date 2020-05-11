@@ -4,7 +4,8 @@ metadata:
   name: "prometheus-exporter-{{ type }}"
   namespace: "{{ meta.namespace }}"
   labels:
-    "{{ grafana_dashboard_label_key }}": "{{ grafana_dashboard_label_value }}"
+    prometheus_exporter_type: "{{ type }}"
+    "{{ grafana_dashboard.label.key | default(grafana_dashboard_label_key) }}": "{{ grafana_dashboard.label.value | default(grafana_dashboard_label_value) }}"
 spec:
   name: "{{ meta.namespace }}-prometheus-exporter-{{ type }}.json"
   json: >

@@ -3,8 +3,10 @@ kind: PrometheusExporter
 metadata:
   name: staging-es
 spec:
-  type: "es"
-  grafanaDashboardLabelKey: "monitoring-key"
-  grafanaDashboardLabelValue: "middleware"
-  dbHost: "https://vpc-staging-es.us-east-1.es.amazonaws.com"
-  dbPort: "443"
+  type: es
+  grafanaDashboard:
+    label:
+      key: monitoring-key
+      value: middleware
+  dbHost: https://vpc-staging-es.us-east-1.es.amazonaws.com
+  dbPort: 443

@@ -12,10 +12,10 @@
   set_fact:
     api_groups: "{{ lookup('k8s', cluster_info='api_groups') }}"
 
-- name: Convert serviceMonitorEnabled boolean var into ansible service_monitor_state state var for PrometheusExporter {{ meta.name }} on Namespace {{ meta.namespace }}
+- name: Convert serviceMonitor.enabled boolean var into ansible service_monitor_state state var for PrometheusExporter {{ meta.name }} on Namespace {{ meta.namespace }}
   set_fact:
     service_monitor_state: "absent"
-  when: service_monitor_enabled|bool == false
+  when: service_monitor.enabled is defined and service_monitor.enabled|bool == false
 
 - name: Manage ServiceMonitor (if monitoring.coreos.com api-group exists) for PrometheusExporter {{ meta.name }} on Namespace {{ meta.namespace }}
   k8s:
@@ -26,10 +26,10 @@
     - name: servicemonitor.yml.j2
       api_exists: "{{ True if 'monitoring.coreos.com' in api_groups else False }}"
 
-- name: Convert grafanaDashboardEnabled boolean var into ansible grafana_dashboard_state state var for PrometheusExporter {{ meta.name }} on Namespace {{ meta.namespace }}
+- name: Convert grafanaDashboard.enabled boolean var into ansible grafana_dashboard_state state var for PrometheusExporter {{ meta.name }} on Namespace {{ meta.namespace }}
   set_fact:
     grafana_dashboard_state: "absent"
-  when: grafana_dashboard_enabled|bool == false
+  when: grafana_dashboard.enabled is defined and grafana_dashboard.enabled|bool == false
 
 - name: Manage GrafanaDashboard (if integreatly.org api-group exists) for PrometheusExporter {{ meta.name }} on Namespace {{ meta.namespace }}
   k8s:

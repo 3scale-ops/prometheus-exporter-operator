@@ -1,11 +1,14 @@
 apiVersion: ops.3scale.net/v1alpha1
 kind: PrometheusExporter
 metadata:
-  name: zync-postgresql-staging
+  name: staging-zync-postgresql
 spec:
-  type: "postgresql"
-  grafanaDashboardLabelKey: "monitoring-key"
-  grafanaDashboardLabelValue: "middleware"
-  labelCustomKey: "threescale_component"
-  labelCustomValue: "zync"
-  dbConnectionStringSecretName: "prometheus-exporter-postgresql-zync-postgresql-staging"
+  type: postgresql
+  grafanaDashboard:
+    label:
+      key: monitoring-key
+      value: middleware
+  extraLabel:
+    key: threescale_component
+    value: zync
+  dbConnectionStringSecretName: prometheus-exporter-postgresql-staging-zync-postgresql

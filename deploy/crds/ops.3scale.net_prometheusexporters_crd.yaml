@@ -29,81 +29,119 @@ spec:
             type:
               type: string
               description: "Possible prometheus-exporter types: memcached, redis, mysql, postgresql, sphinx, es, cloudwatch"
-            serviceMonitorEnabled:
-              type: boolean
-              description: "Create (true) or not (false) ServiceMonitor object"
-            serviceMonitorInterval:
-              type: string
-              description: "Prometheus scrape interval (example 30s)"
-            grafanaDashboardEnabled:
-              type: boolean
-              description: "Create (true) or not (false) GrafanaDashboard object"
-            grafanaDashboardLabelKey:
-              type: string
-              description: "Label key used by grafana-operator for dashboard discovery"
-            grafanaDashboardLabelValue:
-              type: string
-              description: "Label value used by grafana-operator for dashboard discovery"
-            labelCustomKey:
-              type: string
-              description: "Add extra label key to all created resources (example tier)"
-            labelCustomValue:
-              type: string
-              description: "Add extra label value to all created resources (example backend)"
-            resourcesRequestsCpu:
-              type: string
-              description: "Override CPU requests (example 50m)"
-            resourcesRequestsMemory:
-              type: string
-              description: "Override Memory requests (example 64Mi)"
-            resourcesLimitsCpu:
-              type: string
-              description: "Override CPU limits (example 100m)"
-            resourcesLimitsMemory:
-              type: string
-              description: "Override Memory limits (example 256Mi)"
-            livenessProbeTimeoutSeconds:
+              enum:
+              - memcached
+              - redis
+              - mysql
+              - postgresql
+              - sphinx
+              - es
+              - cloudwatch
+            serviceMonitor:
+              type: object
+              properties:
+                enabled:
+                  type: boolean
+                  description: "Create (true) or not (false) ServiceMonitor object"
+                interval:
+                  type: string
+                  description: "Prometheus scrape interval (example 30s)"
+            grafanaDashboard:
+              type: object
+              properties:
+                enabled:
+                  type: boolean
+                  description: "Create (true) or not (false) GrafanaDashboard object"
+              label:
+                type: object
+                properties:
+                  key:
+                    type: string
+                    description: "Label key used by grafana-operator for dashboard discovery"
+                  value:
+                    type: string
+                    description: "Label value used by grafana-operator for dashboard discovery"
+            extraLabel:
+              type: object
+              properties:
+                key:
+                  type: string
+                  description: "Add extra label key to all created resources (example tier)"
+                  value:
+                    type: string
+                    description: "Add extra label value to all created resources (example frontend)"
+            image:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: "Prometheus exporter image name (example prom/memcached-exporter)"
+                version:
+                  type: string
+                  description: "Prometheus exporter image version (example v0.6.0)"
+            port:
               type: integer
-              description: "Override liveness probe timeout (seconds)"
-            livenessProbePeriodSeconds:
-              type: integer
-              description: "Override liveness probe period (seconds)"
-            livenessProbeSuccessThreshold:
-              type: integer
-              description: "Override liveness probe success threshold"
-            livenessProbeFailureThreshold:
-              type: integer
-              description: "Override liveness probe failure threshold"
-            readinessProbeTimeoutSeconds:
-              type: integer
-              description: "Override readiness probe timeout (seconds)"
-            readinessProbePeriodSeconds:
-              type: integer
-              description: "Override readiness probe period (seconds)"
-            readinessProbeSuccessThreshold:
-              type: integer
-              description: "Override readiness probe success threshold"
-            readinessProbeFailureThreshold:
-              type: integer
-              description: "Override readiness probe failure threshold"
-            prometheusExporterImage:
-              type: string
-              description: "Prometheus exporter docker image name (example prom/mysqld-exporter)"
-            prometheusExporterVersion:
-              type: string
-              description: "Prometheus exporter docker image version (example v0.12.1)"
-            prometheusExporterPort:
-              type: string
-              description: "Prometheus exporter port where metrics are available (example 9104)"
+              description: "Prometheus exporter port where metrics are available (example 9150)"
+            resources:
+              type: object
+              properties:
+                requests:
+                  type: object
+                  properties:
+                    cpu:
+                      type: string
+                      description: "Override CPU requests (example 50m)"
+                    memory:
+                      type: string
+                      description: "Override Memory requests (example 64Mi)"
+                limits:
+                  type: object
+                  properties:
+                    cpu:
+                      type: string
+                      description: "Override CPU limits (example 100m)"
+                    memory:
+                      type: string
+                      description: "Override Memory limits (example 256Mi)"
+            livenessProbe:
+              type: object
+              properties:
+                timeoutSeconds:
+                  type: integer
+                  description: "Override liveness probe timeout (seconds)"
+                periodSeconds:
+                  type: integer
+                  description: "Override liveness probe period (seconds)"
+                successThreshold:
+                  type: integer
+                  description: "Override liveness probe success threshold"
+                failureThreshold:
+                  type: integer
+                  description: "Override liveness probe failure threshold"
+            readinessProbe:
+              type: object
+              properties:
+                timeoutSeconds:
+                  type: integer
+                  description: "Override readiness probe timeout (seconds)"
+                periodSeconds:
+                  type: integer
+                  description: "Override readiness probe period (seconds)"
+                successThreshold:
+                  type: integer
+                  description: "Override readiness probe success threshold"
+                failureThreshold:
+                  type: integer
+                  description: "Override readiness probe failure threshold"
             dbHost:
               type: string
               description: "On redis, memcached, sphinx and es exporters, db host to monitor"
             dbPort:
-              type: string
+              type: integer
               description: "On redis, memcached, sphinx and es exporters, db port to monitor"
             dbCheckKeys:
               type: string
-              description: "On redis exporter, redis keys to monitor (example: resque:queue:stats,resque:queue:priority,resque:queue:main,resque:failed)"
+              description: "On redis exporter, optional redis keys to monitor (example: resque:queue:stats,resque:queue:priority,resque:queue:main,resque:failed)"
             dbConnectionStringSecretName:
               type: string
               description: "On mysql and postgresql exporters, Secret name containing connection string definition (DSN)"

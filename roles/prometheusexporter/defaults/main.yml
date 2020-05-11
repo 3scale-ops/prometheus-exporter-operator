@@ -4,17 +4,10 @@
 type: "none" # memcached, redis, mysql, postgresql, sphinx, es, cloudwatch
 
 ## ServiceMonitor config
-service_monitor_enabled: true # Boolean true/false
 service_monitor_state: "present" # Converted to ansible state "present"/"absent" var with an ansible set_fact Task depending on previous CR boolean var
 service_monitor_interval: "30s"
 
 ## GrafanaDashboard config
-grafana_dashboard_enabled: true # Boolean true/false
 grafana_dashboard_state: "present" # Converted to ansible state "present"/"absent" var with an ansible set_fact Task depending on previous CR boolean var
 grafana_dashboard_label_key: "discovery"
 grafana_dashboard_label_value: "enabled"
-
-## Generic config
-## Optional, if you want to add a custom label to resources, you can choose a custom key/value. Example for 3scale:
-#label_custom_key": "threescale_component"
-#label_custom_value: "zync" # system, backend, zync, keycloak...

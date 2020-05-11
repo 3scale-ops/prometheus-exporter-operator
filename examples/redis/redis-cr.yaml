@@ -1,13 +1,16 @@
 apiVersion: ops.3scale.net/v1alpha1
 kind: PrometheusExporter
 metadata:
-  name: backend-redis-staging
+  name: staging-backend-redis
 spec:
-  type: "redis"
-  grafanaDashboardLabelKey: "monitoring-key"
-  grafanaDashboardLabelValue: "middleware"
-  labelCustomKey: "threescale_component"
-  labelCustomValue: "backend"
-  dbHost: "backend-redis"
-  dbPort: "6379"
-  dbCheckKeys: "resque:queue:stats,resque:queue:priority,resque:queue:main,resque:failed"
+  type: redis
+  grafanaDashboard:
+    label:
+      key: monitoring-key
+      value: middleware
+  extraLabel:
+    key: threescale_component
+    value: backend
+  dbHost: backend-redis
+  dbPort: 6379
+  dbCheckKeys: resque:queue:stats,resque:queue:priority,resque:queue:main,resque:failed

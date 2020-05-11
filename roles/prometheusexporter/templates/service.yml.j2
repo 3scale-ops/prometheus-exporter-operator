@@ -7,14 +7,14 @@ metadata:
     prometheus_exporter: "{{ meta.name }}"
     prometheus_exporter_type: "{{ type }}"
     app: "prometheus-exporter-{{ type }}-{{ meta.name }}"
-{% if label_custom_key is defined %}
-    {{ label_custom_key }}: "{{ label_custom_value }}"
+{% if extra_label.key is defined and extra_label.value is defined %}
+    {{ extra_label.key }}: "{{ extra_label.value }}"
 {% endif %}
 spec:
   ports:
     - name: metrics
-      port: {{ prometheus_exporter_port }}
-      targetPort: {{ prometheus_exporter_port }}
+      port: {{ port }}
+      targetPort: {{ port }}
   selector:
     app: "prometheus-exporter-{{ type }}-{{ meta.name }}"
   type: ClusterIP

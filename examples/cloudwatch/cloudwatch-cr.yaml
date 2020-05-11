@@ -1,11 +1,12 @@
 apiVersion: ops.3scale.net/v1alpha1
 kind: PrometheusExporter
 metadata:
-  name: aws-staging
+  name: staging-aws-cw
 spec:
-  type: "cloudwatch"
-  grafanaDashboardLabelKey: "monitoring-key"
-  grafanaDashboardLabelValue: "middleware"
-  resourcesLimitsMemory: "256Mi"
-  awsCredentialsSecretName: "prometheus-exporter-cloudwatch-aws-staging"
-  configurationConfigmapName: "prometheus-exporter-cloudwatch-aws-staging"
+  type: cloudwatch
+  grafanaDashboard:
+    label:
+      key: monitoring-key
+      value: middleware
+  awsCredentialsSecretName: prometheus-exporter-cloudwatch-staging-aws-cw
+  configurationConfigmapName: prometheus-exporter-cloudwatch-staging-aws-cw

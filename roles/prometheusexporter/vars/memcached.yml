@@ -1,9 +1,9 @@
 ---
 
 # Exporter
-prometheus_exporter_port: 9150
-prometheus_exporter_image: "prom/memcached-exporter"
-prometheus_exporter_version: "v0.6.0"
+image_name: "prom/memcached-exporter"
+image_version: "v0.6.0"
+port: 9150
 liveness_probe_timeout_seconds: 3
 liveness_probe_period_seconds: 15
 liveness_probe_success_threshold: 1
@@ -19,4 +19,4 @@ resources_limits_memory: "64Mi"
 
 # Custom
 db_host: "system-memcache"
-db_port: "11211"
+db_port: 11211

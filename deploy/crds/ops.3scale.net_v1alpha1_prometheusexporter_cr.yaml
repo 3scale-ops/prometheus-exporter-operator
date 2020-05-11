@@ -1,12 +1,12 @@
 apiVersion: ops.3scale.net/v1alpha1
 kind: PrometheusExporter
 metadata:
-  name: redis-staging
+  name: staging-system-memcached
 spec:
-  type: "redis"
-  grafanaDashboardLabelKey: "monitoring-key"
-  grafanaDashboardLabelValue: "middleware"
-  labelCustomKey: "tier"
-  labelCustomValue: "backend"
-  dbHost: "redis-service"
-  dbPort: "6379"
+  type: memcached
+  grafanaDashboard:
+    label:
+      key: monitoring-key
+      value: middleware
+  dbHost: system-memcache
+  dbPort: 11211

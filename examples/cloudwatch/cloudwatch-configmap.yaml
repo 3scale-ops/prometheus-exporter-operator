@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: prometheus-exporter-cloudwatch-aws-staging
+  name: prometheus-exporter-cloudwatch-staging-aws-cw
 data:
   config.yml: |
     ---
