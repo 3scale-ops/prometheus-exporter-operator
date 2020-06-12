@@ -1,15 +1,30 @@
-.PHONY: operator-image-update operator-create operator-delete prometheus-rules-create prometheus-rules-delete help
+.PHONY: operator-image-update operator-manual-deploy operator-manual-delete operator-olm-deploy operator-olm-delete manifests-generate manifests-verify manifests-push prometheus-rules-deploy prometheus-rules-delete help
 
 .DEFAULT_GOAL := help
 
 MKFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
 THISDIR_PATH := $(patsubst %/,%,$(abspath $(dir $(MKFILE_PATH))))
+UNAME := $(shell uname)
 
+ifeq (${UNAME}, Linux)
+  INPLACE_SED=sed -i
+else ifeq (${UNAME}, Darwin)
+  INPLACE_SED=sed -i ""
+endif
+
+VERSION ?= v0.2.0
+MANIFESTS_VERSION ?= $(subst v,,$(VERSION))
+REGISTRY ?= quay.io
+ORG ?= 3scale
+PROJECT ?= prometheus-exporter-operator
+MANIFESTS_PROJECT ?= 3scaleops
+IMAGE ?= $(REGISTRY)/$(ORG)/$(PROJECT)
+AUTH_TOKEN = $(shell curl -sH "Content-Type: application/json" -XPOST https://quay.io/cnr/api/v1/users/login -d '{"user": {"username": "$(QUAY_USERNAME)", "password": "${QUAY_PASSWORD}"}}' | jq -r '.token')
 KUBE_CLIENT ?= kubectl # It can be used "oc" or "kubectl"
-IMAGE ?= quay.io/3scale/prometheus-exporter-operator
-VERSION ?= v2.0.0
-NAMESPACE ?= example-application-monitoring
+NAMESPACE ?= prom-exporter
+NAMESPACE_MARKETPLACE ?= openshift-marketplace
 
+## Operator ##
 operator-image-build: # OPERATOR IMAGE - Build operator Docker image
 	operator-sdk build $(IMAGE):$(VERSION)
 
@@ -22,23 +37,52 @@ namespace-create: # NAMESPACE MANAGEMENT - Create namespace for the operator
 	$(KUBE_CLIENT) create namespace $(NAMESPACE) || true
 	$(KUBE_CLIENT) label namespace $(NAMESPACE) monitoring-key=middleware || true
 
-operator-create: namespace-create ## OPERATOR MAIN - Create/Update Operator objects (remember to set correct image on deploy/operator.yaml)
+operator-manual-deploy: namespace-create ## OPERATOR MANUAL DEPLOY - Deploy Operator objects (namespace, CRD, service account, role, role binding and operator deployment)
 	$(KUBE_CLIENT) apply -f deploy/crds/ops.3scale.net_prometheusexporters_crd.yaml --validate=false || true
 	$(KUBE_CLIENT) apply -f deploy/service_account.yaml -n $(NAMESPACE)
 	$(KUBE_CLIENT) apply -f deploy/role.yaml -n $(NAMESPACE)
 	$(KUBE_CLIENT) apply -f deploy/role_binding.yaml -n $(NAMESPACE)
+	$(INPLACE_SED) 's|REPLACE_IMAGE|$(IMAGE):$(VERSION)|g' deploy/operator.yaml
 	$(KUBE_CLIENT) apply -f deploy/operator.yaml -n $(NAMESPACE)
+	$(INPLACE_SED) 's|$(IMAGE):$(VERSION)|REPLACE_IMAGE|g' deploy/operator.yaml
 
-operator-delete: ## OPERATOR MAIN - Delete Operator objects
+operator-manual-delete: ## OPERATOR MANUAL DEPLOY - Delete Operator manual objects (except CRD/namespace for caution)
 	$(KUBE_CLIENT) delete -f deploy/operator.yaml -n $(NAMESPACE) || true
 	$(KUBE_CLIENT) delete -f deploy/role_binding.yaml -n $(NAMESPACE) || true
 	$(KUBE_CLIENT) delete -f deploy/role.yaml -n $(NAMESPACE) || true
 	$(KUBE_CLIENT) delete -f deploy/service_account.yaml -n $(NAMESPACE) || true
 
-prometheus-rules-create: namespace-create ## PROMETHEUS RULES - Create Prometheus Rules (Memcached, Redis, MySQL, PostgreSQL, Sphinx)
+operator-olm-deploy: namespace-create ## OPERATOR OLM DEPLOY - Deploy Operator OLM objects (namespace, operator source, operator group, operator subscription)
+	$(KUBE_CLIENT) apply -f deploy/operator_source.yaml -n $(NAMESPACE_MARKETPLACE)
+	$(INPLACE_SED) 's|REPLACE_NAMESPACE|$(NAMESPACE)|g' deploy/operator_group.yaml
+	$(KUBE_CLIENT) apply -f deploy/operator_group.yaml -n $(NAMESPACE)
+	$(INPLACE_SED) 's|$(NAMESPACE)|REPLACE_NAMESPACE|g' deploy/operator_group.yaml
+	$(INPLACE_SED) 's|REPLACE_NAMESPACE_MARKETPLACE|$(NAMESPACE_MARKETPLACE)|g' deploy/operator_subscription.yaml
+	$(KUBE_CLIENT) apply -f deploy/operator_subscription.yaml -n $(NAMESPACE)
+	$(INPLACE_SED) 's|$(NAMESPACE_MARKETPLACE)|REPLACE_NAMESPACE_MARKETPLACE|g' deploy/operator_subscription.yaml
+
+operator-olm-delete: ## OPERATOR OLM DEPLOY - Delete Operator OLM objects (except namespace for caution)
+	$(KUBE_CLIENT) delete -f deploy/operator_subscription.yaml -n $(NAMESPACE) || true
+	$(KUBE_CLIENT) delete clusterserviceversion  $(PROJECT).$(VERSION) -n $(NAMESPACE) || true
+	$(KUBE_CLIENT) delete -f deploy/operator_group.yaml -n $(NAMESPACE) || true
+	$(KUBE_CLIENT) delete -f deploy/operator_source.yaml -n $(NAMESPACE_MARKETPLACE) || true
+
+manifests-generate: ## OPERATOR OLM CSV - Generate CSV Manifests
+	$(INPLACE_SED) 's|REPLACE_IMAGE|$(IMAGE):$(VERSION)|g' deploy/operator.yaml
+	operator-sdk generate csv --make-manifests=false --csv-version $(MANIFESTS_VERSION) --update-crds
+	$(INPLACE_SED) 's|$(IMAGE):$(VERSION)|REPLACE_IMAGE|g' deploy/operator.yaml
+
+manifests-verify: ## OPERATOR OLM CSV - Verify CSV manifests
+	operator-courier --verbose verify --ui_validate_io deploy/olm-catalog/$(PROJECT)/
+
+manifests-push: ## OPERATOR OLM CSV - Push CSV manifests to remote application registry
+	operator-courier --verbose push deploy/olm-catalog/$(PROJECT)/ $(MANIFESTS_PROJECT) $(PROJECT) $(MANIFESTS_VERSION) "$(AUTH_TOKEN)"
+
+## Prometheus rules ##
+prometheus-rules-deploy: namespace-create ## PROMETHEUS RULES - Create Prometheus Rules (Memcached, Redis, MySQL, PostgreSQL, Sphinx, ElasticSearch, Cloudwatch)
 	$(KUBE_CLIENT) apply -f prometheus-rules/ -n $(NAMESPACE)
 
-prometheus-rules-delete: ## PROMETHEUS RULES - Delete Prometheus Rules (Memcached, Redis, MySQL, PostgreSQL, Sphinx)
+prometheus-rules-delete: ## PROMETHEUS RULES - Delete Prometheus Rules (Memcached, Redis, MySQL, PostgreSQL, Sphinx, ElasticSearch, Cloudwatch)
 	$(KUBE_CLIENT) delete -f prometheus-rules/ -n $(NAMESPACE) || true
 
 help: ## Print this help

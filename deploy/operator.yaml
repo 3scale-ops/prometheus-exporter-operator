@@ -1,3 +1,4 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,7 +16,7 @@ spec:
       serviceAccountName: prometheus-exporter-operator
       containers:
         - name: prometheus-exporter-operator
-          image: "quay.io/3scale/prometheus-exporter-operator:v2.0.0"
+          image: "REPLACE_IMAGE"
           imagePullPolicy: "Always"
           volumeMounts:
           - mountPath: /tmp/ansible-operator/runner
@@ -37,8 +38,11 @@ spec:
             httpGet:
               path: /healthz
               port: 6789
-            initialDelaySeconds: 5
-            periodSeconds: 3
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
+            periodSeconds: 20
+            successThreshold: 1
+            failureThreshold: 3
       volumes:
         - name: runner
           emptyDir: {}

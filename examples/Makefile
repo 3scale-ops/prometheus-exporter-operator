@@ -6,7 +6,7 @@ MKFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
 THISDIR_PATH := $(patsubst %/,%,$(abspath $(dir $(MKFILE_PATH))))
 
 KUBE_CLIENT ?= kubectl # It can be used "oc" or "kubectl"
-NAMESPACE ?= example-application-monitoring
+NAMESPACE ?= prom-exporter
 
 ## General ##
 
