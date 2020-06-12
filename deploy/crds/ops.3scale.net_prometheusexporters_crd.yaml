@@ -97,19 +97,15 @@ spec:
                   type: object
                   properties:
                     cpu:
-                      type: string
                       description: Override CPU requests (example 50m)
                     memory:
-                      type: string
                       description: Override Memory requests (example 64Mi)
                 limits:
                   type: object
                   properties:
                     cpu:
-                      type: string
                       description: Override CPU limits (example 100m)
                     memory:
-                      type: string
                       description: Override Memory limits (example 256Mi)
             livenessProbe:
               type: object
