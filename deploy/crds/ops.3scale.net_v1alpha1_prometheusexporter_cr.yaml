@@ -1,12 +1,12 @@
 apiVersion: ops.3scale.net/v1alpha1
 kind: PrometheusExporter
 metadata:
-  name: staging-system-memcached
+  name: example-memcached
 spec:
   type: memcached
   grafanaDashboard:
     label:
-      key: monitoring-key
-      value: middleware
-  dbHost: system-memcache
+      key: autodiscovery
+      value: enabled
+  dbHost: your-memcached-host
   dbPort: 11211
