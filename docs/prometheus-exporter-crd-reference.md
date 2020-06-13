@@ -5,7 +5,7 @@
 Most of the fields do not need to be specified (can use default values), this is just an example of everything that can be overriden under your own risk:
 
 ```yaml
-apiVersion: ops.3scale.net/v1alpha1
+apiVersion: monitoring.3scale.net/v1alpha1
 kind: PrometheusExporter
 metadata:
   name: staging-system-memcached

@@ -1,4 +1,4 @@
-apiVersion: ops.3scale.net/v1alpha1
+apiVersion: monitoring.3scale.net/v1alpha1
 kind: PrometheusExporter
 metadata:
   name: staging-system-sphinx

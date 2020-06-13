@@ -29,6 +29,6 @@
 
     - name: Delete Custom Resource Definition
       k8s:
-        definition: "{{ lookup('file', '/'.join([deploy_dir, 'crds/ops.3scale.net_prometheusexporters_crd.yaml'])) }}"
+        definition: "{{ lookup('file', '/'.join([deploy_dir, 'crds/monitoring.3scale.net_prometheusexporters_crd.yaml'])) }}"
         state: absent
         wait: yes

@@ -5,7 +5,7 @@ metadata:
     alm-examples: |-
       [
         {
-          "apiVersion": "ops.3scale.net/v1alpha1",
+          "apiVersion": "monitoring.3scale.net/v1alpha1",
           "kind": "PrometheusExporter",
           "metadata": {
             "name": "example-memcached"
@@ -41,7 +41,7 @@ spec:
     - description: Configures a prometheus exporter to monitor a memcached instance
       displayName: PrometheusExporter
       kind: PrometheusExporter
-      name: prometheusexporters.ops.3scale.net
+      name: prometheusexporters.monitoring.3scale.net
       version: v1alpha1
   description: |
     A Kubernetes Operator based on the Operator SDK to centralize the setup of 3rd party prometheus exporters on **Kubernetes/OpenShift**, with a collection of grafana dashboards.
@@ -215,7 +215,7 @@ spec:
           verbs:
           - get
         - apiGroups:
-          - ops.3scale.net
+          - monitoring.3scale.net
           resources:
           - '*'
           verbs:

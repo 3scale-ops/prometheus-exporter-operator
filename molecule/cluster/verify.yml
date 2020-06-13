@@ -8,10 +8,10 @@
     - community.kubernetes
 
   vars:
-    custom_resource: "{{ lookup('template', '/'.join([deploy_dir, 'crds/ops.3scale.net_v1alpha1_prometheusexporter_cr.yaml'])) | from_yaml }}"
+    custom_resource: "{{ lookup('template', '/'.join([deploy_dir, 'crds/monitoring.3scale.net_v1alpha1_prometheusexporter_cr.yaml'])) | from_yaml }}"
 
   tasks:
-    - name: Create the ops.3scale.net/v1alpha1.PrometheusExporter and wait for reconciliation to complete
+    - name: Create the monitoring.3scale.net/v1alpha1.PrometheusExporter and wait for reconciliation to complete
       k8s:
         state: present
         namespace: '{{ namespace }}'

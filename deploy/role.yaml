@@ -83,7 +83,7 @@ rules:
   verbs:
   - get
 - apiGroups:
-  - ops.3scale.net
+  - monitoring.3scale.net
   resources:
   - '*'
   verbs:
