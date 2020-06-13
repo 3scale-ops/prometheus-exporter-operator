@@ -8,7 +8,13 @@ workflows:
               only: /^v.*/
             branches:
               ignore: /.*/
-
+      - release-master:
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              only:
+                - master
 commands:
   docker-login:
     steps:
@@ -33,10 +39,15 @@ commands:
       - run:
           name: Build and Push Operator Image
           command: |
-              make operator-image-update VERSION=${CIRCLE_TAG}
+              make operator-image-update VERSION=${CIRCLE_TAG:-master}
 
 jobs:
   release:
+    machine:
+      image: circleci/classic:latest
+    steps:
+      - build-push-operator-image
+  release-master:
     machine:
       image: circleci/classic:latest
     steps:
