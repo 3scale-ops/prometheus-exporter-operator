@@ -67,6 +67,14 @@ operator-olm-delete: ## OPERATOR OLM DEPLOY - Delete Operator OLM objects (excep
 	$(KUBE_CLIENT) delete -f deploy/operator_group.yaml -n $(NAMESPACE) || true
 	$(KUBE_CLIENT) delete -f deploy/operator_source.yaml -n $(NAMESPACE_MARKETPLACE) || true
 
+operator-test-e2e:
+	kind create cluster || true
+	make operator-manual-deploy --no-print-directory
+	$(KUBE_CLIENT) apply -f deploy/crds/monitoring.3scale.net_v1alpha1_prometheusexporter_cr.yaml -n $(NAMESPACE)
+	$(KUBE_CLIENT) get prometheusexporter example-memcached -n $(NAMESPACE)
+	TIMEOUT=0; until [ $${TIMEOUT} -eq 60 ] || $(KUBE_CLIENT) wait deployment prometheus-exporter-memcached-example-memcached --for=condition=available -n $(NAMESPACE); do sleep 2;((TIMEOUT++)); done ; if [ $${TIMEOUT} -eq 60 ]; then exit -1; else echo "SUCCESS: Operator created memcached CR deployment"; fi
+	kind delete cluster
+
 manifests-generate: ## OPERATOR OLM CSV - Generate CSV Manifests
 	$(INPLACE_SED) 's|REPLACE_IMAGE|$(IMAGE):$(VERSION)|g' deploy/operator.yaml
 	operator-sdk generate csv --make-manifests=false --csv-version $(MANIFESTS_VERSION) --update-crds
