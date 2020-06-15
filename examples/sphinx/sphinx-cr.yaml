@@ -1,14 +1,15 @@
-apiVersion: ops.3scale.net/v1alpha1
+apiVersion: monitoring.3scale.net/v1alpha1
 kind: PrometheusExporter
 metadata:
-  name: system-sphinx-staging
+  name: staging-system-sphinx
 spec:
-  type: "sphinx"
-  serviceMonitorState: "present"
-  serviceMonitorLabelKey: "monitoring-key"
-  serviceMonitorLabelValue: "middleware"
-  labelEnvironment: "staging"
-  labelCustomKey: "threescale_component"
-  labelCustomValue: "system"
-  dbHost: "system-sphinx"
-  dbPort: "9306"
+  type: sphinx
+  grafanaDashboard:
+    label:
+      key: monitoring-key
+      value: middleware
+  extraLabel:
+    key: threescale_component
+    value: system
+  dbHost: system-sphinx
+  dbPort: 9306

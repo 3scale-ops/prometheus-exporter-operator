@@ -1,4 +1,4 @@
-.PHONY: help
+.PHONY: help all clean
 
 .DEFAULT_GOAL := help
 
@@ -6,7 +6,13 @@ MKFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
 THISDIR_PATH := $(patsubst %/,%,$(abspath $(dir $(MKFILE_PATH))))
 
 KUBE_CLIENT ?= kubectl # It can be used "oc" or "kubectl"
-NAMESPACE ?= example-application-monitoring
+NAMESPACE ?= prom-exporter
+
+## General ##
+
+all: memcached-create redis-create mysql-create postgresql-create sphinx-create elasticsearch-create cloudwatch-create ## GENERAL - Create all examples
+
+clean: memcached-delete redis-delete mysql-delete postgresql-delete sphinx-delete elasticsearch-delete cloudwatch-delete ## GENERAL - Delete all examples
 
 ## Memcached ##
 
@@ -53,10 +59,10 @@ sphinx-delete: ## SPHINX EXAMPLE - Delete: CR
 
 ## ElasticSearch ##
 
-elasticsearch-extra:  ## ELASTICSEARCH EXAMPLE - Create: CR-configmap (ES exporter conf file), CR (you need to provide a ES cluster in advance)
+elasticsearch-create:  ## ELASTICSEARCH EXAMPLE - Create: CR (you need to provide a ES cluster in advance)
 	$(KUBE_CLIENT) apply -f elasticsearch/ --validate=false -n $(NAMESPACE)
 
-elasticsearch-delete: ## ELASTICSEARCH EXAMPLE - Delete: CR, CR-configmap
+elasticsearch-delete: ## ELASTICSEARCH EXAMPLE - Delete: CR
 	$(KUBE_CLIENT) delete -f elasticsearch/ -n $(NAMESPACE) || true
 
 ## CloudWatch ##

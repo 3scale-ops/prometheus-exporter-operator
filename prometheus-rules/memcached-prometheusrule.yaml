@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: prometheus-exporter-memcached
+spec:
+  groups:
+    - name: prometheus-exporter-memcached.rules
+      rules:
+      - alert: MemcachedDown
+        expr: memcached_up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          message: "Memcached instance {{ $labels.prometheus_exporter }} is DOWN"

@@ -1,7 +1,43 @@
 ---
 
 - include_vars: "{{ type }}.yml"
-  when: type == "memcached" or type == "redis" or type == "mysql" or type == "postgresql" or type == "sphinx" or type == "elasticsearch" or type == "cloudwatch"
 
-- include_tasks: resources.yml
-  when: type == "memcached" or type == "redis" or type == "mysql" or type == "postgresql" or type == "sphinx" or type == "elasticsearch" or type == "cloudwatch"
+- name: Manage Deployment for PrometheusExporter {{ meta.name }} on Namespace {{ meta.namespace }}
+  k8s:
+    definition: "{{ lookup('template', 'deployment.yml.j2') }}"
+
+- name: Manage Service for PrometheusExporter {{ meta.name }} on Namespace {{ meta.namespace }}
+  k8s:
+    definition: "{{ lookup('template', 'service.yml.j2') }}"
+
+- name: Get information about existing api-groups in the cluster for PrometheusExporter {{ meta.name }} on Namespace {{ meta.namespace }}
+  set_fact:
+    api_groups: "{{ lookup('k8s', cluster_info='api_groups') }}"
+
+- name: Convert serviceMonitor.enabled boolean var into ansible service_monitor_state state var for PrometheusExporter {{ meta.name }} on Namespace {{ meta.namespace }}
+  set_fact:
+    service_monitor_state: "absent"
+  when: service_monitor.enabled is defined and service_monitor.enabled|bool == false
+
+- name: Manage ServiceMonitor (if monitoring.coreos.com api-group exists) for PrometheusExporter {{ meta.name }} on Namespace {{ meta.namespace }}
+  k8s:
+    state: "{{ service_monitor_state }}"
+    definition: "{{ lookup('template', item.name) | from_yaml }}"
+  when: item.api_exists | default(True)
+  loop:
+    - name: servicemonitor.yml.j2
+      api_exists: "{{ True if 'monitoring.coreos.com' in api_groups else False }}"
+
+- name: Convert grafanaDashboard.enabled boolean var into ansible grafana_dashboard_state state var for PrometheusExporter {{ meta.name }} on Namespace {{ meta.namespace }}
+  set_fact:
+    grafana_dashboard_state: "absent"
+  when: grafana_dashboard.enabled is defined and grafana_dashboard.enabled|bool == false
+
+- name: Manage GrafanaDashboard (if integreatly.org api-group exists) for PrometheusExporter {{ meta.name }} on Namespace {{ meta.namespace }}
+  k8s:
+    state: "{{ grafana_dashboard_state }}"
+    definition: "{{ lookup('template', item.name) | from_yaml }}"
+  when: item.api_exists | default(True)
+  loop:
+    - name: "grafanadashboard-{{ type }}.yml.j2"
+      api_exists: "{{ True if 'integreatly.org' in api_groups else False }}"

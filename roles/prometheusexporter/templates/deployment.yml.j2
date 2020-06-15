@@ -7,12 +7,11 @@ metadata:
     prometheus_exporter: "{{ meta.name }}"
     prometheus_exporter_type: "{{ type }}"
     app: "prometheus-exporter-{{ type }}-{{ meta.name }}"
-    environment: "{{ label_environment }}"
-{% if label_custom_key is defined %}
-    {{ label_custom_key }}: "{{ label_custom_value }}"
+{% if extra_label.key is defined and extra_label.value is defined %}
+    {{ extra_label.key }}: "{{ extra_label.value }}"
 {% endif %}
 spec:
-  replicas: {{ replicas }}
+  replicas: 1
   selector:
     matchLabels:
       app: "prometheus-exporter-{{ type }}-{{ meta.name }}"
@@ -22,22 +21,21 @@ spec:
         prometheus_exporter: "{{ meta.name }}"
         prometheus_exporter_type: "{{ type }}"
         app: "prometheus-exporter-{{ type }}-{{ meta.name }}"
-        environment: "{{ label_environment }}"
-{% if label_custom_key is defined %}
-        {{ label_custom_key }}: "{{ label_custom_value }}"
+{% if extra_label.key is defined and extra_label.value is defined %}
+        {{ extra_label.key }}: "{{ extra_label.value }}"
 {% endif %}
     spec:
       containers:
         - name: "prometheus-exporter-{{ type }}-{{ meta.name }}"
-          image: "{{ prometheus_exporter_image }}:{{ prometheus_exporter_version }}"
+          image: "{{ image.name | default(image_name) }}:{{ image.version | default(image_version) }}"
           imagePullPolicy: IfNotPresent
           ports:
             - name: metrics
-              containerPort: {{ prometheus_exporter_port }}
+              containerPort: {{ port }}
               protocol: TCP
 {% if type == "memcached" %}
           args:
-            - "--memcached.address={{ db_host }}:{{db_port }}"
+            - "--memcached.address={{ db_host }}:{{ db_port }}"
 {% elif type == "redis" %}
           env:
             - name: REDIS_ADDR
@@ -64,27 +62,22 @@ spec:
           args:
             - "--sphinx.address={{ db_host }}"
             - "--sphinx.port={{ db_port }}"
-{% elif type == "elasticsearch" %}
-          args:
-            - "-e"
-            - "{{ db_host }}:{{ db_port }}/"
-            - "-c"
-            - "/usr/src/app/user/es-exporter.cfg"
-          volumeMounts:
-           - mountPath: /usr/src/app/user/
-             name: config-volume
-             readOnly: true
+{% elif type == "es" %}
+          command:
+            - "/bin/elasticsearch_exporter"
+            - "--es.uri={{ db_host }}:{{ db_port }}"
+            - "--es.all"
 {% elif type == "cloudwatch" %}
           env:
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
-                  name: "prometheus-exporter-{{ type }}-{{ meta.name }}"
+                  name: "{{ aws_credentials_secret_name }}"
                   key: AWS_ACCESS_KEY_ID
             - name: AWS_SECRET_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
-                  name: "prometheus-exporter-{{ type }}-{{ meta.name }}"
+                  name: "{{ aws_credentials_secret_name }}"
                   key: AWS_SECRET_ACCESS_KEY
           volumeMounts:
             - mountPath: /config/
@@ -94,33 +87,25 @@ spec:
           livenessProbe:
             tcpSocket:
               port: metrics
-            timeoutSeconds: 2
-            periodSeconds: 15
-            successThreshold: 1
-            failureThreshold: 5
+            timeoutSeconds: {{ liveness_probe.timeout_seconds | default(liveness_probe_timeout_seconds) }}
+            periodSeconds: {{ liveness_probe.period_seconds | default (liveness_probe_period_seconds) }}
+            successThreshold: {{ liveness_probe.success_threshold | default(liveness_probe_success_threshold) }}
+            failureThreshold: {{ liveness_probe.failure_threshold | default(liveness_probe_failure_threshold) }}
           readinessProbe:
             tcpSocket:
               port: metrics
-            timeoutSeconds: 2
-            periodSeconds: 30
-            successThreshold: 1
-            failureThreshold: 5
+            timeoutSeconds: {{ readiness_probe.timeout_seconds | default(readiness_probe_timeout_seconds) }}
+            periodSeconds: {{ readiness_probe.period_seconds | default(readiness_probe_period_seconds) }}
+            successThreshold: {{ readiness_probe.success_threshold | default(readiness_probe_success_threshold) }}
+            failureThreshold: {{ readiness_probe.failure_threshold | default(readiness_probe_failure_threshold) }}
           resources:
             limits:
-              cpu: "{{ resources_limits_cpu }}"
-              memory: "{{ resources_limits_memory }}"
+              cpu: "{{ resources.limits.cpu | default(resources_limits_cpu) }}"
+              memory: "{{ resources.limits.memory | default(resources_limits_memory) }}"
             requests:
-              cpu: "{{ resources_requests_cpu }}"
-              memory: "{{ resources_requests_memory }}"
-{% if type == "elasticsearch" %}
-      volumes:
-      - name: config-volume
-        configMap:
-          name: "{{ configuration_configmap_name }}"
-          items:
-          - key: es-exporter.cfg
-            path: es-exporter.cfg
-{% elif type == "cloudwatch" %}
+              cpu: "{{ resources.requests.cpu | default(resources_requests_cpu) }}"
+              memory: "{{ resources.requests.memory | default(resources_requests_memory) }}"
+{% if type == "cloudwatch" %}
       volumes:
       - name: config-volume
         configMap:

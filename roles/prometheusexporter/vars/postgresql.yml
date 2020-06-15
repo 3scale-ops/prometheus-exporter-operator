@@ -1,9 +1,21 @@
 ---
 
 # Exporter
-prometheus_exporter_port: 9187
-prometheus_exporter_image: "wrouesnel/postgres_exporter"
-prometheus_exporter_version: "v0.8.0"
+image_name: "wrouesnel/postgres_exporter"
+image_version: "v0.8.0"
+port: 9187
+liveness_probe_timeout_seconds: 3
+liveness_probe_period_seconds: 15
+liveness_probe_success_threshold: 1
+liveness_probe_failure_threshold: 5
+readiness_probe_timeout_seconds: 3
+readiness_probe_period_seconds: 30
+readiness_probe_success_threshold: 1
+readiness_probe_failure_threshold: 5
+resources_requests_cpu: "25m"
+resources_requests_memory: "32Mi"
+resources_limits_cpu: "50m"
+resources_limits_memory: "64Mi"
 
 # Custom
 db_connection_string_secret_name: "prometheus-exporter-{{ type }}-{{ meta.name }}"
@@ -18,4 +30,4 @@ db_connection_string_secret_name: "prometheus-exporter-{{ type }}-{{ meta.name }
 #  name: "prometheus-exporter-postgresql-zync-database"
 #type: Opaque
 #stringData:
-#  DATA_SOURCE_NAME: "postgresql://postgres_exporter:123456789@zync-host:5432/postgres?sslmode=disable"
+#  DATA_SOURCE_NAME: "postgresql://postgres_exporter:123456789@zync-database:5432/postgres?sslmode=disable"

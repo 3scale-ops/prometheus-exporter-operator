@@ -1,15 +1,16 @@
-apiVersion: ops.3scale.net/v1alpha1
+apiVersion: monitoring.3scale.net/v1alpha1
 kind: PrometheusExporter
 metadata:
-  name: system-redis-staging
+  name: staging-system-redis
 spec:
-  type: "redis"
-  serviceMonitorState: "present"
-  serviceMonitorLabelKey: "monitoring-key"
-  serviceMonitorLabelValue: "middleware"
-  labelEnvironment: "staging"
-  labelCustomKey: "threescale_component"
-  labelCustomValue: "system"
-  dbHost: "system-redis"
-  dbPort: "6379"
-  dbCheckKeys: "queue:backend_sync,queue:billing,queue:critical,queue:default,queue:deletion,queue:events,queue:low,queue:priority,queue:web_hooks,queue_zync"
+  type: redis
+  grafanaDashboard:
+    label:
+      key: monitoring-key
+      value: middleware
+  extraLabel:
+    key: threescale_component
+    value: system
+  dbHost: system-redis
+  dbPort: 6379
+  dbCheckKeys: queue:backend_sync,queue:billing,queue:critical,queue:default,queue:deletion,queue:events,queue:low,queue:priority,queue:web_hooks,queue_zync

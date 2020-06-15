@@ -1,0 +1,22 @@
+---
+
+# Exporter
+image_name: "justwatch/elasticsearch_exporter"
+image_version: "1.1.0"
+port: 9114
+liveness_probe_timeout_seconds: 10
+liveness_probe_period_seconds: 15
+liveness_probe_success_threshold: 1
+liveness_probe_failure_threshold: 5
+readiness_probe_timeout_seconds: 10
+readiness_probe_period_seconds: 30
+readiness_probe_success_threshold: 1
+readiness_probe_failure_threshold: 5
+resources_requests_cpu: "25m"
+resources_requests_memory: "64Mi"
+resources_limits_cpu: "100m"
+resources_limits_memory: "128Mi"
+
+# Custom
+db_host: "http://elasticsearch"
+db_port: 9200

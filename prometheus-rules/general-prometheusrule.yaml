@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: prometheus-exporter-general
+spec:
+  groups:
+    - name: prometheus-exporter-general.rules
+      rules:
+      - alert: PrometheusExporterJobDown
+        expr: up { service=~"prometheus-exporter-.*" } == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          message: "Prometheus Exporter Job {{ $labels.job }} is DOWN, maybe connection to monitored host is lost"

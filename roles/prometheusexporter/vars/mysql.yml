@@ -1,9 +1,21 @@
 ---
 
 # Exporter
-prometheus_exporter_port: 9104
-prometheus_exporter_image: "prom/mysqld-exporter"
-prometheus_exporter_version: "v0.12.1"
+image_name: "prom/mysqld-exporter"
+image_version: "v0.12.1"
+port: 9104
+liveness_probe_timeout_seconds: 3
+liveness_probe_period_seconds: 15
+liveness_probe_success_threshold: 1
+liveness_probe_failure_threshold: 5
+readiness_probe_timeout_seconds: 3
+readiness_probe_period_seconds: 30
+readiness_probe_success_threshold: 1
+readiness_probe_failure_threshold: 5
+resources_requests_cpu: "100m"
+resources_requests_memory: "32Mi"
+resources_limits_cpu: "200m"
+resources_limits_memory: "64Mi"
 
 # Custom
 db_connection_string_secret_name: "prometheus-exporter-{{ type }}-{{ meta.name }}"
@@ -18,4 +30,4 @@ db_connection_string_secret_name: "prometheus-exporter-{{ type }}-{{ meta.name }
 #  name: "prometheus-exporter-mysql-system-mysql"
 #type: Opaque
 #stringData:
-#  DATA_SOURCE_NAME: "exporter:123456789@(mysql-host:3306)/"
+#  DATA_SOURCE_NAME: "exporter:123456789@(system-mysql:3306)/"

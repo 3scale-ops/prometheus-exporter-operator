@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: prometheus-exporter-sphinx
+spec:
+  groups:
+    - name: prometheus-exporter-sphinx.rules
+      rules:
+      - alert: SphinxDown
+        expr: sphinx_up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          message: "Sphinx instance {{ $labels.prometheus_exporter }} is DOWN"

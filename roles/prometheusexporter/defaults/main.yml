@@ -1,21 +1,13 @@
 ---
 
 ## Main
-type: "none" # memcached, redis, mysql, postgresql, sphinx, elasticsearch, cloudwatch
+type: "none" # memcached, redis, mysql, postgresql, sphinx, es, cloudwatch
 
 ## ServiceMonitor config
-service_monitor_state: "absent" # Or "present"  (ansible state var)
+service_monitor_state: "present" # Converted to ansible state "absent" with an ansible set_fact task if CR boolean serviceMonitor.enabled = false
 service_monitor_interval: "30s"
-service_monitor_label_key: "monitoring"
-service_monitor_label_value: "enabled"
 
-## Generic config
-replicas: 1
-resources_requests_cpu: "25m"
-resources_requests_memory: "32Mi"
-resources_limits_cpu: "50m"
-resources_limits_memory: "64Mi"
-label_environment: "dev" # dev, test, staging, production...
-## Optional, if you want to add a custom label to resources, you can choose a custom key/value. Example for 3scale:
-#label_custom_key": "threescale_component"
-#label_custom_value: "zync" # system, backend, zync, keycloak...
+## GrafanaDashboard config
+grafana_dashboard_state: "present" # Converted to ansible state "absent" with an ansible set_fact task if CR boolean grafanaDashboard.enabled = false
+grafana_dashboard_label_key: "discovery"
+grafana_dashboard_label_value: "enabled"

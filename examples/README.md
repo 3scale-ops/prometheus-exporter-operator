@@ -1,25 +1,18 @@
-# Prometheus-exporter examples
+# Prometheus Exporter Examples
 
 Once the deployed prometheus-exporter operator is up and running and watching for any `PrometheusExporter` resource type, you can setup any prometheus exporter following the next examples:
 
-1. [Memcached prometheus-exporter](#memcached-prometheus-exporter)
-1. [Redis prometheus-exporter](#redis-prometheus-exporter)
-1. [MySQL prometheus-exporter](#mysql-prometheus-exporter)
-1. [PostgreSQL prometheus-exporter](#postgresql-prometheus-exporter)
-1. [Sphinx prometheus-exporter](#sphinx-prometheus-exporter)
-1. [ElasticSearch prometheus-exporter](#elasticsearch-prometheus-exporter)
-1. [AWS CloudWatch prometheus-exporter](#aws-cloudwatch-prometheus-exporter)
+1. [Memcached](#memcached)
+1. [Redis](#redis)
+1. [MySQL](#mysql)
+1. [PostgreSQL](#postgresql)
+1. [Sphinx](#sphinx)
+1. [ElasticSearch](#elasticsearch)
+1. [AWS CloudWatch](#aws-cloudwatch)
 
-## Memcached prometheus-exporter
+## Memcached
 
 * Official doc: https://github.com/prometheus/memcached_exporter
-
-### CR Spec custom
-
-| **Field** | **Required** | **Default value** | **Description** |
-|:---:|:---:|:---:|:---:|
-| `dbHost` | Yes | `system-memcache` | Memcached Host (could be a k8s service or any internal/external DNS endpoint) |
-| `dbPort` | Yes | `11211` | Memcached Port |
 
 ### Deploy example
 * Create `memcached-exporter` example ([example-DB](memcached/memcached-db-service.yaml), [example-CR](memcached/memcached-cr.yaml)):
@@ -31,17 +24,9 @@ $ make memcached-create
 $ make memcached-delete
 ```
 
-## Redis prometheus exporter
+## Redis
 
 * Official doc: https://github.com/oliver006/redis_exporter
-
-### CR Spec custom
-
-| **Field** | **Required** | **Default value** | **Description** |
-|:---:|:---:|:---:|:---:|
-| `dbHost` | Yes | `backend-redis` | Redis Host (could be a k8s service or any internal/external DNS endpoint) |
-| `dbPort` | Yes | `6379` | Redis Port |
-| `dbCheckKeys` | No | - | Redis specific keys to check |
 
 ### Deploy example
 
@@ -54,15 +39,9 @@ $ make redis-create
 $ make redis-delete
 ```
 
-## MySQL prometheus exporter
+## MySQL
 
 * Official doc: https://github.com/prometheus/mysqld_exporter
-
-### CR Spec custom
-
-| **Field** | **Required** | **Default value** | **Description** |
-|:---:|:---:|:---:|:---:|
-| `dbConnectionStringSecretName` | Yes | `prometheus-exporter-mysql-${CR_NAME}` | Secret name containing MySQL connection string definition (`DATA_SOURCE_NAME`) |
 
 ### CR needed extra object
 
@@ -92,15 +71,9 @@ $ make mysql-create
 $ make mysql-delete
 ```
 
-## PostgreSQL prometheus exporter
+## PostgreSQL
 
 * Official doc: https://github.com/wrouesnel/postgres_exporter
-
-### CR Spec custom
-
-| **Field** | **Required** | **Default value** | **Description** |
-|:---:|:---:|:---:|:---:|
-| `dbConnectionStringSecretName` | Yes | `prometheus-exporter-postgresql-${CR_NAME}` | Secret name containing PostgreSQL connection string definition (`DATA_SOURCE_NAME`) |
 
 ### CR needed extra object
 
@@ -149,16 +122,9 @@ $ make postgresql-create
 $ make postgresql-delete
 ```
 
-## Sphinx prometheus exporter
+## Sphinx
 
 * Official doc: https://github.com/foxdalas/sphinx_exporter
-
-### CR Spec custom
-
-| **Field** | **Required** | **Default value** | **Description** |
-|:---:|:---:|:---:|:---:|
-| `dbHost` | Yes | `system-sphinx` | Sphinx Host (could be k8s service or any internal/external DNS endpoint) |
-| `dbPort` | Yes | `9306` | Sphinx Port |
 
 ### Deploy example
 
@@ -172,27 +138,14 @@ $ make sphinx-create
 $ make sphinx-delete
 ```
 
-## ElasticSearch prometheus exporter
+## ElasticSearch
 
-* Official doc: https://github.com/braedon/prometheus-es-exporter
-
-### CR Spec custom
-
-| **Field** | **Required** | **Default value** | **Description** |
-|:---:|:---:|:---:|:---:|
-| `dbHost` | Yes | `http://logging-es.openshift-logging.svc` | Elasticsearch Host (could be k8s service or any internal/external DNS endpoint) |
-| `dbPort` | Yes | `9200` | Elasticsearch  Port |
-| `configurationConfigmapName` | Yes | `prometheus-exporter-elasticsearch-${CR_NAME}` | ConfigMap name containing ElasticSearch `es_exporter.cfg` with defined queries to run |
-
-### CR needed extra object
-
-* **The ConfigMap should have been previously created as the operator expects it**:
-  * **[es-configmap-example](elasticsearch/elasticsearch-configmap.yaml) (Remember to set the object name on the CR field `configurationConfigmapName`)**
+* Official doc: https://github.com/justwatchcom/elasticsearch_exporter
 
 ### Deploy example
 
 * **Make sure you have an ElasticSearch cluster available and that dbHost/dbPort are correctly set on CR example file**
-* Create `elasticsearch-exporter` example ([example-configmap](elasticsearch/elasticsearch-configmap.yaml), [example-CR](elasticsearch/elasticsearch-cr.yaml)):
+* Create `elasticsearch-exporter` example ([example-CR](elasticsearch/es-cr.yaml)):
 ```bash
 $ make elasticsearch-create
 ```
@@ -201,16 +154,9 @@ $ make elasticsearch-create
 $ make elasticsearch-delete
 ```
 
-## AWS CloudWatch prometheus exporter
+## AWS CloudWatch
 
 * Official doc: https://github.com/prometheus/cloudwatch_exporter
-
-### CR Spec custom
-
-| **Field** | **Required** | **Default value** | **Description** |
-|:---:|:---:|:---:|:---:|
-| `awsCredentialsSecretName` | Yes | `prometheus-exporter-cloudwatch-${CR_NAME}` | Secret name containing AWS IAM credentials (`AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY`) |
-| `configurationConfigmapName` | Yes | `prometheus-exporter-cloudwatch-${CR_NAME}` | ConfigMap name containing Cloudwatch `config.yml` (Services, Dimensions, Tags used for autodiscovery...) |
 
 ### CR needed extra objects
 
