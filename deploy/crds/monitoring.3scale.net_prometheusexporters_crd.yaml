@@ -36,7 +36,7 @@ spec:
           properties:
             type:
               type: string
-              description: 'Possible prometheus-exporter types: memcached, redis, mysql, postgresql, sphinx, es, cloudwatch'
+              description: 'Supported prometheus-exporter types: memcached, redis, mysql, postgresql, sphinx, es, cloudwatch'
               enum:
               - memcached
               - redis
@@ -139,22 +139,22 @@ spec:
                   description: Override readiness probe failure threshold
             dbHost:
               type: string
-              description: On redis, memcached, sphinx and es exporters, db host to monitor
+              description: For redis, memcached, sphinx and es exporters, the db host to monitor
             dbPort:
               type: integer
-              description: On redis, memcached, sphinx and es exporters, db port to monitor
+              description: For redis, memcached, sphinx and es exporters, the db port to monitor
             dbCheckKeys:
               type: string
-              description: 'On redis exporter, optional redis keys to monitor (example: resque:queue:stats,resque:queue:priority,resque:queue:main,resque:failed)'
+              description: 'For redis exporter, the optional redis keys to monitor (example: resque:queue:stats,resque:queue:priority,resque:queue:main,resque:failed)'
             dbConnectionStringSecretName:
               type: string
-              description: On mysql and postgresql exporters, Secret name containing connection string definition (DSN)
+              description: For mysql and postgresql exporters, the Secret name containing connection string definition (DSN)
             awsCredentialsSecretName:
               type: string
-              description: On cloudwatch exporter, Secret name containing AWS IAM credentials (AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY)
+              description: For cloudwatch exporter, the Secret name containing AWS IAM credentials (AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY)
             configurationConfigmapName:
               type: string
-              description: On cloudwatch exporter, ConfigMap name containing Cloudwatch config.yml (Services, Dimensions, Tags used for autodiscovery...)
+              description: For cloudwatch exporter, the ConfigMap name containing Cloudwatch config.yml (Services, Dimensions, Tags used for autodiscovery...)
   version: v1alpha1
   versions:
   - name: v1alpha1
