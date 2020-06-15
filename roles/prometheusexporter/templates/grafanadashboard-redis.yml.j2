@@ -43,7 +43,7 @@ spec:
           "decimals": 0,
           "editable": true,
           "error": false,
-          "format": "s",
+          "format": "none",
           "gauge": {
             "maxValue": 100,
             "minValue": 0,
@@ -55,6 +55,101 @@ spec:
             "h": 6,
             "w": 3,
             "x": 0,
+            "y": 0
+          },
+          "hideTimeOverride": true,
+          "id": 27,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "options": {},
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "redis_up{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "",
+              "metric": "",
+              "refId": "A",
+              "step": 1
+            }
+          ],
+          "thresholds": "0.5,1",
+          "timeFrom": "30s",
+          "timeShift": "30s",
+          "title": "Status",
+          "type": "singlestat",
+          "valueFontSize": "100%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "UP",
+              "value": "1"
+            },
+            {
+              "op": "=",
+              "text": "DOWN",
+              "value": "0"
+            }
+          ],
+          "valueName": "avg"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": true,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "datasource": "$datasource",
+          "decimals": 0,
+          "editable": true,
+          "error": false,
+          "format": "s",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 3,
+            "x": 3,
             "y": 0
           },
           "hideTimeOverride": true,
@@ -142,7 +237,7 @@ spec:
           "gridPos": {
             "h": 6,
             "w": 3,
-            "x": 3,
+            "x": 6,
             "y": 0
           },
           "hideTimeOverride": true,
@@ -231,7 +326,7 @@ spec:
           "gridPos": {
             "h": 6,
             "w": 3,
-            "x": 6,
+            "x": 9,
             "y": 0
           },
           "hideTimeOverride": true,
@@ -321,7 +416,7 @@ spec:
           "gridPos": {
             "h": 6,
             "w": 3,
-            "x": 9,
+            "x": 12,
             "y": 0
           },
           "hideTimeOverride": true,
@@ -388,6 +483,264 @@ spec:
           "valueName": "current"
         },
         {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": false,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "datasource": "$datasource",
+          "decimals": 0,
+          "editable": true,
+          "error": false,
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 3,
+            "x": 15,
+            "y": 0
+          },
+          "hideTimeOverride": true,
+          "id": 24,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "options": {},
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": true
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "redis_instance_info{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "{{ '{{' }} redis_mode {{ '}}' }}",
+              "metric": "",
+              "refId": "A",
+              "step": 1
+            }
+          ],
+          "thresholds": "",
+          "timeFrom": "1m",
+          "timeShift": "1m",
+          "title": "Redis mode",
+          "type": "singlestat",
+          "valueFontSize": "100%",
+          "valueMaps": [],
+          "valueName": "name"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": false,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "datasource": "$datasource",
+          "decimals": 0,
+          "editable": true,
+          "error": false,
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 3,
+            "x": 18,
+            "y": 0
+          },
+          "hideTimeOverride": true,
+          "id": 25,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "options": {},
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": true
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "redis_instance_info{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "{{ '{{' }} role {{ '}}' }}",
+              "metric": "",
+              "refId": "A",
+              "step": 1
+            }
+          ],
+          "thresholds": "",
+          "timeFrom": "1m",
+          "timeShift": "1m",
+          "title": "Redis role",
+          "type": "singlestat",
+          "valueFontSize": "100%",
+          "valueMaps": [],
+          "valueName": "name"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": false,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "datasource": "$datasource",
+          "decimals": 0,
+          "editable": true,
+          "error": false,
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 3,
+            "x": 21,
+            "y": 0
+          },
+          "hideTimeOverride": true,
+          "id": 26,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "options": {},
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": true
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "redis_connected_slaves{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "slaves",
+              "metric": "",
+              "refId": "A",
+              "step": 1
+            }
+          ],
+          "thresholds": "",
+          "timeFrom": "1m",
+          "timeShift": "1m",
+          "title": "Connected slaves",
+          "type": "singlestat",
+          "valueFontSize": "100%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "0",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
           "aliasColors": {},
           "bars": false,
           "dashLength": 10,
@@ -398,10 +751,10 @@ spec:
           "fill": 1,
           "grid": {},
           "gridPos": {
-            "h": 6,
+            "h": 8,
             "w": 12,
-            "x": 12,
-            "y": 0
+            "x": 0,
+            "y": 6
           },
           "id": 17,
           "legend": {
@@ -498,8 +851,8 @@ spec:
           "fill": 1,
           "gridPos": {
             "h": 8,
-            "w": 24,
-            "x": 0,
+            "w": 12,
+            "x": 12,
             "y": 6
           },
           "id": 15,
