@@ -47,7 +47,7 @@ $ make manifests-verify
 ```
 
 ### Manifests push
-* Before publishing a release on a given quay.io namespace, make sure everything is 100% correct, because releases cannot be deleted, and appregistry is currently broken when deleting application repositories
+* Before publishing a release on a given quay.io namespace, make sure everything is 100% correct, because releases cannot be deleted or overridden
 * So before publishing a final release on `3scaleops` quay namespace, you can do tests on your own personal quay.io namespace (doing incremental release versions always for any test), and pushing final metadata to the appropiate release version on `3scaleops` namespace
 * Push Operator OLM CSV manifests/package for specific version to Application Registry using `operator-courier` tool:
 ```bash

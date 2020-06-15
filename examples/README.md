@@ -1,4 +1,4 @@
-# Prometheus-exporter examples
+# Prometheus Exporter Examples
 
 Once the deployed prometheus-exporter operator is up and running and watching for any `PrometheusExporter` resource type, you can setup any prometheus exporter following the next examples:
 

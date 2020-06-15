@@ -40,8 +40,8 @@ The operator manages the lifecycle of the following objects:
 ## GrafanaDashboards
 
 `GrafanaDashboards` management is included in the operator:
-* For each CR, a `GrafanaDashboard` (optional, enabled by default `grafanaDashboard.enabled: true`) is created, but in reality operator manages a single dashboard type per Namespace (not per CR)
-* If you deploy for example different redis CRs, and you want to have the redis dashboard created, you need to enabled it on every redis CR with the same grafana-operator label selector (but in reality, operator will just manage a single dashboard per Namespace shared accross all CRs from the same type)
+* For each CR, a `GrafanaDashboard` (optional, enabled by default `grafanaDashboard.enabled: true`) is created, but actually operator manages a single dashboard type per Namespace (not per CR)
+* If you deploy for example different redis CRs, and you want to have the redis dashboard created, you need to enabled it on every redis CR with the same grafana-operator label selector (but actually, operator will just manage a single dashboard per Namespace shared accross all CRs from the same type)
 * You can deploy the prometheus-exporter-operator with different operator versions on different Namespaces, so operator will create separate dashboards per Namespace (they won't collision, that's why dashboard name includes the Namespace)
 * All grafana dashboards are preconfigured to use `CR_NAME` as the filter of all possible dashboards of every type (for example `staging-system-memcached`)
 * *In the future it is possible that `GrafanaDashboard` management get its own CRD separate from `PrometheusExporter` CRD (so you could have N PrometheusExporter CRs, and also an additonal single Dashboard CR per exporter type*

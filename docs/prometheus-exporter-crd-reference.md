@@ -62,10 +62,10 @@ spec:
 | `image.name` | `string` | No | Depends on exporter | Prometheus exporter image name |
 | `image.version` | `string` | No | Depends on exporter | Prometheus exporter image version |
 | `port` | `int` | No | Depends on exporter | Prometheus exporter metrics port |
-| `resources.requests.cpu` | `string` | No | `25m` | Override CPU requests |
-| `resources.requests.memory` | `string` | No | `32Mi` | Override Memory requests |
-| `resources.limits.cpu` | `string` | No | `50m` | Override CPU limits |
-| `resources.limits.memory` | `string` | No | `64Mi` | Override Memory limits |
+| `resources.requests.cpu` | - | No | `25m` | Override CPU requests |
+| `resources.requests.memory` | - | No | `32Mi` | Override Memory requests |
+| `resources.limits.cpu` | - | No | `50m` | Override CPU limits |
+| `resources.limits.memory` | - | No | `64Mi` | Override Memory limits |
 | `livenessProbe.timeoutSeconds` | `int` | No | `3` | Override liveness timeout (seconds) |
 | `livenessProbe.periodSeconds` | `int` | No | `15` | Override liveness period (seconds) |
 | `livenessProbe.successThreshold` | `int` | No | `1` | Override liveness success threshold |
