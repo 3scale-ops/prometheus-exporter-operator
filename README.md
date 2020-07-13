@@ -26,6 +26,10 @@ The operator manages the lifecycle of the following objects:
 > **NOTE**
 ><br /> Some exporters need some **extra objects to be previously manually created** in order to work (**manual objects names need to be specified on required CR fields**). This extra needed objects includes **Secrets (credentials) or Configmaps (configuration files) on specific formats**. Examples to help you create these extra objects are provided on [examples](examples/) directory for all exporter types.
 
+## Current status
+
+Operator is available at [OperatorHub.io](https://operatorhub.io/operator/prometheus-exporter-operator) (on both Kubernetes/OpenShift OLM catalogs)
+
 ## Requirements
 
 * [prometheus-operator](https://github.com/coreos/prometheus-operator) v0.17.0+
