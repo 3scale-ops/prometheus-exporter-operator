@@ -13,4 +13,4 @@ spec:
     value: backend
   dbHost: backend-redis
   dbPort: 6379
-  dbCheckKeys: resque:queue:stats,resque:queue:priority,resque:queue:main,resque:failed
+  dbCheckKeys: "db1=resque:queue:stats,db1=resque:queue:priority,db1=resque:queue:main,db1=resque:failed"

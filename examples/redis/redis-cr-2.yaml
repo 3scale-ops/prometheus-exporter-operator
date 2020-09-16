@@ -13,4 +13,4 @@ spec:
     value: system
   dbHost: system-redis
   dbPort: 6379
-  dbCheckKeys: queue:backend_sync,queue:billing,queue:critical,queue:default,queue:deletion,queue:events,queue:low,queue:priority,queue:web_hooks,queue_zync
+  dbCheckKeys: "db1=queue:backend_sync,db1=queue:billing,db1=queue:critical,db1=queue:default,db1=queue:deletion,db1=queue:events,db1=queue:low,db1=queue:priority,db1=queue:web_hooks,db1=queue:zync"
