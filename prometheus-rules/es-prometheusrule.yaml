@@ -6,38 +6,87 @@ spec:
   groups:
     - name: prometheus-exporter-es.rules
       rules:
-      - alert: ElasticSearchDown
-        expr: elasticsearch_cluster_health_up == 0
-        for: 1m
-        labels:
-          severity: critical
-        annotations:
-          message: "ElasticSearch {{ $labels.prometheus_exporter }} is DOWN"
-      - alert: ElasticSearchClusterStatusYellow
-        expr: elasticsearch_cluster_health_status {color="yellow"} == 1
-        for: 1m
-        labels:
-          severity: warning
-        annotations:
-          message: "ElasticSearch {{ $labels.prometheus_exporter }} Cluster Status is Yellow"
-      - alert: ElasticSearchClusterStatusRed
-        expr: elasticsearch_cluster_health_status {color="red"} == 1
-        for: 1m
-        labels:
-          severity: critical
-        annotations:
-          message: "ElasticSearch {{ $labels.prometheus_exporter }} Cluster Status is Red"
-      - alert: ElasticSearchHeapMemoryHigh
-        expr: 100* elasticsearch_jvm_memory_used_bytes{area="heap"} / elasticsearch_jvm_memory_max_bytes{area="heap"} > 85
-        for: 1m
-        labels:
-          severity: critical
-        annotations:
-          message: "ElasticSearch {{ $labels.prometheus_exporter }} Heap Memory usage is High"
-      - alert: ElasticSearchFreeSpaceLow
-        expr: 100 -( 100 * (elasticsearch_filesystem_data_size_bytes - elasticsearch_filesystem_data_free_bytes)/ elasticsearch_filesystem_data_size_bytes) < 15
-        for: 1m
-        labels:
-          severity: critical
-        annotations:
-          message: "ElasticSearch {{ $labels.prometheus_exporter }} has Low Free space"
+        # Cluster status alerts
+        - alert: ElasticSearchDown
+          expr: elasticsearch_cluster_health_up == 0
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            message: "ElasticSearch {{ $labels.prometheus_exporter }} is DOWN"
+        - alert: ElasticSearchClusterStatusYellow
+          expr: elasticsearch_cluster_health_status {color="yellow"} == 1
+          for: 1m
+          labels:
+            severity: warning
+          annotations:
+            message: "ElasticSearch {{ $labels.prometheus_exporter }} Cluster Status is Yellow"
+        - alert: ElasticSearchClusterStatusRed
+          expr: elasticsearch_cluster_health_status {color="red"} == 1
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            message: "ElasticSearch {{ $labels.prometheus_exporter }} Cluster Status is Red"
+
+        # Memory alerts
+        - alert: ElasticSearchNodeHeapMemoryHigh
+          expr: 100* elasticsearch_jvm_memory_used_bytes{area="heap"} / elasticsearch_jvm_memory_max_bytes{area="heap"} > 85
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            message: "ElasticSearch node {{ $labels.name }} Heap Memory usage is High"
+        - alert: ElasticSearchNodeHeapMemoryHigh
+          expr: 100* elasticsearch_jvm_memory_used_bytes{area="heap"} / elasticsearch_jvm_memory_max_bytes{area="heap"} > 95
+          for: 10m
+          labels:
+            severity: critical
+          annotations:
+            message: "ElasticSearch node {{ $labels.name }} Heap Memory usage is High"
+
+        - alert: ElasticSearchNodeFreeSpaceLow
+          expr: 100 -( 100 * (elasticsearch_filesystem_data_size_bytes - elasticsearch_filesystem_data_free_bytes)/ elasticsearch_filesystem_data_size_bytes) < 15
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            message: "ElasticSearch node {{ $labels.name }} has Low Free space"
+        - alert: ElasticSearchNodeFreeSpaceLow
+          expr: 100 -( 100 * (elasticsearch_filesystem_data_size_bytes - elasticsearch_filesystem_data_free_bytes)/ elasticsearch_filesystem_data_size_bytes) < 5
+          for: 10m
+          labels:
+            severity: critical
+          annotations:
+            message: "ElasticSearch node {{ $labels.name }} has Low Free space"
+
+        - alert: ElasticSearchWillFillIn96h
+          expr: predict_linear(elasticsearch_filesystem_data_free_bytes{}[24h], 96 * 3600) < 0
+          for: 1h
+          labels:
+            severity: warning
+          annotations:
+            message: "ElasticSearch node {{ $labels.name }} will fill in 4 days"
+        - alert: ElasticSearchNodeWillFillIn24h
+          expr: predict_linear(elasticsearch_filesystem_data_free_bytes{}[24h], 24 * 3600) < 0
+          for: 1h
+          labels:
+            severity: critical
+          annotations:
+            message: "ElasticSearch node {{ $labels.name }} will fill in 24h"
+
+        # CPU alerts
+        - alert: ElasticSeachNodeHighCPU
+          expr: elasticsearch_os_cpu_percent > 85
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            message: "ElasticSearch node {{ $labels.name }} has high CPU usage"
+        - alert: ElasticSeachNodeHighCPU
+          expr: elasticsearch_os_cpu_percent > 95
+          for: 10m
+          labels:
+            severity: critical
+          annotations:
+            message: "ElasticSearch node {{ $labels.name }} has high CPU usage"
