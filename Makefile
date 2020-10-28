@@ -1,4 +1,4 @@
-.PHONY: operator-image-update operator-manual-deploy operator-manual-delete operator-olm-deploy operator-olm-delete manifests-generate manifests-verify manifests-push prometheus-rules-deploy prometheus-rules-delete help
+.PHONY: operator-image-update operator-local-deploy operator-manual-deploy operator-manual-delete operator-olm-deploy operator-olm-delete manifests-generate manifests-verify manifests-push prometheus-rules-deploy prometheus-rules-delete help
 
 .DEFAULT_GOAL := help
 
@@ -36,6 +36,9 @@ operator-image-update: operator-image-build operator-image-push ## OPERATOR IMAG
 namespace-create: # NAMESPACE MANAGEMENT - Create namespace for the operator
 	$(KUBE_CLIENT) create namespace $(NAMESPACE) || true
 	$(KUBE_CLIENT) label namespace $(NAMESPACE) monitoring-key=middleware || true
+
+operator-local-deploy: namespace-create ## OPERATOR LOCAL DEPLOY - Deploy Operator locally for dev purpose
+	operator-sdk run --local --watch-namespace $(NAMESPACE)
 
 operator-manual-deploy: namespace-create ## OPERATOR MANUAL DEPLOY - Deploy Operator objects (namespace, CRD, service account, role, role binding and operator deployment)
 	$(KUBE_CLIENT) apply -f deploy/crds/monitoring.3scale.net_prometheusexporters_crd.yaml --validate=false || true

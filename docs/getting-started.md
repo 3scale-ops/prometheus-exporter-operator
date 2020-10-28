@@ -10,6 +10,13 @@ $ make operator-image-update
 
 ## Operator deploy
 
+### Local deploy
+* Deploy operator locally for developmnt purpose without generating a new image:
+```bash
+$ make operator-local-deploy
+```
+* Create any `PrometheusExporter` resource type (you can find examples on [examples](../examples/) directory).
+
 ### Manual deploy
 * Deploy operator (namespace, CRD, service account, role, role binding and operator deployment):
 ```bash
