@@ -67,6 +67,20 @@ $ make prometheus-rules-deploy
 $ make prometheus-rules-delete
 ```
 
+## Development
+
+To run the operator locally you need to install some ansible dependencies first:
+
+* ansible-runner: `sudo dnf install python-ansible-runner`
+* ansible-runner-http: `pip install python-ansible-runner`
+* openshift ansible module: `pip install openshift`
+
+You can then run the operator with the following command:
+
+```bash
+operator-sdk run --local --watch-namespace <namespace>
+```
+
 ## Contributing
 
 You can contribute by:
