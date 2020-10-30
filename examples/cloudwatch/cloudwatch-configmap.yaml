@@ -80,15 +80,27 @@ data:
        aws_statistics: [Maximum]
      - aws_namespace: AWS/ES
        aws_metric_name: FreeStorageSpace
-       aws_dimensions: [DomainName, ClientId]
+       aws_dimensions: [DomainName, ClientId, NodeId]
        aws_statistics: [Minimum]
      - aws_namespace: AWS/ES
        aws_metric_name: CPUUtilization
-       aws_dimensions: [DomainName, ClientId]
+       aws_dimensions: [DomainName, ClientId, NodeId]
        aws_statistics: [Maximum]
      - aws_namespace: AWS/ES
        aws_metric_name: JVMMemoryPressure
-       aws_dimensions: [DomainName, ClientId]
+       aws_dimensions: [DomainName, ClientId, NodeId]
+       aws_statistics: [Maximum]
+     - aws_namespace: AWS/ES
+       aws_metric_name: MasterFreeStorageSpace
+       aws_dimensions: [DomainName, ClientId, NodeId]
+       aws_statistics: [Minimum]
+     - aws_namespace: AWS/ES
+       aws_metric_name: MasterCPUUtilization
+       aws_dimensions: [DomainName, ClientId, NodeId]
+       aws_statistics: [Maximum]
+     - aws_namespace: AWS/ES
+       aws_metric_name: MasterJVMMemoryPressure
+       aws_dimensions: [DomainName, ClientId, NodeId]
        aws_statistics: [Maximum]
      - aws_namespace: AWS/ApplicationELB
        aws_metric_name: HealthyHostCount
