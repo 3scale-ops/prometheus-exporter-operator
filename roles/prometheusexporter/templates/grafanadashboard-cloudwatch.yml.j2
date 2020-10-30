@@ -3410,6 +3410,7 @@ spec:
                 "x": 0,
                 "y": 24
               },
+              "hideTimeOverride": true,
               "id": 41,
               "links": [],
               "options": {
@@ -3450,8 +3451,8 @@ spec:
                   "refId": "A"
                 }
               ],
-              "timeFrom": null,
-              "timeShift": null,
+              "timeFrom": "5m",
+              "timeShift": "5m",
               "title": "Cluster Status GREEN Maximum",
               "type": "bargauge"
             },
@@ -3464,6 +3465,7 @@ spec:
                 "x": 6,
                 "y": 24
               },
+              "hideTimeOverride": true,
               "id": 42,
               "links": [],
               "options": {
@@ -3504,8 +3506,8 @@ spec:
                   "refId": "A"
                 }
               ],
-              "timeFrom": null,
-              "timeShift": null,
+              "timeFrom": "5m",
+              "timeShift": "5m",
               "title": "Cluster Status YELLOW Maximum",
               "type": "bargauge"
             },
@@ -3518,6 +3520,7 @@ spec:
                 "x": 12,
                 "y": 24
               },
+              "hideTimeOverride": true,
               "id": 43,
               "links": [],
               "options": {
@@ -3558,8 +3561,8 @@ spec:
                   "refId": "A"
                 }
               ],
-              "timeFrom": null,
-              "timeShift": null,
+              "timeFrom": "5m",
+              "timeShift": "5m",
               "title": "Cluster Status RED Maximum",
               "type": "bargauge"
             },
@@ -3572,6 +3575,7 @@ spec:
                 "x": 18,
                 "y": 24
               },
+              "hideTimeOverride": true,
               "id": 44,
               "links": [],
               "options": {
@@ -3612,8 +3616,8 @@ spec:
                   "refId": "A"
                 }
               ],
-              "timeFrom": null,
-              "timeShift": null,
+              "timeFrom": "5m",
+              "timeShift": "5m",
               "title": "Automated Snapshot Failure Maximum",
               "type": "bargauge"
             },
@@ -3669,7 +3673,7 @@ spec:
               "title": "Cluster Number Nodes Maximum",
               "tooltip": {
                 "shared": true,
-                "sort": 1,
+                "sort": 2,
                 "value_type": "individual"
               },
               "type": "graph",
@@ -3745,8 +3749,15 @@ spec:
                   "expr": "aws_es_free_storage_space_minimum{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
                   "format": "time_series",
                   "intervalFactor": 1,
-                  "legendFormat": "{{ '{{' }} domain_name {{ '}}' }}",
+                  "legendFormat": "{{ '{{' }} domain_name {{ '}}' }}-data-{{ '{{' }} node_id {{ '}}' }}",
                   "refId": "A"
+                },
+                {
+                  "expr": "aws_es_master_free_storage_space_minimum{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
+                  "format": "time_series",
+                  "intervalFactor": 1,
+                  "legendFormat": "{{ '{{' }} domain_name {{ '}}' }}-master-{{ '{{' }} node_id {{ '}}' }}",
+                  "refId": "B"
                 }
               ],
               "thresholds": [],
@@ -3756,7 +3767,7 @@ spec:
               "title": "Free Storage Space Minimum (megabytes)",
               "tooltip": {
                 "shared": true,
-                "sort": 1,
+                "sort": 2,
                 "value_type": "individual"
               },
               "type": "graph",
@@ -3832,8 +3843,15 @@ spec:
                   "expr": "aws_es_cpuutilization_maximum{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
                   "format": "time_series",
                   "intervalFactor": 1,
-                  "legendFormat": "{{ '{{' }} domain_name {{ '}}' }}",
+                  "legendFormat": "{{ '{{' }} domain_name {{ '}}' }}-data-{{ '{{' }} node_id {{ '}}' }}",
                   "refId": "A"
+                },
+                {
+                  "expr": "aws_es_master_cpuutilization_maximum{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
+                  "format": "time_series",
+                  "intervalFactor": 1,
+                  "legendFormat": "{{ '{{' }} domain_name {{ '}}' }}-master-{{ '{{' }} node_id {{ '}}' }}",
+                  "refId": "B"
                 }
               ],
               "thresholds": [],
@@ -3919,8 +3937,15 @@ spec:
                   "expr": "aws_es_jvmmemory_pressure_maximum{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
                   "format": "time_series",
                   "intervalFactor": 1,
-                  "legendFormat": "{{ '{{' }} domain_name {{ '}}' }}",
+                  "legendFormat": "{{ '{{' }} domain_name {{ '}}' }}-data-{{ '{{' }} node_id {{ '}}' }}",
                   "refId": "A"
+                },
+                {
+                  "expr": "aws_es_master_jvmmemory_pressure_maximum{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
+                  "format": "time_series",
+                  "intervalFactor": 1,
+                  "legendFormat": "{{ '{{' }} domain_name {{ '}}' }}-master-{{ '{{' }} node_id {{ '}}' }}",
+                  "refId": "B"
                 }
               ],
               "thresholds": [],
@@ -3966,7 +3991,7 @@ spec:
               }
             }
           ],
-          "title": "AWS ElasticSearch",
+          "title": "AWS Elasticsearch",
           "type": "row"
         },
         {

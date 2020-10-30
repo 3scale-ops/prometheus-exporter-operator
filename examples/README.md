@@ -7,7 +7,7 @@ Once the deployed prometheus-exporter operator is up and running and watching fo
 1. [MySQL](#mysql)
 1. [PostgreSQL](#postgresql)
 1. [Sphinx](#sphinx)
-1. [ElasticSearch](#elasticsearch)
+1. [Elasticsearch](#elasticsearch)
 1. [AWS CloudWatch](#aws-cloudwatch)
 
 ## Memcached
@@ -138,13 +138,13 @@ $ make sphinx-create
 $ make sphinx-delete
 ```
 
-## ElasticSearch
+## Elasticsearch
 
 * Official doc: https://github.com/justwatchcom/elasticsearch_exporter
 
 ### Deploy example
 
-* **Make sure you have an ElasticSearch cluster available and that dbHost/dbPort are correctly set on CR example file**
+* **Make sure you have an Elasticsearch cluster available and that dbHost/dbPort are correctly set on CR example file**
 * Create `elasticsearch-exporter` example ([example-CR](elasticsearch/es-cr.yaml)):
 ```bash
 $ make elasticsearch-create
