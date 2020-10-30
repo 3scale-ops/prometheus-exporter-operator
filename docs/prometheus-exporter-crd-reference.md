@@ -128,12 +128,12 @@ Specific CR fields per exporter type:
 * Image, port, resources, liveness, readiness default values can be found at [ansible-sphinx-vars](../roles/prometheusexporter/vars/sphinx.yml)
 * Real `sphinx` example can be found on [examples](../examples/README.md#sphinx) directory.
 
-### CR Spec Custom Type Es (ElasticSearch)
+### CR Spec Custom Type Es (Elasticsearch)
 
 | **Field** | **Type** | **Required** | **Default value** | **Description** |
 |:---:|:---:|:---:|:---:|:---:|
-| `dbHost` | `string`| Yes | `http://elasticsearch` | ElasticSearch Host (could be k8s service or any internal/external DNS endpoint) |
-| `dbPort` | `int`| Yes | `9200` | ElasticSearch Port |
+| `dbHost` | `string`| Yes | `http://elasticsearch` | Elasticsearch Host (could be k8s service or any internal/external DNS endpoint) |
+| `dbPort` | `int`| Yes | `9200` | Elasticsearch Port |
 
 * Image, port, resources, liveness, readiness default values can be found at [ansible-es-vars](../roles/prometheusexporter/vars/es.yml)
 

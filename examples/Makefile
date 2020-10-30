@@ -57,7 +57,7 @@ sphinx-create: ## SPHINX EXAMPLE - Create: CR (you need to provide a sphinx inst
 sphinx-delete: ## SPHINX EXAMPLE - Delete: CR
 	$(KUBE_CLIENT) delete -f sphinx/ -n $(NAMESPACE) || true
 
-## ElasticSearch ##
+## Elasticsearch ##
 
 elasticsearch-create:  ## ELASTICSEARCH EXAMPLE - Create: CR (you need to provide a ES cluster in advance)
 	$(KUBE_CLIENT) apply -f elasticsearch/ --validate=false -n $(NAMESPACE)
