@@ -170,3 +170,28 @@ data:
        aws_metric_name: HTTPCode_Backend_5XX
        aws_dimensions: [LoadBalancerName]
        aws_statistics: [Sum]
+     - aws_namespace: AWS/ClientVPN
+       aws_metric_name: CrlDaysToExpiry
+       aws_dimensions: [Endpoint]
+       aws_statistics: [Average]
+       period_seconds: 300
+     - aws_namespace: AWS/ClientVPN
+       aws_metric_name: ActiveConnectionsCount
+       aws_dimensions: [Endpoint]
+       aws_statistics: [Average]
+       period_seconds: 300
+     - aws_namespace: AWS/ClientVPN
+       aws_metric_name: AuthenticationFailures
+       aws_dimensions: [Endpoint]
+       aws_statistics: [Average]
+       period_seconds: 300
+     - aws_namespace: AWS/ClientVPN
+       aws_metric_name: IngressBytes
+       aws_dimensions: [Endpoint]
+       aws_statistics: [Average]
+       period_seconds: 300
+     - aws_namespace: AWS/ClientVPN
+       aws_metric_name: EgressBytes
+       aws_dimensions: [Endpoint]
+       aws_statistics: [Average]
+       period_seconds: 300
