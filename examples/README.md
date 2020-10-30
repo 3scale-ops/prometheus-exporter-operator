@@ -157,6 +157,8 @@ $ make elasticsearch-delete
 ## AWS CloudWatch
 
 * Official doc: https://github.com/prometheus/cloudwatch_exporter
+> **NOTE**
+><br /> The metrics from some services like `AWSClientVPN` are reported to AWS CloudWatch every **5 minutes** (instead of default **1 minute**), because they are not critical services like databases (RDS/EC) where details are more important. So on thoses cases, scrapping AWS Cloudwatch metrics every 1 minute makes no sense, so it is better to specify the var `period_seconds: 300` (instead of default `period_seconds: 60`) in the metric definition in the configmap. In addition, for those cases reporting metrics every 5 minutes, empty spaces (null values) could appear empty in the prometheus time series database, so in order to configure alerts, you can use queries like `max_over_time(aws_clientvpn_crl_days_to_expiry_average[10m]) < 2`, which takes max value within last 10 minutes, so we guarantee there is always a value that can fire an alert that won't disappear from time to time although alert might not be really recovered.
 
 ### CR needed extra objects
 

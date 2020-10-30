@@ -55,3 +55,10 @@ spec:
           severity: critical
         annotations:
           message: "AWS RDS instance {{ $labels.dbinstance_identifier }} from {{ $labels.prometheus_exporter }} has Low Free Storage Space usage (bytes)"
+      - alert: AWSClientVPNCrlDaysToExpiry
+        expr: max_over_time(aws_clientvpn_crl_days_to_expiry_average[10m]) < 2
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          message: "AWS ClientVPN CRL {{ $labels.endpoint }} will expire soon, maybe it is not being regenerated"
