@@ -303,7 +303,7 @@ spec:
           "tableColumn": "",
           "targets": [
             {
-              "expr": "elasticsearch_clusterinfo_version_info{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
+              "expr": "sum(elasticsearch_clusterinfo_version_info{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}) by (version)",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 1,
