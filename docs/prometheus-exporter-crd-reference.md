@@ -51,7 +51,7 @@ spec:
 
 | **Field** | **Type** | **Required** | **Default value (some depends on type)** | **Description** |
 |:---:|:---:|:---:|:---:|:---:|
-| `type` | `string` | Yes | `none` | Possible prometheus-exporter types: `memcached`, `redis`, `mysql`, `postgresql`, `sphinx`, `es`, `cloudwatch` |
+| `type` | `string` | Yes | `none` | Possible prometheus-exporter types: `memcached`, `redis`, `mysql`, `postgresql`, `sphinx`, `es`, `cloudwatch`, `probe` |
 | `serviceMonitor.enabled` | `bool` | No | `true` | Create (`true`) or not (`false`) ServiceMonitor object |
 | `serviceMonitor.interval` | `string` | No | `30s` | Prometheus scrape interval |
 | `grafanaDashboard.enabled` | `bool` | No | `true` | Create (`true`) or not (`false`) GrafanaDashboard object |
@@ -148,3 +148,12 @@ Specific CR fields per exporter type:
 
 * Image, port, resources, liveness, readiness default values can be found at [ansible-cloudwatch-vars](../roles/prometheusexporter/vars/cloudwatch.yml)
 * Real `cloudwatch` example can be found on [examples](../examples/README.md#aws-cloudwatch) directory.
+
+### CR Spec Custom Type Probe
+
+| **Field** | **Type** | **Required** | **Default value** | **Description** |
+|:---:|:---:|:---:|:---:|:---:|
+| `configurationConfigmapName` | `string` | Yes | `prometheus-exporter-probe-${CR_NAME}` | ConfigMap name containing blackbox modules configuration `config.yml` (http_2xx, tcp_connect...) |
+
+* Image, port, resources, liveness, readiness default values can be found at [ansible-probe-vars](../roles/prometheusexporter/vars/probe.yml)
+* Real `probe` example can be found on [examples](../examples/README.md#probe) directory.
