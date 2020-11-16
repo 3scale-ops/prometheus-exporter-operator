@@ -9,6 +9,7 @@ Once the deployed prometheus-exporter operator is up and running and watching fo
 1. [Sphinx](#sphinx)
 1. [Elasticsearch](#elasticsearch)
 1. [AWS CloudWatch](#aws-cloudwatch)
+1. [Probe](#probe)
 
 ## Memcached
 
@@ -182,4 +183,30 @@ $ make cloudwatch-create
 * Once tested, delete the created objects:
 ```bash
 $ make cloudwatch-delete
+```
+
+## Probe
+
+* Official doc: https://github.com/prometheus/blackbox_exporter
+
+### CR needed extra object
+
+* **The ConfigMap should have been previously created as the operator expects it**:
+  * **[probe-configmap-example](probe/probe-configmap.yaml) (Remember to set the object name on the CR field `configurationConfigmapName`)**
+
+> **NOTE**
+><br /> To deploy a probe exporter (blackbox exporter) it is just needed the configmap with blackbox modules configuration, and a single `PrometheusExporter` custom resource of type `probe`. But then, in order to be able to scrape different targets, you need to deploy for every endpoint that you want to monitor, a prometheus `ServiceMonitor` resource with the `selector.matchLabels` pointing to the deployed probe exporter `app: prometheus-exporter-probe-${CR_NAME}`, and then configure the specific module and target, with a proper relabeling of source label `__param_target` into target label `target` (which is used in the deployed grafana dashboard and possible prometheus alerts).
+
+### Target ServiceMonitor extra objects
+  * **[probe-target-service-monitor-example](probe/probe-target-service-monitor.yaml) (Remember to set the `selector.matchLabels` pointing to the deployed probe exporter `app: prometheus-exporter-probe-${CR_NAME}`)**
+
+### Deploy example
+
+* Create `probe-exporter` example ([example-configmap](probe/probe-configmap.yaml), [example-CR](probe/probe-cr.yaml), [example-target-service-monitor](probe/probe-target-service-monitor.yaml)):
+```bash
+$ make probe-create
+```
+* Once tested, delete the created objects:
+```bash
+$ make probe-delete
 ```
