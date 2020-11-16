@@ -90,10 +90,10 @@ manifests-push: ## OPERATOR OLM CSV - Push CSV manifests to remote application r
 	operator-courier --verbose push deploy/olm-catalog/$(PROJECT)/ $(MANIFESTS_PROJECT) $(PROJECT) $(MANIFESTS_VERSION) "$(AUTH_TOKEN)"
 
 ## Prometheus rules ##
-prometheus-rules-deploy: namespace-create ## PROMETHEUS RULES - Create Prometheus Rules (Memcached, Redis, MySQL, PostgreSQL, Sphinx, Elasticsearch, Cloudwatch)
+prometheus-rules-deploy: namespace-create ## PROMETHEUS RULES - Create Prometheus Rules (Memcached, Redis, MySQL, PostgreSQL, Sphinx, Elasticsearch, Cloudwatch, Probe)
 	$(KUBE_CLIENT) apply -f prometheus-rules/ -n $(NAMESPACE)
 
-prometheus-rules-delete: ## PROMETHEUS RULES - Delete Prometheus Rules (Memcached, Redis, MySQL, PostgreSQL, Sphinx, Elasticsearch, Cloudwatch)
+prometheus-rules-delete: ## PROMETHEUS RULES - Delete Prometheus Rules (Memcached, Redis, MySQL, PostgreSQL, Sphinx, Elasticsearch, Cloudwatch, Probe)
 	$(KUBE_CLIENT) delete -f prometheus-rules/ -n $(NAMESPACE) || true
 
 help: ## Print this help
