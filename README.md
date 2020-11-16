@@ -16,6 +16,7 @@ Current prometheus exporters `types` supported, managed by same prometheus-expor
 * sphinx
 * es (elasticsearch)
 * cloudwatch
+* probe (blackbox)
 
 The operator manages the lifecycle of the following objects:
 * Deployment (one per CR)
