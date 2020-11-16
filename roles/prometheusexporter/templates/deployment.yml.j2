@@ -83,6 +83,14 @@ spec:
             - mountPath: /config/
               name: config-volume
               readOnly: true
+{% elif type == "probe" %}
+          args:
+            - --config.file=/etc/blackbox_exporter/config.yml
+            - --log.level=debug
+          volumeMounts:
+            - mountPath: /etc/blackbox_exporter
+              name: config-volume
+              readOnly: true
 {% endif %}
           livenessProbe:
             tcpSocket:
@@ -106,6 +114,14 @@ spec:
               cpu: "{{ resources.requests.cpu | default(resources_requests_cpu) }}"
               memory: "{{ resources.requests.memory | default(resources_requests_memory) }}"
 {% if type == "cloudwatch" %}
+      volumes:
+      - name: config-volume
+        configMap:
+          name: "{{ configuration_configmap_name }}"
+          items:
+          - key: config.yml
+            path: config.yml
+{% elif type == "probe" %}
       volumes:
       - name: config-volume
         configMap:
