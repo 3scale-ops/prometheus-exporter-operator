@@ -1,0 +1,48 @@
+---
+
+# Exporter
+image_name: "quay.io/prometheus/blackbox-exporter"
+image_version: "v0.18.0"
+port: 9115
+liveness_probe_timeout_seconds: 3
+liveness_probe_period_seconds: 15
+liveness_probe_success_threshold: 1
+liveness_probe_failure_threshold: 5
+readiness_probe_timeout_seconds: 3
+readiness_probe_period_seconds: 30
+readiness_probe_success_threshold: 1
+readiness_probe_failure_threshold: 5
+resources_requests_cpu: "25m"
+resources_requests_memory: "32Mi"
+resources_limits_cpu: "50m"
+resources_limits_memory: "64Mi"
+
+# Custom
+configuration_configmap_name: "prometheus-exporter-{{ type }}-{{ meta.name }}"
+
+###### Example of ConfigMap
+#
+# If you don't specify CR field configurationConfigmapName, it will be used default ConfigMap name "prometheus-exporter-probe-{{ CR_NAME }}"
+#
+#apiVersion: v1
+#kind: ConfigMap
+#metadata:
+#  name: "prometheus-exporter-probe-example"
+#data:
+#  config.yml: |
+#    modules:
+#      http_2xx:
+#        prober: http
+#        timeout: 5s
+#        http:
+#          method: GET
+#          no_follow_redirects: false
+#          fail_if_ssl: false
+#          fail_if_not_ssl: false
+#          tls_config:
+#            insecure_skip_verify: false
+#          preferred_ip_protocol: "ip4" # defaults to "ip6"
+#          ip_protocol_fallback: false  # no fallback to "ip6"
+#      tcp_connect:
+#        prober: tcp
+#        timeout: 5s
