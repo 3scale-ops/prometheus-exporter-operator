@@ -10,9 +10,9 @@ NAMESPACE ?= prom-exporter
 
 ## General ##
 
-all: memcached-create redis-create mysql-create postgresql-create sphinx-create elasticsearch-create cloudwatch-create ## GENERAL - Create all examples
+all: memcached-create redis-create mysql-create postgresql-create sphinx-create elasticsearch-create cloudwatch-create probe-create ## GENERAL - Create all examples
 
-clean: memcached-delete redis-delete mysql-delete postgresql-delete sphinx-delete elasticsearch-delete cloudwatch-delete ## GENERAL - Delete all examples
+clean: memcached-delete redis-delete mysql-delete postgresql-delete sphinx-delete elasticsearch-delete cloudwatch-delete probe-delete ## GENERAL - Delete all examples
 
 ## Memcached ##
 
@@ -72,6 +72,14 @@ cloudwatch-create: ## CLOUDWATCH EXAMPLE - Create: CR-secret (AWS IAM creds), CR
 
 cloudwatch-delete: ## CLOUDWATCH EXAMPLE - Delete: CR, CR-secret, CR-configmap
 	$(KUBE_CLIENT) delete -f cloudwatch/ -n $(NAMESPACE) || true
+
+## Probe ##
+
+probe-create: ## PROBE EXAMPLE - Create: CR-configmap (blackbox modules config), CR, Target-SM
+	$(KUBE_CLIENT) apply -f probe/ --validate=false -n $(NAMESPACE)
+
+probe-delete: ## PROBE EXAMPLE - Delete: Target-SM, CR, CR-configmap
+	$(KUBE_CLIENT) delete -f probe/ -n $(NAMESPACE) || true
 
 help: ## Print this help
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-33s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)

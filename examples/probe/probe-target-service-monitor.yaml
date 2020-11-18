@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: prometheus-exporter-probe-http-kubernetes-io
+spec:
+  endpoints:
+  - interval: 30s
+    path: /probe
+    port: metrics
+    relabelings:
+      - sourceLabels: [__param_target]
+        targetLabel: target
+    params:
+      module:
+      - http_2xx
+      target:
+      - https://kubernetes.io
+  selector:
+    matchLabels:
+      app: prometheus-exporter-probe-staging-blackbox

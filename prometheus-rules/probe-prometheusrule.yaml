@@ -1,0 +1,29 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: prometheus-exporter-probe
+spec:
+  groups:
+    - name: prometheus-exporter-probe.rules
+      rules:
+      - alert: ProbeDown
+        expr: probe_success < 1
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          message: "Probe target {{ $labels.target }} is DOWN"
+      - alert: ProbeSSLCertExpireWarning
+        expr: probe_ssl_earliest_cert_expiry - time() < 86400 * 30
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          message: "SSL certificate from probe target {{ $labels.target }} is going to expire in 30 days"
+      - alert: ProbeSSLCertExpireCritical
+        expr: probe_ssl_earliest_cert_expiry - time() < 86400 * 14
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          message: "SSL certificate from probe target {{ $labels.target }} is going to expire in 14 days"

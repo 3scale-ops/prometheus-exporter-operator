@@ -16,6 +16,7 @@ Current prometheus exporters `types` supported, managed by same prometheus-expor
 * sphinx
 * es (elasticsearch)
 * cloudwatch
+* probe (blackbox)
 
 The operator manages the lifecycle of the following objects:
 * Deployment (one per CR)
@@ -25,6 +26,8 @@ The operator manages the lifecycle of the following objects:
 
 > **NOTE**
 ><br /> Some exporters need some **extra objects to be previously manually created** in order to work (**manual objects names need to be specified on required CR fields**). This extra needed objects includes **Secrets (credentials) or Configmaps (configuration files) on specific formats**. Examples to help you create these extra objects are provided on [examples](examples/) directory for all exporter types.
+><br />
+><br /> **If you modify the content of these extra needed objects (*Secrets*/*Configmaps*), exporters won't load them automatically, so you need to force a new pod creation by for example deleting the running pod.**
 
 ## Current status
 

@@ -36,7 +36,7 @@ spec:
           properties:
             type:
               type: string
-              description: 'Supported prometheus-exporter types: memcached, redis, mysql, postgresql, sphinx, es, cloudwatch'
+              description: 'Supported prometheus-exporter types: memcached, redis, mysql, postgresql, sphinx, es, cloudwatch, probe'
               enum:
               - memcached
               - redis
@@ -45,6 +45,7 @@ spec:
               - sphinx
               - es
               - cloudwatch
+              - probe
             serviceMonitor:
               type: object
               properties:
