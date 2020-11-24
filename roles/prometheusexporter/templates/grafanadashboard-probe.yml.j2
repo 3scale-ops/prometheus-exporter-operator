@@ -766,23 +766,7 @@ spec:
           "title": "SSL Expiry",
           "type": "singlestat",
           "valueFontSize": "80%",
-          "valueMaps": [
-            {
-              "op": "=",
-              "text": "N/A",
-              "value": "null"
-            },
-            {
-              "op": "=",
-              "text": "YES",
-              "value": "1"
-            },
-            {
-              "op": "=",
-              "text": "NO",
-              "value": "0"
-            }
-          ],
+          "valueMaps": [],
           "valueName": "current"
         },
         {
@@ -1032,7 +1016,7 @@ spec:
                 "$__all"
               ]
             },
-            "datasource": "Prometheus",
+            "datasource": "$datasource",
             "definition": "label_values(probe_success{namespace=\"$namespace\",service=~\".*$prometheus_exporter\"}, target)",
             "hide": 0,
             "includeAll": true,
