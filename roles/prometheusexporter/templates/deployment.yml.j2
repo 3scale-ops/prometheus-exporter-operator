@@ -130,3 +130,6 @@ spec:
           - key: config.yml
             path: config.yml
 {% endif %}
+{% if nodeSelector is defined %}
+      nodeSelector: {{ nodeSelector }}
+{% endif %}

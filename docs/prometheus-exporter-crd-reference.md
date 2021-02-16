@@ -38,6 +38,8 @@ spec:
     periodSeconds: 20
     successThreshold: 1
     failureThreshold: 7
+  nodeSlector:
+    node: test
   resources:
     requests:
       cpu: 75m
@@ -74,6 +76,7 @@ spec:
 | `readinessProbe.periodSeconds` | `int` | No | `30` | Override readiness period (seconds) |
 | `readinessProbe.successThreshold` | `int` | No | `1` | Override readiness success threshold |
 | `readinessProbe.failureThreshold` | `int` | No | `5` | Override readiness failure threshold |
+| `nodeSelector` | `map` | No | - | NodeSelector value for deployment |
 
 ## CR Spec Custom
 
