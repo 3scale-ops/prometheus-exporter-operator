@@ -131,5 +131,8 @@ spec:
             path: config.yml
 {% endif %}
 {% if node_selector is defined %}
-      nodeSelector: {{ node_selector }}
+      nodeSelector:
+{% for key, value in node_selector.items() %}
+        {{ key | safe }}: {{ value | safe }}
+{% endfor %}
 {% endif %}

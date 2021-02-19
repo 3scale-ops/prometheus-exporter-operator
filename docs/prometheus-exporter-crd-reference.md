@@ -38,7 +38,7 @@ spec:
     periodSeconds: 20
     successThreshold: 1
     failureThreshold: 7
-  nodeSlector:
+  nodeSelector:
     node: test
   resources:
     requests:
@@ -76,7 +76,7 @@ spec:
 | `readinessProbe.periodSeconds` | `int` | No | `30` | Override readiness period (seconds) |
 | `readinessProbe.successThreshold` | `int` | No | `1` | Override readiness success threshold |
 | `readinessProbe.failureThreshold` | `int` | No | `5` | Override readiness failure threshold |
-| `nodeSelector` | `map` | No | - | NodeSelector value for deployment |
+| `nodeSelector` | `map` | No | - | Map of nodeSelector key-value pairs |
 
 ## CR Spec Custom
 
