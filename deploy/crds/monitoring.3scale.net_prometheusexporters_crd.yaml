@@ -156,6 +156,11 @@ spec:
             configurationConfigmapName:
               type: string
               description: For cloudwatch exporter, the ConfigMap name containing Cloudwatch config.yml (Services, Dimensions, Tags used for autodiscovery...)
+            nodeSelector:
+              additionalProperties:
+                type: string
+              description: Map of nodeSelector key-value pairs
+              type: object
   version: v1alpha1
   versions:
   - name: v1alpha1
