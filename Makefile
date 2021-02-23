@@ -12,7 +12,7 @@ else ifeq (${UNAME}, Darwin)
   INPLACE_SED=sed -i ""
 endif
 
-VERSION ?= v0.2.0
+VERSION ?= v0.2.4
 MANIFESTS_VERSION ?= $(subst v,,$(VERSION))
 REGISTRY ?= quay.io
 ORG ?= 3scale
