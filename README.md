@@ -8,7 +8,7 @@
 
 A Kubernetes Operator based on the Operator SDK to centralize the setup of 3rd party prometheus exporters on **Kubernetes/OpenShift**, with a collection of grafana dashboards.
 
-You can setup different prometheus exporters to monitor the internals from different databases, or even any available cloudwatch metric from any AWS Service, by just providing a few parameters like *dbHost* or *dbPort* (operator manage the container image, port, argument, command, volumes... and also prometheus `ServiceMonitor` and `GrafanaDashboard` k8s objects).
+You can setup different prometheus exporters to monitor the **internals from different databases**, **HTTP/TCP endpoints** (availability, latency, SSL/TLS certificate expiration...), or even any available **cloudwatch metric from any AWS Service**, by just providing a few parameters like *dbHost* or *dbPort* (operator manage the container image, port, argument, command, volumes... and also prometheus `ServiceMonitor` and `GrafanaDashboard` k8s objects).
 
 Current prometheus exporters `types` supported, managed by same prometheus-exporter-operator:
 * memcached
@@ -86,15 +86,7 @@ Operator is available at [OperatorHub.io](https://operatorhub.io/operator/promet
 * Why you want to be paged (severity warning/critical, minutes duration before firing an alert...)
 * Customizable thresholds definition (it is something that depends on infrastructure dimensions...)
 
-However, some examples of prometheus rules can be found on [prometheus-rules](prometheus-rules/) directory.
-* Deploy all `PrometheusRules` examples:
-```bash
-$ make prometheus-rules-deploy
-```
-* Once tested, delete deployed rules:
-```bash
-$ make prometheus-rules-delete
-```
+However, some examples of prometheus rules can be found at [prometheus-rules](prometheus-rules/) directory.
 
 ## Development
 
