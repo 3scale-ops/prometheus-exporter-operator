@@ -15,39 +15,21 @@ BUNDLE_DEFAULT_CHANNEL := --default-channel=$(DEFAULT_CHANNEL)
 endif
 BUNDLE_METADATA_OPTS ?= $(BUNDLE_CHANNELS) $(BUNDLE_DEFAULT_CHANNEL)
 
-all: docker-build
-
-# Run against the configured Kubernetes cluster in ~/.kube/config
-run: ansible-operator
-	$(ANSIBLE_OPERATOR) run
-
-# Install CRDs into a cluster
-install: kustomize
-	$(KUSTOMIZE) build config/crd | kubectl apply -f -
-
-# Uninstall CRDs from a cluster
-uninstall: kustomize
-	$(KUSTOMIZE) build config/crd | kubectl delete -f -
-
-# Deploy controller in the configured Kubernetes cluster in ~/.kube/config
-deploy: kustomize
-	cd config/manager && $(KUSTOMIZE) edit set image controller=${IMG}
-	$(KUSTOMIZE) build config/default | kubectl apply -f -
-
-# Undeploy controller in the configured Kubernetes cluster in ~/.kube/config
-undeploy: kustomize
-	$(KUSTOMIZE) build config/default | kubectl delete -f -
-
-# Build the docker image
-docker-build:
-	docker build -t ${IMG} .
-
-# Push the docker image
-docker-push:
-	docker push ${IMG}
+#############################
+### Makefile requirements ###
+#############################
 
 OS := $(shell uname -s | tr '[:upper:]' '[:lower:]')
 ARCH := $(shell uname -m | sed 's/x86_64/amd64/')
+
+# Download operator-sdk binary if necesasry
+OPERATOR_SDK_RELEASE = v1.5.0
+OPERATOR_SDK = $(shell pwd)/bin/operator-sdk-$(OPERATOR_SDK_RELEASE)
+OPERATOR_SDK_DL_URL = https://github.com/operator-framework/operator-sdk/releases/download/$(OPERATOR_SDK_RELEASE)/operator-sdk_$(OS)_$(ARCH)
+$(OPERATOR_SDK):
+	mkdir -p $(shell pwd)/bin
+	curl -sL -o $(OPERATOR_SDK) $(OPERATOR_SDK_DL_URL)
+	chmod +x $(OPERATOR_SDK)
 
 # Download kustomize locally if necessary, preferring the $(pwd)/bin path over global if both exist.
 .PHONY: kustomize
@@ -83,12 +65,47 @@ ANSIBLE_OPERATOR = $(shell which ansible-operator)
 endif
 endif
 
+###########################
+### Kubebuilder targets ###
+###########################
+
+all: docker-build
+
+# Run against the configured Kubernetes cluster in ~/.kube/config
+run: ansible-operator
+	$(ANSIBLE_OPERATOR) run
+
+# Install CRDs into a cluster
+install: kustomize
+	$(KUSTOMIZE) build config/crd | kubectl apply -f -
+
+# Uninstall CRDs from a cluster
+uninstall: kustomize
+	$(KUSTOMIZE) build config/crd | kubectl delete -f -
+
+# Deploy controller in the configured Kubernetes cluster in ~/.kube/config
+deploy: kustomize
+	cd config/manager && $(KUSTOMIZE) edit set image controller=${IMG}
+	$(KUSTOMIZE) build config/default | kubectl apply -f -
+
+# Undeploy controller in the configured Kubernetes cluster in ~/.kube/config
+undeploy: kustomize
+	$(KUSTOMIZE) build config/default | kubectl delete -f -
+
+# Build the docker image
+docker-build:
+	docker build -t ${IMG} .
+
+# Push the docker image
+docker-push:
+	docker push ${IMG}
+
 .PHONY: bundle ## Generate bundle manifests and metadata, then validate generated files.
-bundle: kustomize
-	operator-sdk generate kustomize manifests -q
+bundle: $(OPERATOR_SDK) kustomize
+	$(OPERATOR_SDK) generate kustomize manifests -q
 	cd config/manager && $(KUSTOMIZE) edit set image controller=$(IMG)
-	$(KUSTOMIZE) build config/manifests | operator-sdk generate bundle -q --overwrite --version $(VERSION) $(BUNDLE_METADATA_OPTS)
-	operator-sdk bundle validate ./bundle
+	$(KUSTOMIZE) build config/manifests | $(OPERATOR_SDK) generate bundle -q --overwrite --version $(VERSION) $(BUNDLE_METADATA_OPTS)
+	$(OPERATOR_SDK) bundle validate ./bundle
 
 .PHONY: bundle-build ## Build the bundle image.
 bundle-build:
