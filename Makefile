@@ -145,3 +145,6 @@ catalog-push:
 	docker push $(CATALOG_IMG)
 
 bundle-publish: bundle-build bundle-push catalog-build catalog-push
+
+get-new-release:
+	@hack/new-release.sh v$(VERSION)
