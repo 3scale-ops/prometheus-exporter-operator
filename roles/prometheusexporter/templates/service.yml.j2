@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: "prometheus-exporter-{{ type }}-{{ meta.name }}"
-  namespace: "{{ meta.namespace }}"
+  name: "prometheus-exporter-{{ type }}-{{ ansible_operator_meta.name }}"
+  namespace: "{{ ansible_operator_meta.namespace }}"
   labels:
-    prometheus_exporter: "{{ meta.name }}"
+    prometheus_exporter: "{{ ansible_operator_meta.name }}"
     prometheus_exporter_type: "{{ type }}"
-    app: "prometheus-exporter-{{ type }}-{{ meta.name }}"
+    app: "prometheus-exporter-{{ type }}-{{ ansible_operator_meta.name }}"
 {% if extra_label.key is defined and extra_label.value is defined %}
     {{ extra_label.key }}: "{{ extra_label.value }}"
 {% endif %}
@@ -16,5 +16,5 @@ spec:
       port: {{ port }}
       targetPort: {{ port }}
   selector:
-    app: "prometheus-exporter-{{ type }}-{{ meta.name }}"
+    app: "prometheus-exporter-{{ type }}-{{ ansible_operator_meta.name }}"
   type: ClusterIP

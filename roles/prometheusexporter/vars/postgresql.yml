@@ -18,7 +18,7 @@ resources_limits_cpu: "50m"
 resources_limits_memory: "64Mi"
 
 # Custom
-db_connection_string_secret_name: "prometheus-exporter-{{ type }}-{{ meta.name }}"
+db_connection_string_secret_name: "prometheus-exporter-{{ type }}-{{ ansible_operator_meta.name }}"
 
 ###### Example of Secret
 #
