@@ -98,16 +98,15 @@ $ make prometheus-rules-delete
 
 ## Development
 
-To run the operator locally you need to install some ansible dependencies first:
-
-* ansible-runner: `sudo dnf install python-ansible-runner`
-* ansible-runner-http: `pip install python-ansible-runner`
-* openshift ansible module: `pip install openshift`
-
-You can then run the operator with the following command:
+You can run the operator locally watching all namespaces (default behaviour):
 
 ```bash
-operator-sdk run --local --watch-namespace <namespace>
+make run
+```
+
+Or watching a specific namespace:
+```bash
+make run WATCH_NAMESPACE=example
 ```
 
 ## Release
