@@ -31,6 +31,15 @@ $(OPERATOR_SDK):
 	curl -sL -o $(OPERATOR_SDK) $(OPERATOR_SDK_DL_URL)
 	chmod +x $(OPERATOR_SDK)
 
+# Download operator package manager if necessary
+OPM_RELEASE = v1.16.1
+OPM = $(shell pwd)/bin/opm-$(OPM_RELEASE)
+OPM_DL_URL = https://github.com/operator-framework/operator-registry/releases/download/$(OPM_RELEASE)/$(OS)-$(ARCH)-opm
+$(OPM):
+	mkdir -p $(shell pwd)/bin
+	curl -sL -o $(OPM) $(OPM_DL_URL)
+	chmod +x $(OPM)
+
 # Download kustomize locally if necessary, preferring the $(pwd)/bin path over global if both exist.
 .PHONY: kustomize
 KUSTOMIZE = $(shell pwd)/bin/kustomize
@@ -110,3 +119,29 @@ bundle: $(OPERATOR_SDK) kustomize
 .PHONY: bundle-build ## Build the bundle image.
 bundle-build:
 	docker build -f bundle.Dockerfile -t $(BUNDLE_IMG) .
+
+#########################
+#### Release targets ####
+#########################
+prepare-alpha-release: bundle
+
+prepare-release: bundle
+	$(MAKE) bundle CHANNELS=alpha,stable DEFAULT_CHANNEL=alpha
+
+prepare-release: bundle
+
+bundle-push:
+	docker push $(BUNDLE_IMG)
+
+catalog-build: $(OPM)
+	$(OPM) index add \
+		--build-tool docker \
+		--mode semver-skippatch \
+		--bundles $(BUNDLE_IMG) \
+		--from-index $(CATALOG_IMG) \
+		--tag $(CATALOG_IMG)
+
+catalog-push:
+	docker push $(CATALOG_IMG)
+
+bundle-publish: bundle-build bundle-push catalog-build catalog-push

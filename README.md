@@ -110,6 +110,13 @@ You can then run the operator with the following command:
 operator-sdk run --local --watch-namespace <namespace>
 ```
 
+## Release
+
+1. Update Makefile variable `VERSION` to the appropiate release version.
+1. If it is an **alpha** release, execute make target `make prepare-alpha-release`
+1. If it is an **stable** release, execute make target `make prepare-release`
+1. Open a [Pull Request](https://github.com/3scale/prometheus-exporter-operator/pulls)
+
 ## Contributing
 
 You can contribute by:
