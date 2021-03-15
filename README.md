@@ -2,7 +2,7 @@
 
 <img src="img/prometheus-exporter-operator-logo.svg" height="150px" alt="Prometheus Exporter Operator"></img>
 
-[![build status](https://circleci.com/gh/3scale/prometheus-exporter-operator.svg?style=shield)](https://circleci.com/gh/3scale/prometheus-exporter-operator)
+[![build](https://github.com/3scale/prometheus-exporter-operator/actions/workflows/release.yaml/badge.svg)](https://github.com/3scale/prometheus-exporter-operator/actions/workflows/release.yaml)
 [![release](https://badgen.net/github/release/3scale/prometheus-exporter-operator)](https://github.com/3scale/prometheus-exporter-operator/releases)
 [![license](https://badgen.net/github/license/3scale/prometheus-exporter-operator)](https://github.com/3scale/prometheus-exporter-operator/blob/master/LICENSE)
 
