@@ -53,7 +53,7 @@ spec:
 
 | **Field** | **Type** | **Required** | **Default value (some depends on type)** | **Description** |
 |:---:|:---:|:---:|:---:|:---:|
-| `type` | `string` | Yes | `none` | Possible prometheus-exporter types: `memcached`, `redis`, `mysql`, `postgresql`, `sphinx`, `es`, `cloudwatch`, `probe` |
+| `type` | `string` | Yes | `none` | Supported prometheus-exporter types: `memcached`, `redis`, `mysql`, `postgresql`, `sphinx`, `es`, `cloudwatch`, `probe` |
 | `serviceMonitor.enabled` | `bool` | No | `true` | Create (`true`) or not (`false`) ServiceMonitor object |
 | `serviceMonitor.interval` | `string` | No | `30s` | Prometheus scrape interval |
 | `grafanaDashboard.enabled` | `bool` | No | `true` | Create (`true`) or not (`false`) GrafanaDashboard object |
@@ -62,7 +62,7 @@ spec:
 | `extraLabel.key` | `string` | No | - | Add extra label `key` to all created resources (example `tier`) |
 | `extraLabel.value` | `string` | No | - | Add extra label `value` to all created resources (example `frontend`) |
 | `image.name` | `string` | No | Depends on exporter | Prometheus exporter image name |
-| `image.version` | `string` | No | Depends on exporter | Prometheus exporter image version |
+| `image.version` | `string` | No | Depends on exporter | Prometheus exporter image tag version |
 | `port` | `int` | No | Depends on exporter | Prometheus exporter metrics port |
 | `resources.requests.cpu` | - | No | `25m` | Override CPU requests |
 | `resources.requests.memory` | - | No | `32Mi` | Override Memory requests |
