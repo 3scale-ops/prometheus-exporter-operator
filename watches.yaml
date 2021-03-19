@@ -1,6 +1,6 @@
 ---
 # Use the 'create api' subcommand to add watches to this file.
-- version: v1
+- version: v1alpha1
   group: monitoring.3scale.net
   kind: PrometheusExporter
   role: prometheusexporter
