@@ -2,13 +2,13 @@
 
 <img src="img/prometheus-exporter-operator-logo.svg" height="150px" alt="Prometheus Exporter Operator"></img>
 
-[![build status](https://circleci.com/gh/3scale/prometheus-exporter-operator.svg?style=shield)](https://circleci.com/gh/3scale/prometheus-exporter-operator)
+[![build](https://github.com/3scale/prometheus-exporter-operator/actions/workflows/release.yaml/badge.svg)](https://github.com/3scale/prometheus-exporter-operator/actions/workflows/release.yaml)
 [![release](https://badgen.net/github/release/3scale/prometheus-exporter-operator)](https://github.com/3scale/prometheus-exporter-operator/releases)
 [![license](https://badgen.net/github/license/3scale/prometheus-exporter-operator)](https://github.com/3scale/prometheus-exporter-operator/blob/master/LICENSE)
 
 A Kubernetes Operator based on the Operator SDK to centralize the setup of 3rd party prometheus exporters on **Kubernetes/OpenShift**, with a collection of grafana dashboards.
 
-You can setup different prometheus exporters to monitor the internals from different databases, or even any available cloudwatch metric from any AWS Service, by just providing a few parameters like *dbHost* or *dbPort* (operator manage the container image, port, argument, command, volumes... and also prometheus `ServiceMonitor` and `GrafanaDashboard` k8s objects).
+You can setup different prometheus exporters to monitor the **internals from different databases**, **HTTP/TCP endpoints** (availability, latency, SSL/TLS certificate expiration...), or even any available **cloudwatch metric from any AWS Service**, by just providing a few parameters like *dbHost* or *dbPort* (operator manage the container image, port, argument, command, volumes... and also prometheus `ServiceMonitor` and `GrafanaDashboard` k8s objects).
 
 Current prometheus exporters `types` supported, managed by same prometheus-exporter-operator:
 * memcached
@@ -86,29 +86,27 @@ Operator is available at [OperatorHub.io](https://operatorhub.io/operator/promet
 * Why you want to be paged (severity warning/critical, minutes duration before firing an alert...)
 * Customizable thresholds definition (it is something that depends on infrastructure dimensions...)
 
-However, some examples of prometheus rules can be found on [prometheus-rules](prometheus-rules/) directory.
-* Deploy all `PrometheusRules` examples:
-```bash
-$ make prometheus-rules-deploy
-```
-* Once tested, delete deployed rules:
-```bash
-$ make prometheus-rules-delete
-```
+However, some examples of prometheus rules can be found at [prometheus-rules](prometheus-rules/) directory.
 
 ## Development
 
-To run the operator locally you need to install some ansible dependencies first:
-
-* ansible-runner: `sudo dnf install python-ansible-runner`
-* ansible-runner-http: `pip install python-ansible-runner`
-* openshift ansible module: `pip install openshift`
-
-You can then run the operator with the following command:
+You can run the operator locally watching all namespaces (default behaviour):
 
 ```bash
-operator-sdk run --local --watch-namespace <namespace>
+make run
 ```
+
+Or watching a specific namespace:
+```bash
+make run WATCH_NAMESPACE=example
+```
+
+## Release
+
+1. Update Makefile variable `VERSION` to the appropiate release version.
+1. If it is an **alpha** release, execute make target `make prepare-alpha-release`
+1. If it is an **stable** release, execute make target `make prepare-release`
+1. Open a [Pull Request](https://github.com/3scale/prometheus-exporter-operator/pulls)
 
 ## Contributing
 

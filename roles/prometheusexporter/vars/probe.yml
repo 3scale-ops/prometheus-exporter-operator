@@ -18,7 +18,7 @@ resources_limits_cpu: "50m"
 resources_limits_memory: "64Mi"
 
 # Custom
-configuration_configmap_name: "prometheus-exporter-{{ type }}-{{ meta.name }}"
+configuration_configmap_name: "prometheus-exporter-{{ type }}-{{ ansible_operator_meta.name }}"
 
 ###### Example of ConfigMap
 #

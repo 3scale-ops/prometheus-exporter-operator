@@ -1,100 +1,148 @@
-.PHONY: operator-image-update operator-local-deploy operator-manual-deploy operator-manual-delete operator-olm-deploy operator-olm-delete manifests-generate manifests-verify manifests-push prometheus-rules-deploy prometheus-rules-delete help
+# Current Operator version
+VERSION ?= 0.3.0-alpha.11
+# Image URL to use all building/pushing image targets
+IMG ?= quay.io/3scale/prometheus-exporter-operator:v$(VERSION)
+# Default catalog image
+CATALOG_IMG ?= quay.io/3scale/prometheus-exporter-operator-bundle:catalog
+# Default bundle image tag
+BUNDLE_IMG ?= quay.io/3scale/prometheus-exporter-operator-bundle:$(VERSION)
 
-.DEFAULT_GOAL := help
+ifneq ($(origin CHANNELS), undefined)
+BUNDLE_CHANNELS := --channels=$(CHANNELS)
+endif
+ifneq ($(origin DEFAULT_CHANNEL), undefined)
+BUNDLE_DEFAULT_CHANNEL := --default-channel=$(DEFAULT_CHANNEL)
+endif
+BUNDLE_METADATA_OPTS ?= $(BUNDLE_CHANNELS) $(BUNDLE_DEFAULT_CHANNEL)
 
-MKFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
-THISDIR_PATH := $(patsubst %/,%,$(abspath $(dir $(MKFILE_PATH))))
-UNAME := $(shell uname)
+#############################
+### Makefile requirements ###
+#############################
 
-ifeq (${UNAME}, Linux)
-  INPLACE_SED=sed -i
-else ifeq (${UNAME}, Darwin)
-  INPLACE_SED=sed -i ""
+OS := $(shell uname -s | tr '[:upper:]' '[:lower:]')
+ARCH := $(shell uname -m | sed 's/x86_64/amd64/')
+
+# Download operator-sdk binary if necesasry
+OPERATOR_SDK_RELEASE = v1.5.0
+OPERATOR_SDK = $(shell pwd)/bin/operator-sdk-$(OPERATOR_SDK_RELEASE)
+OPERATOR_SDK_DL_URL = https://github.com/operator-framework/operator-sdk/releases/download/$(OPERATOR_SDK_RELEASE)/operator-sdk_$(OS)_$(ARCH)
+$(OPERATOR_SDK):
+	mkdir -p $(shell pwd)/bin
+	curl -sL -o $(OPERATOR_SDK) $(OPERATOR_SDK_DL_URL)
+	chmod +x $(OPERATOR_SDK)
+
+# Download operator package manager if necessary
+OPM_RELEASE = v1.16.1
+OPM = $(shell pwd)/bin/opm-$(OPM_RELEASE)
+OPM_DL_URL = https://github.com/operator-framework/operator-registry/releases/download/$(OPM_RELEASE)/$(OS)-$(ARCH)-opm
+$(OPM):
+	mkdir -p $(shell pwd)/bin
+	curl -sL -o $(OPM) $(OPM_DL_URL)
+	chmod +x $(OPM)
+
+# Download kustomize locally if necessary, preferring the $(pwd)/bin path over global if both exist.
+.PHONY: kustomize
+KUSTOMIZE = $(shell pwd)/bin/kustomize
+kustomize:
+ifeq (,$(wildcard $(KUSTOMIZE)))
+ifeq (,$(shell which kustomize 2>/dev/null))
+	@{ \
+	set -e ;\
+	mkdir -p $(dir $(KUSTOMIZE)) ;\
+	curl -sSLo - https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v3.5.4/kustomize_v3.5.4_$(OS)_$(ARCH).tar.gz | \
+	tar xzf - -C bin/ ;\
+	}
+else
+KUSTOMIZE = $(shell which kustomize)
+endif
 endif
 
-VERSION ?= v0.2.4
-MANIFESTS_VERSION ?= $(subst v,,$(VERSION))
-REGISTRY ?= quay.io
-ORG ?= 3scale
-PROJECT ?= prometheus-exporter-operator
-MANIFESTS_PROJECT ?= 3scaleops
-IMAGE ?= $(REGISTRY)/$(ORG)/$(PROJECT)
-AUTH_TOKEN = $(shell curl -sH "Content-Type: application/json" -XPOST https://quay.io/cnr/api/v1/users/login -d '{"user": {"username": "$(QUAY_USERNAME)", "password": "${QUAY_PASSWORD}"}}' | jq -r '.token')
-KUBE_CLIENT ?= kubectl # It can be used "oc" or "kubectl"
-NAMESPACE ?= prom-exporter
-NAMESPACE_MARKETPLACE ?= openshift-marketplace
+# Download ansible-operator locally if necessary, preferring the $(pwd)/bin path over global if both exist.
+.PHONY: ansible-operator
+ANSIBLE_OPERATOR = $(shell pwd)/bin/ansible-operator
+ansible-operator:
+ifeq (,$(wildcard $(ANSIBLE_OPERATOR)))
+ifeq (,$(shell which ansible-operator 2>/dev/null))
+	@{ \
+	set -e ;\
+	mkdir -p $(dir $(ANSIBLE_OPERATOR)) ;\
+	curl -sSLo $(ANSIBLE_OPERATOR) https://github.com/operator-framework/operator-sdk/releases/download/v1.5.0/ansible-operator_$(OS)_$(ARCH) ;\
+	chmod +x $(ANSIBLE_OPERATOR) ;\
+	}
+else
+ANSIBLE_OPERATOR = $(shell which ansible-operator)
+endif
+endif
 
-## Operator ##
-operator-image-build: # OPERATOR IMAGE - Build operator Docker image
-	operator-sdk build $(IMAGE):$(VERSION)
+###########################
+### Kubebuilder targets ###
+###########################
 
-operator-image-push: # OPERATOR IMAGE - Push operator Docker image to remote registry
-	docker push $(IMAGE):$(VERSION)
+all: docker-build
 
-operator-image-update: operator-image-build operator-image-push ## OPERATOR IMAGE - Build and Push Operator Docker image to remote registry
+# Run against the configured Kubernetes cluster in ~/.kube/config
+run: ansible-operator
+	$(ANSIBLE_OPERATOR) run
 
-namespace-create: # NAMESPACE MANAGEMENT - Create namespace for the operator
-	$(KUBE_CLIENT) create namespace $(NAMESPACE) || true
-	$(KUBE_CLIENT) label namespace $(NAMESPACE) monitoring-key=middleware || true
+# Install CRDs into a cluster
+install: kustomize
+	$(KUSTOMIZE) build config/crd | kubectl apply -f -
 
-operator-local-deploy: namespace-create ## OPERATOR LOCAL DEPLOY - Deploy Operator locally for dev purpose
-	operator-sdk run --local --watch-namespace $(NAMESPACE)
+# Uninstall CRDs from a cluster
+uninstall: kustomize
+	$(KUSTOMIZE) build config/crd | kubectl delete -f -
 
-operator-manual-deploy: namespace-create ## OPERATOR MANUAL DEPLOY - Deploy Operator objects (namespace, CRD, service account, role, role binding and operator deployment)
-	$(KUBE_CLIENT) apply -f deploy/crds/monitoring.3scale.net_prometheusexporters_crd.yaml --validate=false || true
-	$(KUBE_CLIENT) apply -f deploy/service_account.yaml -n $(NAMESPACE)
-	$(KUBE_CLIENT) apply -f deploy/role.yaml -n $(NAMESPACE)
-	$(KUBE_CLIENT) apply -f deploy/role_binding.yaml -n $(NAMESPACE)
-	$(INPLACE_SED) 's|REPLACE_IMAGE|$(IMAGE):$(VERSION)|g' deploy/operator.yaml
-	$(KUBE_CLIENT) apply -f deploy/operator.yaml -n $(NAMESPACE)
-	$(INPLACE_SED) 's|$(IMAGE):$(VERSION)|REPLACE_IMAGE|g' deploy/operator.yaml
+# Deploy controller in the configured Kubernetes cluster in ~/.kube/config
+deploy: kustomize
+	cd config/manager && $(KUSTOMIZE) edit set image controller=${IMG}
+	$(KUSTOMIZE) build config/default | kubectl apply -f -
 
-operator-manual-delete: ## OPERATOR MANUAL DEPLOY - Delete Operator manual objects (except CRD/namespace for caution)
-	$(KUBE_CLIENT) delete -f deploy/operator.yaml -n $(NAMESPACE) || true
-	$(KUBE_CLIENT) delete -f deploy/role_binding.yaml -n $(NAMESPACE) || true
-	$(KUBE_CLIENT) delete -f deploy/role.yaml -n $(NAMESPACE) || true
-	$(KUBE_CLIENT) delete -f deploy/service_account.yaml -n $(NAMESPACE) || true
+# Undeploy controller in the configured Kubernetes cluster in ~/.kube/config
+undeploy: kustomize
+	$(KUSTOMIZE) build config/default | kubectl delete -f -
 
-operator-olm-deploy: namespace-create ## OPERATOR OLM DEPLOY - Deploy Operator OLM objects (namespace, operator source, operator group, operator subscription)
-	$(KUBE_CLIENT) apply -f deploy/operator_source.yaml -n $(NAMESPACE_MARKETPLACE)
-	$(INPLACE_SED) 's|REPLACE_NAMESPACE|$(NAMESPACE)|g' deploy/operator_group.yaml
-	$(KUBE_CLIENT) apply -f deploy/operator_group.yaml -n $(NAMESPACE)
-	$(INPLACE_SED) 's|$(NAMESPACE)|REPLACE_NAMESPACE|g' deploy/operator_group.yaml
-	$(INPLACE_SED) 's|REPLACE_NAMESPACE_MARKETPLACE|$(NAMESPACE_MARKETPLACE)|g' deploy/operator_subscription.yaml
-	$(KUBE_CLIENT) apply -f deploy/operator_subscription.yaml -n $(NAMESPACE)
-	$(INPLACE_SED) 's|$(NAMESPACE_MARKETPLACE)|REPLACE_NAMESPACE_MARKETPLACE|g' deploy/operator_subscription.yaml
+# Build the docker image
+docker-build:
+	docker build -t ${IMG} .
 
-operator-olm-delete: ## OPERATOR OLM DEPLOY - Delete Operator OLM objects (except namespace for caution)
-	$(KUBE_CLIENT) delete -f deploy/operator_subscription.yaml -n $(NAMESPACE) || true
-	$(KUBE_CLIENT) delete clusterserviceversion  $(PROJECT).$(VERSION) -n $(NAMESPACE) || true
-	$(KUBE_CLIENT) delete -f deploy/operator_group.yaml -n $(NAMESPACE) || true
-	$(KUBE_CLIENT) delete -f deploy/operator_source.yaml -n $(NAMESPACE_MARKETPLACE) || true
+# Push the docker image
+docker-push:
+	docker push ${IMG}
 
-operator-test-e2e:
-	kind create cluster || true
-	make operator-manual-deploy --no-print-directory
-	$(KUBE_CLIENT) apply -f deploy/crds/monitoring.3scale.net_v1alpha1_prometheusexporter_cr.yaml -n $(NAMESPACE)
-	$(KUBE_CLIENT) get prometheusexporter example-memcached -n $(NAMESPACE)
-	TIMEOUT=0; until [ $${TIMEOUT} -eq 60 ] || $(KUBE_CLIENT) wait deployment prometheus-exporter-memcached-example-memcached --for=condition=available -n $(NAMESPACE); do sleep 2;((TIMEOUT++)); done ; if [ $${TIMEOUT} -eq 60 ]; then exit -1; else echo "SUCCESS: Operator created memcached CR deployment"; fi
-	kind delete cluster
+.PHONY: bundle ## Generate bundle manifests and metadata, then validate generated files.
+bundle: $(OPERATOR_SDK) kustomize
+	$(OPERATOR_SDK) generate kustomize manifests -q
+	cd config/manager && $(KUSTOMIZE) edit set image controller=$(IMG)
+	$(KUSTOMIZE) build config/manifests | $(OPERATOR_SDK) generate bundle -q --overwrite --version $(VERSION) $(BUNDLE_METADATA_OPTS)
+	$(OPERATOR_SDK) bundle validate ./bundle
 
-manifests-generate: ## OPERATOR OLM CSV - Generate CSV Manifests
-	$(INPLACE_SED) 's|REPLACE_IMAGE|$(IMAGE):$(VERSION)|g' deploy/operator.yaml
-	operator-sdk generate csv --make-manifests=false --csv-version $(MANIFESTS_VERSION) --update-crds
-	$(INPLACE_SED) 's|$(IMAGE):$(VERSION)|REPLACE_IMAGE|g' deploy/operator.yaml
+.PHONY: bundle-build ## Build the bundle image.
+bundle-build:
+	docker build -f bundle.Dockerfile -t $(BUNDLE_IMG) .
 
-manifests-verify: ## OPERATOR OLM CSV - Verify CSV manifests
-	operator-courier --verbose verify --ui_validate_io deploy/olm-catalog/$(PROJECT)/
+#########################
+#### Release targets ####
+#########################
+prepare-alpha-release: bundle
 
-manifests-push: ## OPERATOR OLM CSV - Push CSV manifests to remote application registry
-	operator-courier --verbose push deploy/olm-catalog/$(PROJECT)/ $(MANIFESTS_PROJECT) $(PROJECT) $(MANIFESTS_VERSION) "$(AUTH_TOKEN)"
+prepare-release: bundle
+	$(MAKE) bundle CHANNELS=alpha,stable DEFAULT_CHANNEL=alpha
 
-## Prometheus rules ##
-prometheus-rules-deploy: namespace-create ## PROMETHEUS RULES - Create Prometheus Rules (Memcached, Redis, MySQL, PostgreSQL, Sphinx, Elasticsearch, Cloudwatch, Probe)
-	$(KUBE_CLIENT) apply -f prometheus-rules/ -n $(NAMESPACE)
+bundle-push:
+	docker push $(BUNDLE_IMG)
 
-prometheus-rules-delete: ## PROMETHEUS RULES - Delete Prometheus Rules (Memcached, Redis, MySQL, PostgreSQL, Sphinx, Elasticsearch, Cloudwatch, Probe)
-	$(KUBE_CLIENT) delete -f prometheus-rules/ -n $(NAMESPACE) || true
+catalog-build: $(OPM)
+	$(OPM) index add \
+		--build-tool docker \
+		--mode semver-skippatch \
+		--bundles $(BUNDLE_IMG) \
+		--from-index $(CATALOG_IMG) \
+		--tag $(CATALOG_IMG)
 
-help: ## Print this help
-	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-33s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
+catalog-push:
+	docker push $(CATALOG_IMG)
+
+bundle-publish: bundle-build bundle-push catalog-build catalog-push
+
+get-new-release:
+	@hack/new-release.sh v$(VERSION)

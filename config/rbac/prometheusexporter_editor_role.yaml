@@ -1,0 +1,24 @@
+# permissions for end users to edit prometheusexporters.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: prometheusexporter-editor-role
+rules:
+- apiGroups:
+  - monitoring.3scale.net
+  resources:
+  - prometheusexporters
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - monitoring.3scale.net
+  resources:
+  - prometheusexporters/status
+  verbs:
+  - get

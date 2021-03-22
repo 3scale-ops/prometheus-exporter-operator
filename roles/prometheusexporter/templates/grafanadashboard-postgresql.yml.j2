@@ -2,12 +2,12 @@ apiVersion: integreatly.org/v1alpha1
 kind: GrafanaDashboard
 metadata:
   name: "prometheus-exporter-{{ type }}"
-  namespace: "{{ meta.namespace }}"
+  namespace: "{{ ansible_operator_meta.namespace }}"
   labels:
     prometheus_exporter_type: "{{ type }}"
     "{{ grafana_dashboard.label.key | default(grafana_dashboard_label_key) }}": "{{ grafana_dashboard.label.value | default(grafana_dashboard_label_value) }}"
 spec:
-  name: "{{ meta.namespace }}-prometheus-exporter-{{ type }}.json"
+  name: "{{ ansible_operator_meta.namespace }}-prometheus-exporter-{{ type }}.json"
   json: >
     {
       "annotations": {
@@ -2224,8 +2224,8 @@ spec:
           {
             "allValue": null,
             "current": {
-              "text": "{{ meta.namespace }}",
-              "value": "{{ meta.namespace }}"
+              "text": "{{ ansible_operator_meta.namespace }}",
+              "value": "{{ ansible_operator_meta.namespace }}"
             },
             "hide": 0,
             "includeAll": false,
@@ -2235,11 +2235,11 @@ spec:
             "options": [
               {
                 "selected": true,
-                "text": "{{ meta.namespace }}",
-                "value": "{{ meta.namespace }}"
+                "text": "{{ ansible_operator_meta.namespace }}",
+                "value": "{{ ansible_operator_meta.namespace }}"
               }
             ],
-            "query": "{{ meta.namespace }}",
+            "query": "{{ ansible_operator_meta.namespace }}",
             "skipUrlSync": false,
             "type": "custom"
           },
@@ -2375,6 +2375,6 @@ spec:
         ]
       },
       "timezone": "browser",
-      "title": "{{ meta.namespace }} / PrometheusExporter PostgreSQL",
+      "title": "{{ ansible_operator_meta.namespace }} / PrometheusExporter PostgreSQL",
       "version": 1
     }

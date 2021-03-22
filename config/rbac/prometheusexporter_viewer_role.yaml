@@ -1,0 +1,20 @@
+# permissions for end users to view prometheusexporters.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: prometheusexporter-viewer-role
+rules:
+- apiGroups:
+  - monitoring.3scale.net
+  resources:
+  - prometheusexporters
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - monitoring.3scale.net
+  resources:
+  - prometheusexporters/status
+  verbs:
+  - get
