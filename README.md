@@ -4,7 +4,7 @@
 
 [![build](https://github.com/3scale-ops/prometheus-exporter-operator/actions/workflows/release.yaml/badge.svg)](https://github.com/3scale-ops/prometheus-exporter-operator/actions/workflows/release.yaml)
 [![release](https://badgen.net/github/release/3scale-ops/prometheus-exporter-operator)](https://github.com/3scale-ops/prometheus-exporter-operator/releases)
-[![license](https://badgen.net/github/license/3scale-ops/prometheus-exporter-operator)](https://github.com/3scale-ops/prometheus-exporter-operator/blob/master/LICENSE)
+[![license](https://badgen.net/github/license/3scale-ops/prometheus-exporter-operator)](https://github.com/3scale-ops/prometheus-exporter-operator/blob/main/LICENSE)
 
 A Kubernetes Operator based on the Operator SDK to centralize the setup of 3rd party prometheus exporters on **Kubernetes/OpenShift**, with a collection of grafana dashboards.
 
