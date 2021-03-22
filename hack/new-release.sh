@@ -1,6 +1,6 @@
 #!/bin/bash
 
-REPO="3scale/prometheus-exporter-operator"
+REPO="3scale-ops/prometheus-exporter-operator"
 
 # Skip if alpha release
 [[ ${1} == *"-alpha"* ]] && echo "" && exit 0

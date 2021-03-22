@@ -2,9 +2,9 @@
 
 <img src="img/prometheus-exporter-operator-logo.svg" height="150px" alt="Prometheus Exporter Operator"></img>
 
-[![build](https://github.com/3scale/prometheus-exporter-operator/actions/workflows/release.yaml/badge.svg)](https://github.com/3scale/prometheus-exporter-operator/actions/workflows/release.yaml)
-[![release](https://badgen.net/github/release/3scale/prometheus-exporter-operator)](https://github.com/3scale/prometheus-exporter-operator/releases)
-[![license](https://badgen.net/github/license/3scale/prometheus-exporter-operator)](https://github.com/3scale/prometheus-exporter-operator/blob/master/LICENSE)
+[![build](https://github.com/3scale-ops/prometheus-exporter-operator/actions/workflows/release.yaml/badge.svg)](https://github.com/3scale-ops/prometheus-exporter-operator/actions/workflows/release.yaml)
+[![release](https://badgen.net/github/release/3scale-ops/prometheus-exporter-operator)](https://github.com/3scale-ops/prometheus-exporter-operator/releases)
+[![license](https://badgen.net/github/license/3scale-ops/prometheus-exporter-operator)](https://github.com/3scale-ops/prometheus-exporter-operator/blob/main/LICENSE)
 
 A Kubernetes Operator based on the Operator SDK to centralize the setup of 3rd party prometheus exporters on **Kubernetes/OpenShift**, with a collection of grafana dashboards.
 
@@ -106,19 +106,19 @@ make run WATCH_NAMESPACE=example
 1. Update Makefile variable `VERSION` to the appropiate release version.
 1. If it is an **alpha** release, execute make target `make prepare-alpha-release`
 1. If it is an **stable** release, execute make target `make prepare-release`
-1. Open a [Pull Request](https://github.com/3scale/prometheus-exporter-operator/pulls)
+1. Open a [Pull Request](https://github.com/3scale-ops/prometheus-exporter-operator/pulls)
 
 ## Contributing
 
 You can contribute by:
 
 * Raising any issues you find using Prometheus Exporter Operator
-* Fixing issues by opening [Pull Requests](https://github.com/3scale/prometheus-exporter-operator/pulls)
+* Fixing issues by opening [Pull Requests](https://github.com/3scale-ops/prometheus-exporter-operator/pulls)
 * Submitting a patch or opening a PR
 * Improving documentation
 * Talking about Prometheus Exporter Operator
 
-All bugs, tasks or enhancements are tracked as [GitHub issues](https://github.com/3scale/prometheus-exporter-operator/issues).
+All bugs, tasks or enhancements are tracked as [GitHub issues](https://github.com/3scale-ops/prometheus-exporter-operator/issues).
 
 ## License
 
