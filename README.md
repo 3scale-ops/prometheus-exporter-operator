@@ -2,6 +2,7 @@
 
 <img src="img/prometheus-exporter-operator-logo.svg" height="150px" alt="Prometheus Exporter Operator"></img>
 
+[![test](https://github.com/3scale-ops/prometheus-exporter-operator/actions/workflows/test.yaml/badge.svg)](https://github.com/3scale-ops/prometheus-exporter-operator/actions/workflows/test.yaml)
 [![build](https://github.com/3scale-ops/prometheus-exporter-operator/actions/workflows/release.yaml/badge.svg)](https://github.com/3scale-ops/prometheus-exporter-operator/actions/workflows/release.yaml)
 [![release](https://badgen.net/github/release/3scale-ops/prometheus-exporter-operator)](https://github.com/3scale-ops/prometheus-exporter-operator/releases)
 [![license](https://badgen.net/github/license/3scale-ops/prometheus-exporter-operator)](https://github.com/3scale-ops/prometheus-exporter-operator/blob/main/LICENSE)
