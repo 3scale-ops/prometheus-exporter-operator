@@ -1,16 +1,15 @@
 # Adds namespace to all resources.
-namespace: osdk-test
+namespace: default
 
-namePrefix: osdk-
+namePrefix: prometheus-exporter-operator-
 
 # Labels to add to all resources and selectors.
 #commonLabels:
 #  someName: someValue
 
 patchesStrategicMerge:
-- manager_image.yaml
 - debug_logs_patch.yaml
-- ../default/manager_auth_proxy_patch.yaml
+- manager_auth_proxy_patch.yaml
 
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
@@ -18,6 +17,16 @@ resources:
 - ../crd
 - ../rbac
 - ../manager
-images:
-- name: testing
-  newName: testing-operator
+- external-apis/servicemonitors.monitoring.coreos.com.yaml
+- external-apis/grafanadashboards.integreatly.org.yaml
+
+patches:
+  - target:
+      group: apps
+      version: v1
+      kind: Deployment
+      name: controller-manager
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/1/env/2
+        value: { "name": "WATCH_NAMESPACE", "value": default }
