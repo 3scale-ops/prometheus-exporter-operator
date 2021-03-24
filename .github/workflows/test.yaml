@@ -1,0 +1,20 @@
+name: test
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/cache@v2
+        with:
+          path: ./bin
+          key: ${{ runner.os }}-bin
+
+      - name: Run test-e2e
+        run: make test-e2e

@@ -40,6 +40,24 @@ $(OPM):
 	curl -sL -o $(OPM) $(OPM_DL_URL)
 	chmod +x $(OPM)
 
+# Download kind locally if necessary
+KIND_RELEASE = v0.10.0
+KIND = $(shell pwd)/bin/kind-$(KIND_RELEASE)
+KIND_DL_URL = https://github.com/kubernetes-sigs/kind/releases/download/$(KIND_RELEASE)/kind-$(OS)-$(ARCH)
+$(KIND):
+	mkdir -p $(shell pwd)/bin
+	curl -sL -o $(KIND) $(KIND_DL_URL)
+	chmod +x $(KIND)
+
+# Download kuttl locally if necessary for e2e tests
+KUTTL_RELEASE = 0.9.0
+KUTTL = $(shell pwd)/bin/kuttl-v$(KUTTL_RELEASE)
+KUTTL_DL_URL = https://github.com/kudobuilder/kuttl/releases/download/v$(KUTTL_RELEASE)/kubectl-kuttl_$(KUTTL_RELEASE)_$(OS)_x86_64
+$(KUTTL):
+	mkdir -p $(shell pwd)/bin
+	curl -sL -o $(KUTTL) $(KUTTL_DL_URL)
+	chmod +x $(KUTTL)
+
 # Download kustomize locally if necessary, preferring the $(pwd)/bin path over global if both exist.
 .PHONY: kustomize
 KUSTOMIZE = $(shell pwd)/bin/kustomize
@@ -146,3 +164,28 @@ bundle-publish: bundle-build bundle-push catalog-build catalog-push
 
 get-new-release:
 	@hack/new-release.sh v$(VERSION)
+
+############################################
+#### Targets to manually test with Kind ####
+############################################
+
+## Runs a k8s kind cluster for testing
+kind-create: export KUBECONFIG = ${PWD}/kubeconfig
+kind-create: $(KIND)
+	$(KIND) create cluster --wait 5m
+
+## Deletes the kind cluster
+kind-delete: $(KIND)
+	$(KIND) delete cluster
+
+## Deploys the operator in the kind cluster for testing
+kind-deploy: export KUBECONFIG = ${PWD}/kubeconfig
+kind-deploy: docker-build $(KIND)
+	$(KIND) load docker-image $(IMG)
+	cd config/manager && $(KUSTOMIZE) edit set image controller=${IMG}
+	$(KUSTOMIZE) build config/testing | kubectl apply -f -
+
+# Run kuttl e2e tests in the kind cluster
+test-e2e: export KUBECONFIG = ${PWD}/kubeconfig
+test-e2e: kind-create kind-deploy $(KUTTL)
+	$(KUTTL) test
