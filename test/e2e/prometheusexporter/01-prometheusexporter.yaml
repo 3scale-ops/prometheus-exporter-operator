@@ -1,0 +1,13 @@
+apiVersion: monitoring.3scale.net/v1alpha1
+kind: PrometheusExporter
+metadata:
+  name: example-memcached
+  namespace: default
+spec:
+  type: memcached
+  grafanaDashboard:
+    label:
+      key: autodiscovery
+      value: enabled
+  dbHost: your-memcached-host
+  dbPort: 11211
