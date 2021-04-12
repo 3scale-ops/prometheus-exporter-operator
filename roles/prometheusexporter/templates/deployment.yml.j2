@@ -25,6 +25,23 @@ spec:
         {{ extra_label.key }}: "{{ extra_label.value }}"
 {% endif %}
     spec:
+{% if type == "cloudwatch" %}
+      volumes:
+        - name: config-volume
+          configMap:
+            name: "{{ configuration_configmap_name }}"
+            items:
+              - key: config.yml
+                path: config.yml
+{% elif type == "probe" %}
+      volumes:
+        - name: config-volume
+          configMap:
+            name: "{{ configuration_configmap_name }}"
+            items:
+              - key: config.yml
+                path: config.yml
+{% endif %}
       containers:
         - name: "prometheus-exporter-{{ type }}-{{ ansible_operator_meta.name }}"
           image: "{{ image.name | default(image_name) }}:{{ image.version | default(image_version) }}"
@@ -33,65 +50,6 @@ spec:
             - name: metrics
               containerPort: {{ port }}
               protocol: TCP
-{% if type == "memcached" %}
-          args:
-            - "--memcached.address={{ db_host }}:{{ db_port }}"
-{% elif type == "redis" %}
-          env:
-            - name: REDIS_ADDR
-              value: "{{ db_host }}:{{ db_port }}"
-{% if db_check_keys is defined %}
-            - name: REDIS_EXPORTER_CHECK_KEYS
-              value: "{{ db_check_keys }}"
-{% endif %}
-{% elif type == "mysql" %}
-          env:
-            - name: DATA_SOURCE_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: "{{ db_connection_string_secret_name }}"
-                  key: DATA_SOURCE_NAME
-{% elif type == "postgresql" %}
-          env:
-            - name: DATA_SOURCE_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: "{{ db_connection_string_secret_name }}"
-                  key: DATA_SOURCE_NAME
-{% elif type == "sphinx" %}
-          args:
-            - "--sphinx.address={{ db_host }}"
-            - "--sphinx.port={{ db_port }}"
-{% elif type == "es" %}
-          command:
-            - "/bin/elasticsearch_exporter"
-            - "--es.uri={{ db_host }}:{{ db_port }}"
-            - "--es.all"
-{% elif type == "cloudwatch" %}
-          env:
-            - name: AWS_ACCESS_KEY_ID
-              valueFrom:
-                secretKeyRef:
-                  name: "{{ aws_credentials_secret_name }}"
-                  key: AWS_ACCESS_KEY_ID
-            - name: AWS_SECRET_ACCESS_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: "{{ aws_credentials_secret_name }}"
-                  key: AWS_SECRET_ACCESS_KEY
-          volumeMounts:
-            - mountPath: /config/
-              name: config-volume
-              readOnly: true
-{% elif type == "probe" %}
-          args:
-            - --config.file=/etc/blackbox_exporter/config.yml
-            - --log.level=debug
-          volumeMounts:
-            - mountPath: /etc/blackbox_exporter
-              name: config-volume
-              readOnly: true
-{% endif %}
           livenessProbe:
             tcpSocket:
               port: metrics
@@ -113,23 +71,11 @@ spec:
             requests:
               cpu: "{{ resources.requests.cpu | default(resources_requests_cpu) }}"
               memory: "{{ resources.requests.memory | default(resources_requests_memory) }}"
-{% if type == "cloudwatch" %}
-      volumes:
-      - name: config-volume
-        configMap:
-          name: "{{ configuration_configmap_name }}"
-          items:
-          - key: config.yml
-            path: config.yml
-{% elif type == "probe" %}
-      volumes:
-      - name: config-volume
-        configMap:
-          name: "{{ configuration_configmap_name }}"
-          items:
-          - key: config.yml
-            path: config.yml
-{% endif %}
+{## <container_parameters> ##}
+{% filter indent(10, True) %}
+{% include "exporters/"+type+"/container.yml.j2" ignore missing %}
+{% endfilter %}
+{## <container_parameters> ##}
 {% if node_selector is defined %}
       nodeSelector:
 {% for key, value in node_selector.items() %}

@@ -10,7 +10,7 @@ spec:
   name: "{{ ansible_operator_meta.namespace }}-prometheus-exporter-{{ type }}.json"
   json: >
 {## <grafana_dashboard> ##}
-{%  filter indent(4, True) %}
-{%  include "exporters/"+type+"/grafanadashboard.json.j2" %}
-{%  endfilter %}
+{% filter indent(4, True) %}
+{% include "exporters/"+type+"/grafanadashboard.json.j2" %}
+{% endfilter %}
 {## <grafana_dashboard> ##}

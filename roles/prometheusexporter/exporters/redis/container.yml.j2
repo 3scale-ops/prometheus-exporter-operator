@@ -1,0 +1,7 @@
+env:
+  - name: REDIS_ADDR
+    value: "{{ db_host }}:{{ db_port }}"
+{% if db_check_keys is defined %}
+  - name: REDIS_EXPORTER_CHECK_KEYS
+    value: "{{ db_check_keys }}"
+{% endif %}
