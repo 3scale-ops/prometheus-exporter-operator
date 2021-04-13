@@ -43,9 +43,11 @@ Operator is available at [OperatorHub.io](https://operatorhub.io/operator/promet
 
 ## Documentation
 
-* [Getting started](docs/getting-started.md)
-* [Examples](examples/)
 * [PrometheusExporter Custom Resource Reference](docs/prometheus-exporter-crd-reference.md)
+* [Install](docs/install.md)
+* [Development](docs/development.md)
+* [Examples](examples/)
+* [Release](docs/release.md)
 
 ## GrafanaDashboards
 
@@ -88,26 +90,6 @@ Operator is available at [OperatorHub.io](https://operatorhub.io/operator/promet
 * Customizable thresholds definition (it is something that depends on infrastructure dimensions...)
 
 However, some examples of prometheus rules can be found at [prometheus-rules](prometheus-rules/) directory.
-
-## Development
-
-You can run the operator locally watching all namespaces (default behaviour):
-
-```bash
-make run
-```
-
-Or watching a specific namespace:
-```bash
-make run WATCH_NAMESPACE=example
-```
-
-## Release
-
-1. Update Makefile variable `VERSION` to the appropiate release version.
-1. If it is an **alpha** release, execute make target `make prepare-alpha-release`
-1. If it is an **stable** release, execute make target `make prepare-release`
-1. Open a [Pull Request](https://github.com/3scale-ops/prometheus-exporter-operator/pulls)
 
 ## Contributing
 
