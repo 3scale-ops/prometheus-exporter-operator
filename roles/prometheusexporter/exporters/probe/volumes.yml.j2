@@ -1,0 +1,7 @@
+volumes:
+  - name: config-volume
+    configMap:
+      name: "{{ configuration_configmap_name }}"
+      items:
+        - key: config.yml
+          path: config.yml

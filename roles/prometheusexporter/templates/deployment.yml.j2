@@ -25,23 +25,6 @@ spec:
         {{ extra_label.key }}: "{{ extra_label.value }}"
 {% endif %}
     spec:
-{% if type == "cloudwatch" %}
-      volumes:
-        - name: config-volume
-          configMap:
-            name: "{{ configuration_configmap_name }}"
-            items:
-              - key: config.yml
-                path: config.yml
-{% elif type == "probe" %}
-      volumes:
-        - name: config-volume
-          configMap:
-            name: "{{ configuration_configmap_name }}"
-            items:
-              - key: config.yml
-                path: config.yml
-{% endif %}
       containers:
         - name: "prometheus-exporter-{{ type }}-{{ ansible_operator_meta.name }}"
           image: "{{ image.name | default(image_name) }}:{{ image.version | default(image_version) }}"
@@ -73,7 +56,9 @@ spec:
               memory: "{{ resources.requests.memory | default(resources_requests_memory) }}"
 {## <container_parameters> ##}
 {% filter indent(10, True) %}
+
 {% include "exporters/"+type+"/container.yml.j2" ignore missing %}
+
 {% endfilter %}
 {## <container_parameters> ##}
 {% if node_selector is defined %}
@@ -82,3 +67,10 @@ spec:
         {{ key | safe }}: {{ value | safe }}
 {% endfor %}
 {% endif %}
+{## <volumes> ##}
+{% filter indent(6, True) %}
+
+{% include "exporters/"+type+"/volumes.yml.j2" ignore missing %}
+
+{% endfilter %}
+{## <volumes> ##}
