@@ -350,6 +350,7 @@
         {
           "expr": "rate(mysql_global_status_queries{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval]) or irate(mysql_global_status_queries{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[5m])",
           "format": "time_series",
+          "instant": true,
           "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
