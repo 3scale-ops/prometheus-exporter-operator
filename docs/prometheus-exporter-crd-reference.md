@@ -89,7 +89,7 @@ Specific CR fields per exporter type:
 | `dbHost` | `string`| Yes | `system-memcache` | Memcached Host (could be a k8s service or any internal/external DNS endpoint) |
 | `dbPort` | `int`| Yes | `11211` | Memcached Port |
 
-* Image, port, resources, liveness, readiness default values can be found at [ansible-memcached-vars](../roles/prometheusexporter/vars/memcached.yml)
+* Image, port, resources, liveness, readiness default values can be found at [ansible-memcached-vars](../roles/prometheusexporter/exporters/memcached/vars.yml)
 * Real `memcached` example can be found on [examples](../examples/README.md#memcached) directory.
 
 ### CR Spec Custom Type Redis
@@ -100,7 +100,7 @@ Specific CR fields per exporter type:
 | `dbPort` | `int`| Yes | `6379` | Redis Port |
 | `dbCheckKeys` | `string`| No | - | Optional redis specific keys to check |
 
-* Image, port, resources, liveness, readiness default values can be found at [ansible-redis-vars](../roles/prometheusexporter/vars/redis.yml)
+* Image, port, resources, liveness, readiness default values can be found at [ansible-redis-vars](../roles/prometheusexporter/exporters/redis/vars.yml)
 * Real `redis` example can be found on [examples](../examples/README.md#redis) directory.
 
 ### CR Spec Custom Type MySQL
@@ -109,7 +109,7 @@ Specific CR fields per exporter type:
 |:---:|:---:|:---:|:---:|:---:|
 | `dbConnectionStringSecretName` | `string` | Yes | `prometheus-exporter-mysql-${CR_NAME}` | Secret name containing MySQL connection string definition (`DATA_SOURCE_NAME`) |
 
-* Image, port, resources, liveness, readiness default values can be found at [ansible-mysql-vars](../roles/prometheusexporter/vars/mysql.yml)
+* Image, port, resources, liveness, readiness default values can be found at [ansible-mysql-vars](../roles/prometheusexporter/exporters/mysql/vars.yml)
 * Real `mysql` example can be found on [examples](../examples/README.md#mysql) directory.
 
 ### CR Spec Custom Type PostgreSQL
@@ -118,7 +118,7 @@ Specific CR fields per exporter type:
 |:---:|:---:|:---:|:---:|:---:|
 | `dbConnectionStringSecretName` | `string` | Yes | `prometheus-exporter-postgresql-${CR_NAME}` | Secret name containing PostgreSQL connection string definition (`DATA_SOURCE_NAME`) |
 
-* Image, port, resources, liveness, readiness default values can be found at [ansible-postgresql-vars](../roles/prometheusexporter/vars/postgresql.yml)
+* Image, port, resources, liveness, readiness default values can be found at [ansible-postgresql-vars](../roles/prometheusexporter/exporters/postgresql/vars.yml)
 * Real `postgresql` example can be found on [examples](../examples/README.md#postgresql) directory.
 
 ### CR Spec Custom Type Sphinx
@@ -128,7 +128,7 @@ Specific CR fields per exporter type:
 | `dbHost` | `string`| Yes | `system-sphinx` | Sphinx Host (could be k8s service or any internal/external DNS endpoint) |
 | `dbPort` | `int`| Yes | `9306` | Sphinx Port |
 
-* Image, port, resources, liveness, readiness default values can be found at [ansible-sphinx-vars](../roles/prometheusexporter/vars/sphinx.yml)
+* Image, port, resources, liveness, readiness default values can be found at [ansible-sphinx-vars](../roles/prometheusexporter/exporters/sphinx/vars.yml)
 * Real `sphinx` example can be found on [examples](../examples/README.md#sphinx) directory.
 
 ### CR Spec Custom Type Es (Elasticsearch)
@@ -138,7 +138,7 @@ Specific CR fields per exporter type:
 | `dbHost` | `string`| Yes | `http://elasticsearch` | Elasticsearch Host (could be k8s service or any internal/external DNS endpoint) |
 | `dbPort` | `int`| Yes | `9200` | Elasticsearch Port |
 
-* Image, port, resources, liveness, readiness default values can be found at [ansible-es-vars](../roles/prometheusexporter/vars/es.yml)
+* Image, port, resources, liveness, readiness default values can be found at [ansible-es-vars](../roles/prometheusexporter/exporters/es/vars.yml)
 
 * Real `es` example can be found on [examples](../examples/README.md#elasticsearch) directory.
 
@@ -149,7 +149,7 @@ Specific CR fields per exporter type:
 | `awsCredentialsSecretName` | `string` | Yes | `prometheus-exporter-cloudwatch-${CR_NAME}` | Secret name containing AWS IAM credentials (`AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY`) |
 | `configurationConfigmapName` | `string` | Yes | `prometheus-exporter-cloudwatch-${CR_NAME}` | ConfigMap name containing Cloudwatch `config.yml` (Services, Dimensions, Tags used for autodiscovery...) |
 
-* Image, port, resources, liveness, readiness default values can be found at [ansible-cloudwatch-vars](../roles/prometheusexporter/vars/cloudwatch.yml)
+* Image, port, resources, liveness, readiness default values can be found at [ansible-cloudwatch-vars](../roles/prometheusexporter/exporters/cloudwatch/vars.yml)
 * Real `cloudwatch` example can be found on [examples](../examples/README.md#aws-cloudwatch) directory.
 
 ### CR Spec Custom Type Probe
@@ -158,5 +158,5 @@ Specific CR fields per exporter type:
 |:---:|:---:|:---:|:---:|:---:|
 | `configurationConfigmapName` | `string` | Yes | `prometheus-exporter-probe-${CR_NAME}` | ConfigMap name containing blackbox modules configuration `config.yml` (http_2xx, tcp_connect...) |
 
-* Image, port, resources, liveness, readiness default values can be found at [ansible-probe-vars](../roles/prometheusexporter/vars/probe.yml)
+* Image, port, resources, liveness, readiness default values can be found at [ansible-probe-vars](../roles/prometheusexporter/exporters/probe/vars.yml)
 * Real `probe` example can be found on [examples](../examples/README.md#probe) directory.

@@ -1,5 +1,5 @@
 # Current Operator version
-VERSION ?= 0.3.0-alpha.11
+VERSION ?= 0.3.0-alpha.12
 # Image URL to use all building/pushing image targets
 IMG ?= quay.io/3scale/prometheus-exporter-operator:v$(VERSION)
 # Default catalog image
@@ -113,11 +113,11 @@ uninstall: kustomize
 # Deploy controller in the configured Kubernetes cluster in ~/.kube/config
 deploy: kustomize
 	cd config/manager && $(KUSTOMIZE) edit set image controller=${IMG}
-	$(KUSTOMIZE) build config/default | kubectl apply -f -
+	$(KUSTOMIZE) build config/manual | kubectl apply -f -
 
 # Undeploy controller in the configured Kubernetes cluster in ~/.kube/config
 undeploy: kustomize
-	$(KUSTOMIZE) build config/default | kubectl delete -f -
+	$(KUSTOMIZE) build config/manual | kubectl delete -f -
 
 # Build the docker image
 docker-build:

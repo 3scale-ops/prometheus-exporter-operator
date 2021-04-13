@@ -1,0 +1,6 @@
+env:
+  - name: DATA_SOURCE_NAME
+    valueFrom:
+      secretKeyRef:
+        name: "{{ db_connection_string_secret_name }}"
+        key: DATA_SOURCE_NAME

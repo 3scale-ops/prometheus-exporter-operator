@@ -1,0 +1,7 @@
+args:
+  - --config.file=/etc/blackbox_exporter/config.yml
+  - --log.level=debug
+volumeMounts:
+  - mountPath: /etc/blackbox_exporter
+    name: config-volume
+    readOnly: true

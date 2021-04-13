@@ -1,0 +1,15 @@
+env:
+  - name: AWS_ACCESS_KEY_ID
+    valueFrom:
+      secretKeyRef:
+        name: "{{ aws_credentials_secret_name }}"
+        key: AWS_ACCESS_KEY_ID
+  - name: AWS_SECRET_ACCESS_KEY
+    valueFrom:
+      secretKeyRef:
+        name: "{{ aws_credentials_secret_name }}"
+        key: AWS_SECRET_ACCESS_KEY
+volumeMounts:
+  - mountPath: /config/
+    name: config-volume
+    readOnly: true
