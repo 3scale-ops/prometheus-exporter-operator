@@ -16,4 +16,4 @@ make prepare-alpha-release
 ```bash
 make prepare-release
 ```
-* Then open a [Pull Request](https://github.com/3scale-ops/prometheus-exporter-operator/pulls), and github action will automatically detect if it is new release or not, in order to create it by building/pushing new operator, bundle and catalog images, as well as creating a github release draft.
+* Then open a [Pull Request](https://github.com/3scale-ops/prometheus-exporter-operator/pulls), and a GitHub Action will automatically detect if it is new release or not, in order to create it by building/pushing new operator, bundle and catalog images, as well as creating a GitHub release draft.
