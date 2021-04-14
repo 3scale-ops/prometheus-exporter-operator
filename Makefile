@@ -1,5 +1,5 @@
 # Current Operator version
-VERSION ?= 0.3.0-alpha.12
+VERSION ?= 0.3.0
 # Image URL to use all building/pushing image targets
 IMG ?= quay.io/3scale/prometheus-exporter-operator:v$(VERSION)
 # Default catalog image
