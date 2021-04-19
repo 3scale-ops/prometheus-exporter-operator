@@ -7,9 +7,9 @@ metadata:
   name: prometheus-exporter-operator-controller-manager-metrics-service
 spec:
   ports:
-  - name: https
-    port: 8443
-    targetPort: https
+  - name: http
+    port: 8080
+    targetPort: http
   selector:
     control-plane: controller-manager
 status:
