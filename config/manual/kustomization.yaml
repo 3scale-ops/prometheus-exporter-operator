@@ -22,7 +22,8 @@ patchesStrategicMerge:
   # Protect the /metrics endpoint by putting it behind auth.
   # If you want your controller-manager to expose the /metrics
   # endpoint w/o any authn/z, please comment the following line.
-- manager_auth_proxy_patch.yaml
+  #- manager_auth_proxy_patch.yaml
+- manager_metrics_patch.yaml
 
 patches:
   - target:
@@ -32,5 +33,5 @@ patches:
       name: controller-manager
     patch: |-
       - op: replace
-        path: /spec/template/spec/containers/1/env/1
+        path: /spec/template/spec/containers/0/env/1
         value: { "name": "WATCH_NAMESPACE", "value": prometheus-exporter-operator-system }
