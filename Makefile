@@ -1,5 +1,5 @@
 # Current Operator version
-VERSION ?= 0.3.0
+VERSION ?= 0.3.1
 # Image URL to use all building/pushing image targets
 IMG ?= quay.io/3scale/prometheus-exporter-operator:v$(VERSION)
 # Default catalog image
@@ -143,7 +143,7 @@ bundle-build:
 #########################
 prepare-alpha-release: bundle
 
-prepare-release: bundle
+prepare-stable-release: bundle
 	$(MAKE) bundle CHANNELS=alpha,stable DEFAULT_CHANNEL=alpha
 
 bundle-push:
