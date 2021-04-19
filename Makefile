@@ -143,7 +143,7 @@ bundle-build:
 #########################
 prepare-alpha-release: bundle
 
-prepare-release: bundle
+prepare-stable-release: bundle
 	$(MAKE) bundle CHANNELS=alpha,stable DEFAULT_CHANNEL=alpha
 
 bundle-push:
