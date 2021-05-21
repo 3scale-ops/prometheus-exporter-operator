@@ -172,7 +172,7 @@ spec:
                 description: For redis, memcached, sphinx and es exporters, the db port to monitor
               dbCheckKeys:
                 type: string
-                description: 'For redis exporter, the optional redis keys to monitor'
+                description: For redis exporter, the optional redis keys to monitor
               dbConnectionStringSecretName:
                 type: string
                 description: For mysql and postgresql exporters, the Secret name containing connection string definition (DSN)
@@ -181,7 +181,13 @@ spec:
                 description: For cloudwatch exporter, the Secret name containing AWS IAM credentials (AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY)
               configurationConfigmapName:
                 type: string
-                description: For cloudwatch exporter, the ConfigMap name containing Cloudwatch config.yml (Services, Dimensions, Tags used for autodiscovery...)
+                description: For cloudwatch exporter, the ConfigMap name containing Cloudwatch config.yml (Services, Dimensions, Tags used for autodiscovery...). For probe exporter, ConfigMap name containing blackbox modules configuration.
+              logLevel:
+                type: string
+                description: For probe exporter, log level of the exporter
+                enum:
+                - info
+                - debug
             type: object
             required:
             - type

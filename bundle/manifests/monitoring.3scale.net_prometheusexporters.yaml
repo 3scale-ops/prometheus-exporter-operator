@@ -32,7 +32,7 @@ spec:
                 description: For cloudwatch exporter, the Secret name containing AWS IAM credentials (AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY)
                 type: string
               configurationConfigmapName:
-                description: For cloudwatch exporter, the ConfigMap name containing Cloudwatch config.yml (Services, Dimensions, Tags used for autodiscovery...)
+                description: For cloudwatch exporter, the ConfigMap name containing Cloudwatch config.yml (Services, Dimensions, Tags used for autodiscovery...). For probe exporter, ConfigMap name containing blackbox modules configuration.
                 type: string
               dbCheckKeys:
                 description: For redis exporter, the optional redis keys to monitor
@@ -99,6 +99,12 @@ spec:
                     format: int32
                     type: integer
                 type: object
+              logLevel:
+                description: For probe exporter, log level of the exporter
+                enum:
+                - info
+                - debug
+                type: string
               nodeSelector:
                 additionalProperties:
                   type: string
