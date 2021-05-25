@@ -1,6 +1,6 @@
 args:
   - --config.file=/etc/blackbox_exporter/config.yml
-  - --log.level=debug
+  - --log.level={{ log_level }}
 volumeMounts:
   - mountPath: /etc/blackbox_exporter
     name: config-volume
