@@ -157,6 +157,7 @@ Specific CR fields per exporter type:
 | **Field** | **Type** | **Required** | **Default value** | **Description** |
 |:---:|:---:|:---:|:---:|:---:|
 | `configurationConfigmapName` | `string` | Yes | `prometheus-exporter-probe-${CR_NAME}` | ConfigMap name containing blackbox modules configuration `config.yml` (http_2xx, tcp_connect...) |
+| `configurationSecretName` | `string` | No | - | Optional Secret name containing blackbox modules configuration `config.yml` (http_2xx, tcp_connect...). Replaces usage of `configurationConfigmapName` (in case config includes sensitive data and so you prefer to use a Secret) |
 | `logLevel` | `string` | No | `debug` | Log level of the exporter (debug/info) |
 
 * Image, port, resources, liveness, readiness default values can be found at [ansible-probe-vars](../roles/prometheusexporter/exporters/probe/vars.yml)

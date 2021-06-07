@@ -182,6 +182,9 @@ spec:
               configurationConfigmapName:
                 type: string
                 description: For cloudwatch exporter, the ConfigMap name containing Cloudwatch config.yml (Services, Dimensions, Tags used for autodiscovery...). For probe exporter, ConfigMap name containing blackbox modules configuration.
+              configurationSecretName:
+                description: For probe exporter, optional Secret name containing blackbox modules configuration. Replaces usage of configurationConfigmapName (in case config includes sensitive data and so you prefer to use a Secret)
+                type: string
               logLevel:
                 type: string
                 description: For probe exporter, log level of the exporter

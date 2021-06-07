@@ -1,7 +1,12 @@
 volumes:
   - name: config-volume
+{% if configuration_secret_name is defined %}
+    secret:
+      secretName: "{{ configuration_secret_name }}"
+{% else %}
     configMap:
       name: "{{ configuration_configmap_name }}"
+{% endif %}
       items:
         - key: config.yml
           path: config.yml
