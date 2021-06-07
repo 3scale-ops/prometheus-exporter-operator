@@ -193,9 +193,11 @@ $ make cloudwatch-delete
 
 * **The ConfigMap should have been previously created as the operator expects it**:
   * **[probe-configmap-example](probe/probe-configmap.yaml) (Remember to set the object name on the CR field `configurationConfigmapName`)**
+* **The optional Secret (replacing previous ConfigMap) should have been previously created as the operator expects it (in case config includes sensitive data and so you prefer to use a Secret**
+  * **[probe-secret-example](probe/probe-secret.yaml) (Remember to set the object name on the CR field `configurationSecretName` replacing previous `configurationConfigmapName`)**
 
 > **NOTE**
-><br /> To deploy a probe exporter (blackbox exporter) it is just needed the configmap with blackbox modules configuration, and a single `PrometheusExporter` custom resource of type `probe`. But then, in order to be able to scrape different targets, you need to deploy for every endpoint that you want to monitor, a prometheus `ServiceMonitor` resource with the `selector.matchLabels` pointing to the deployed probe exporter `app: prometheus-exporter-probe-${CR_NAME}`, and then configure the specific module and target, with a proper relabeling of source label `__param_target` into target label `target` (which is used in the deployed grafana dashboard and possible prometheus alerts).
+><br /> To deploy a probe exporter (blackbox exporter) it is just needed the configmap (or secret) with blackbox modules configuration, and a single `PrometheusExporter` custom resource of type `probe`. But then, in order to be able to scrape different targets, you need to deploy for every endpoint that you want to monitor, a prometheus `ServiceMonitor` resource with the `selector.matchLabels` pointing to the deployed probe exporter `app: prometheus-exporter-probe-${CR_NAME}`, and then configure the specific module and target, with a proper relabeling of source label `__param_target` into target label `target` (which is used in the deployed grafana dashboard and possible prometheus alerts).
 
 ### Target ServiceMonitor extra objects
   * **[probe-target-service-monitor-example](probe/probe-target-service-monitor.yaml) (Remember to set the `selector.matchLabels` pointing to the deployed probe exporter `app: prometheus-exporter-probe-${CR_NAME}`)**
