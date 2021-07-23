@@ -80,6 +80,10 @@ data:
        aws_statistics: [Maximum]
      - aws_namespace: AWS/ES
        aws_metric_name: FreeStorageSpace
+       aws_dimensions: [DomainName, ClientId]
+       aws_statistics: [Sum]
+     - aws_namespace: AWS/ES
+       aws_metric_name: FreeStorageSpace
        aws_dimensions: [DomainName, ClientId, NodeId]
        aws_statistics: [Minimum]
      - aws_namespace: AWS/ES

@@ -13,7 +13,7 @@ spec:
           severity: critical
         annotations:
           message: "AWS ElastiCache instance {{ $labels.cache_cluster_id }} from {{ $labels.prometheus_exporter }} has High CPU usage (%)"
-      - alert: AWSElastiCacheFreeableMemoryLow 
+      - alert: AWSElastiCacheFreeableMemoryLow
         expr: aws_elasticache_freeable_memory_average < 1000000000
         for: 2m
         labels:
@@ -69,6 +69,27 @@ spec:
           severity: critical
         annotations:
           message: "AWS Elasticsearch {{ $labels.domain_name }} from {{ $labels.prometheus_exporter }} cluster status is Red"
+      - alert: AWSElasticsearchAutomaticSnapshotFailed
+        expr: aws_es_automated_snapshot_failure_maximum == 1
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          message: "AWS Elasticsearch {{ $labels.domain_name }} from {{ $labels.prometheus_exporter }} has failed its automated snapshot"
+      - alert: AWSElasticsearchFreeSpaceDataTotalLow
+        expr: aws_es_free_storage_space_sum < 1000000
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          message: "AWS Elasticsearch {{ $labels.domain_name }} from {{ $labels.prometheus_exporter }} has Low Data Total Free Storage Space (megabytes)"
+      - alert: AWSElasticsearchFreeSpaceDataNodeLow
+        expr: aws_es_free_storage_space_minimum < 100000
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          message: "AWS Elasticsearch {{ $labels.domain_name }} from {{ $labels.prometheus_exporter }} has Low Data Node Free Storage Space (megabytes)"
       - alert: AWSClientVPNCrlDaysToExpiry
         expr: max_over_time(aws_clientvpn_crl_days_to_expiry_average[10m]) < 2
         for: 5m

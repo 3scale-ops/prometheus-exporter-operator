@@ -3435,6 +3435,8 @@
             {
               "expr": "aws_es_cluster_status_green_maximum{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
+              "instant": true,
+              "interval": "",
               "intervalFactor": 1,
               "legendFormat": "{{ '{{' }} domain_name {{ '}}' }}",
               "refId": "A"
@@ -3490,6 +3492,8 @@
             {
               "expr": "aws_es_cluster_status_yellow_maximum{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
+              "instant": true,
+              "interval": "",
               "intervalFactor": 1,
               "legendFormat": "{{ '{{' }} domain_name {{ '}}' }}",
               "refId": "A"
@@ -3545,6 +3549,8 @@
             {
               "expr": "aws_es_cluster_status_red_maximum{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
+              "instant": true,
+              "interval": "",
               "intervalFactor": 1,
               "legendFormat": "{{ '{{' }} domain_name {{ '}}' }}",
               "refId": "A"
@@ -3600,6 +3606,8 @@
             {
               "expr": "aws_es_automated_snapshot_failure_maximum{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
               "format": "time_series",
+              "instant": true,
+              "interval": "",
               "intervalFactor": 1,
               "legendFormat": "{{ '{{' }} domain_name {{ '}}' }}",
               "refId": "A"
@@ -3747,13 +3755,20 @@
               "intervalFactor": 1,
               "legendFormat": "{{ '{{' }} domain_name {{ '}}' }}-master-{{ '{{' }} node_id {{ '}}' }}",
               "refId": "B"
+            },
+            {
+              "expr": "aws_es_free_storage_space_sum{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "legendFormat": "{{ '{{' }} domain_name {{ '}}' }}-data-total",
+              "refId": "C"
             }
           ],
           "thresholds": [],
           "timeFrom": null,
           "timeRegions": [],
           "timeShift": null,
-          "title": "Free Storage Space Minimum (megabytes)",
+          "title": "Free Storage Space Minimum/Sum (megabytes)",
           "tooltip": {
             "shared": true,
             "sort": 2,
