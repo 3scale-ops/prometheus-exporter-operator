@@ -41,7 +41,7 @@ $(OPM):
 	chmod +x $(OPM)
 
 # Download kind locally if necessary
-KIND_RELEASE = v0.10.0
+KIND_RELEASE = v0.11.1
 KIND = $(shell pwd)/bin/kind-$(KIND_RELEASE)
 KIND_DL_URL = https://github.com/kubernetes-sigs/kind/releases/download/$(KIND_RELEASE)/kind-$(OS)-$(ARCH)
 $(KIND):
