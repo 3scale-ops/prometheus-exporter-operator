@@ -2,7 +2,7 @@
 
 # Exporter
 image_name: "prom/cloudwatch-exporter"
-image_version: "cloudwatch_exporter-0.8.0"
+image_version: "cloudwatch_exporter-0.11.0"
 port: 9106
 liveness_probe_timeout_seconds: 45
 liveness_probe_period_seconds: 60
