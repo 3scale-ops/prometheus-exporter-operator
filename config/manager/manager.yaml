@@ -22,32 +22,36 @@ spec:
       labels:
         control-plane: controller-manager
     spec:
-      serviceAccountName: controller-manager
+      securityContext:
+        runAsNonRoot: true
       containers:
-        - name: manager
-          args:
-            - "--enable-leader-election"
-            - "--leader-election-id=prometheus-exporter-operator"
-          env:
-            - name: ANSIBLE_GATHERING
-              value: explicit
-            - name: WATCH_NAMESPACE
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.annotations['olm.targetNamespaces']
-          image: controller:latest
-          livenessProbe:
-            httpGet:
-              path: /healthz
-              port: 6789
-            initialDelaySeconds: 30
-            periodSeconds: 20
-            timeoutSeconds: 5
-          readinessProbe:
-            httpGet:
-              path: /readyz
-              port: 6789
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 5
+      - args:
+        - --leader-elect
+        - --leader-election-id=prometheus-exporter-operator
+        image: controller:latest
+        name: manager
+        env:
+        - name: ANSIBLE_GATHERING
+          value: explicit
+        - name: WATCH_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['olm.targetNamespaces']
+        securityContext:
+          allowPrivilegeEscalation: false
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 6789
+          initialDelaySeconds: 30
+          periodSeconds: 20
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 6789
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5
+      serviceAccountName: controller-manager
       terminationGracePeriodSeconds: 10
