@@ -9,8 +9,9 @@ spec:
       containers:
       - name: manager
         args:
-        - "--metrics-addr=0.0.0.0:8080"
-        - "--enable-leader-election"
+        - "--health-probe-bind-address=:6789"
+        - "--metrics-bind-address=0.0.0.0:8080"
+        - "--leader-elect"
         - "--leader-election-id=prometheus-exporter-operator"
         ports:
         - containerPort: 8080

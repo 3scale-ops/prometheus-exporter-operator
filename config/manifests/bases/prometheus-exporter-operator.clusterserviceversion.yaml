@@ -8,7 +8,8 @@ metadata:
     certified: "false"
     containerImage: quay.io/3scale/prometheus-exporter-operator
     createdAt: "2020-06-08 00:00:00"
-    description: Operator to setup 3rd party prometheus exporters, with a collection of grafana dashboards
+    description: Operator to setup 3rd party prometheus exporters, with a collection
+      of grafana dashboards
     repository: https://github.com/3scale-ops/prometheus-exporter-operator
     support: Red Hat, Inc.
   name: prometheus-exporter-operator.v0.0.0
@@ -75,7 +76,7 @@ spec:
     type: SingleNamespace
   - supported: true
     type: MultiNamespace
-  - supported: false
+  - supported: true
     type: AllNamespaces
   keywords:
   - monitoring

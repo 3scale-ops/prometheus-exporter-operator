@@ -9,8 +9,6 @@ namePrefix: prometheus-exporter-operator-
 
 patchesStrategicMerge:
 - debug_logs_patch.yaml
-#- manager_auth_proxy_patch.yaml
-- manager_metrics_patch.yaml
 
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
@@ -20,6 +18,9 @@ resources:
 - ../manager
 - external-apis/servicemonitors.monitoring.coreos.com.yaml
 - external-apis/grafanadashboards.integreatly.org.yaml
+images:
+- name: testing
+  newName: testing-operator
 
 patches:
   - target:

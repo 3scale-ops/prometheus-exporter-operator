@@ -28,12 +28,13 @@ metadata:
     certified: "false"
     containerImage: quay.io/3scale/prometheus-exporter-operator
     createdAt: "2020-06-08 00:00:00"
-    description: Operator to setup 3rd party prometheus exporters, with a collection of grafana dashboards
-    operators.operatorframework.io/builder: operator-sdk-v1.4.0+git
+    description: Operator to setup 3rd party prometheus exporters, with a collection
+      of grafana dashboards
+    operators.operatorframework.io/builder: operator-sdk-v1.13.0+git
     operators.operatorframework.io/project_layout: ansible.sdk.operatorframework.io/v1
     repository: https://github.com/3scale-ops/prometheus-exporter-operator
     support: Red Hat, Inc.
-  name: prometheus-exporter-operator.v0.3.4
+  name: prometheus-exporter-operator.v0.4.0
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
@@ -103,8 +104,9 @@ spec:
             spec:
               containers:
               - args:
-                - --metrics-addr=0.0.0.0:8080
-                - --enable-leader-election
+                - --health-probe-bind-address=:6789
+                - --metrics-bind-address=0.0.0.0:8080
+                - --leader-elect
                 - --leader-election-id=prometheus-exporter-operator
                 env:
                 - name: ANSIBLE_GATHERING
@@ -113,7 +115,7 @@ spec:
                   valueFrom:
                     fieldRef:
                       fieldPath: metadata.annotations['olm.targetNamespaces']
-                image: quay.io/3scale/prometheus-exporter-operator:v0.3.4
+                image: quay.io/3scale/prometheus-exporter-operator:v0.4.0
                 livenessProbe:
                   httpGet:
                     path: /healthz
@@ -133,6 +135,10 @@ spec:
                   periodSeconds: 10
                   timeoutSeconds: 5
                 resources: {}
+                securityContext:
+                  allowPrivilegeEscalation: false
+              securityContext:
+                runAsNonRoot: true
               serviceAccountName: prometheus-exporter-operator-controller-manager
               terminationGracePeriodSeconds: 10
       permissions:
@@ -141,6 +147,18 @@ spec:
           - ""
           resources:
           - configmaps
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
+          - patch
+          - delete
+        - apiGroups:
+          - coordination.k8s.io
+          resources:
+          - leases
           verbs:
           - get
           - list
@@ -243,7 +261,7 @@ spec:
     type: SingleNamespace
   - supported: true
     type: MultiNamespace
-  - supported: false
+  - supported: true
     type: AllNamespaces
   keywords:
   - monitoring
@@ -270,4 +288,4 @@ spec:
   provider:
     name: Red Hat
     url: https://www.redhat.com
-  version: 0.3.4
+  version: 0.4.0
