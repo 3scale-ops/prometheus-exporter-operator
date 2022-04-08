@@ -7,7 +7,6 @@ metadata:
     prometheus_exporter_type: "{{ type }}"
     "{{ grafana_dashboard.label.key | default(grafana_dashboard_label_key) }}": "{{ grafana_dashboard.label.value | default(grafana_dashboard_label_value) }}"
 spec:
-  name: "{{ ansible_operator_meta.namespace }}-prometheus-exporter-{{ type }}.json"
   json: >
 {## <grafana_dashboard> ##}
 {% filter indent(4, True) %}
