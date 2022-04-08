@@ -118,7 +118,7 @@ endif
 endif
 
 .PHONY: bundle
-bundle: $(OPERATOR_SDK) kustomize ## Generate bundle manifests and metadata, then validate generated files.
+bundle: operator-sdk kustomize ## Generate bundle manifests and metadata, then validate generated files.
 	$(OPERATOR_SDK) generate kustomize manifests -q
 	cd config/manager && $(KUSTOMIZE) edit set image controller=$(IMG)
 	$(KUSTOMIZE) build config/manifests | $(OPERATOR_SDK) generate bundle -q --overwrite --version $(VERSION) $(BUNDLE_METADATA_OPTS)
@@ -183,10 +183,12 @@ catalog-push: ## Push a catalog image.
 OPERATOR_SDK_RELEASE = v1.13.1
 OPERATOR_SDK = $(shell pwd)/bin/operator-sdk-$(OPERATOR_SDK_RELEASE)
 OPERATOR_SDK_DL_URL = https://github.com/operator-framework/operator-sdk/releases/download/$(OPERATOR_SDK_RELEASE)/operator-sdk_$(OS)_$(ARCH)
-$(OPERATOR_SDK):
-	mkdir -p $(shell pwd)/bin
-	curl -sL -o $(OPERATOR_SDK) $(OPERATOR_SDK_DL_URL)
-	chmod +x $(OPERATOR_SDK)
+operator-sdk:
+	@if [ ! -f $(OPERATOR_SDK) ]; then\
+		mkdir -p $(shell pwd)/bin;\
+		curl -sL -o $(OPERATOR_SDK) $(OPERATOR_SDK_DL_URL);\
+		chmod +x $(OPERATOR_SDK);\
+	fi
 
 # Download kind locally if necessary
 KIND_RELEASE = v0.11.1
