@@ -234,7 +234,7 @@ get-new-release:
 
 kind-create: export KUBECONFIG = ${PWD}/kubeconfig
 kind-create: $(KIND) ## Creates a k8s kind cluster
-	$(KIND) create cluster --wait 5m
+	$(KIND) create cluster --wait 5m || true
 
 kind-delete: $(KIND) ## Deletes the k8s kind cluster
 	$(KIND) delete cluster
