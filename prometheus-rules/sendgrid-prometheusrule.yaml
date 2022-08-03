@@ -1,0 +1,29 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: prometheus-exporter-sendgrid
+spec:
+  groups:
+    - name: prometheus-exporter-sendgrid.rules
+      rules:
+      - alert: SendgridRequestsHigh
+        expr: sendgrid_requests > 10000
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          message: "Sendgrid {{ $labels.prometheus_exporter }} requests emails is High above contracted plan"
+      - alert: SendgridSpamReportsHigh
+        expr: sendgrid_spam_reports > 100
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          message: "Sendgrid {{ $labels.prometheus_exporter }} spam reports emails (marked as spam) is High"
+      - alert: SendgridBlocksHourlyRateHigh
+        expr: increase(sendgrid_blocks{}[1h]) > 20
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          message: "Sendgrid {{ $labels.prometheus_exporter }}blocks hourly rate is High"

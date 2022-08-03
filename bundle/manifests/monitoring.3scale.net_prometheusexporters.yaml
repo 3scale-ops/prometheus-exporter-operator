@@ -182,6 +182,21 @@ spec:
                       to an implementation-defined value. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
                     type: object
                 type: object
+              sendgridAccumulatedMetrics:
+                description: For sendgrid exporter, configures monthly acumulated
+                  metrics (true) instead of daily metrics (false)
+                type: boolean
+              sendgridCredentialsSecretName:
+                description: For sendgrid exporter, Secret name containing Sendgrid
+                  username and apikey
+                type: string
+              sendgridLocation:
+                description: For sendgrid exporter, configures time zone
+                type: string
+              sendgridTimeOffset:
+                description: For sendgrid exporter, specifies the offset in seconds
+                  from UTC as an integer (needed along with location)
+                type: integer
               serviceMonitor:
                 properties:
                   enabled:
@@ -202,6 +217,7 @@ spec:
                 - es
                 - cloudwatch
                 - probe
+                - sendgrid
                 type: string
             required:
             - type

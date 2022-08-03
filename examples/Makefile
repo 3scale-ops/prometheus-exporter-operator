@@ -81,5 +81,13 @@ probe-create: ## PROBE EXAMPLE - Create: CR-configmap (blackbox modules config),
 probe-delete: ## PROBE EXAMPLE - Delete: Target-SM, CR, CR-configmap
 	$(KUBE_CLIENT) delete -f probe/ -n $(NAMESPACE) || true
 
+## Sendgrid ##
+
+sendgrid-create: ## SENDGRID EXAMPLE - Create: CR-secret (username/apikey), CR
+	$(KUBE_CLIENT) apply -f sendgrid/ --validate=false -n $(NAMESPACE)
+
+sendgrid-delete: ## SENDGRID EXAMPLE - Delete: CR, CR-secret
+	$(KUBE_CLIENT) delete -f sendgrid/ -n $(NAMESPACE) || true
+
 help: ## Print this help
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-33s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
