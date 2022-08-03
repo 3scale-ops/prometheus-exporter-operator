@@ -44,6 +44,7 @@ spec:
                 - es
                 - cloudwatch
                 - probe
+                - sendgrid
               serviceMonitor:
                 type: object
                 properties:
@@ -185,6 +186,18 @@ spec:
               configurationSecretName:
                 description: For probe exporter, optional Secret name containing blackbox modules configuration. Replaces usage of configurationConfigmapName (in case config includes sensitive data and so you prefer to use a Secret)
                 type: string
+              sendgridCredentialsSecretName:
+                description: For sendgrid exporter, Secret name containing Sendgrid username and apikey
+                type: string
+              sendgridAccumulatedMetrics:
+                description: For sendgrid exporter, configures monthly acumulated metrics (true) instead of daily metrics (false)
+                type: boolean
+              sendgridLocation:
+                description: For sendgrid exporter, configures time zone
+                type: string
+              sendgridTimeOffset:
+                description: For sendgrid exporter, specifies the offset in seconds from UTC as an integer (needed along with location)
+                type: integer
               logLevel:
                 type: string
                 description: For probe exporter, log level of the exporter
