@@ -1,0 +1,37 @@
+---
+
+# Exporter
+image_name: "chatwork/sendgrid-stats-exporter"
+image_version: "0.0.9"
+port: 9154
+liveness_probe_timeout_seconds: 3
+liveness_probe_period_seconds: 15
+liveness_probe_success_threshold: 1
+liveness_probe_failure_threshold: 5
+readiness_probe_timeout_seconds: 3
+readiness_probe_period_seconds: 30
+readiness_probe_success_threshold: 1
+readiness_probe_failure_threshold: 5
+resources_requests_cpu: "100m"
+resources_requests_memory: "128Mi"
+resources_limits_cpu: "200m"
+resources_limits_memory: "256Mi"
+
+# Custom
+sendgrid_credentials_secret_name: "prometheus-exporter-{{ type }}-{{ ansible_operator_meta.name }}"
+sendgrid_accumulated_metrics: "True"
+sendgrid_location: ""
+sendgrid_time_offset: "0"
+
+###### Example of Secret
+#
+# If you don't specify CR field sendgridCredentialsSecretName, it will be used default Secret name "prometheus-exporter-sendgrid-{{ CR_NAME }}"
+#
+#apiVersion: v1
+#kind: Secret
+#metadata:
+#  name: "prometheus-exporter-sendgrid-production"
+#type: Opaque
+#stringData:
+#  SENDGRID_USER_NAME: "username"
+#  SENDGRID_API_KEY: "apikey"

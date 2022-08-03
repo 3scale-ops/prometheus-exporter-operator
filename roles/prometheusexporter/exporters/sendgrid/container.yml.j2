@@ -1,0 +1,17 @@
+env:
+  - name: SENDGRID_USER_NAME
+    valueFrom:
+      secretKeyRef:
+        name: "{{ sendgrid_credentials_secret_name }}"
+        key: SENDGRID_USER_NAME
+  - name: SENDGRID_API_KEY
+    valueFrom:
+      secretKeyRef:
+        name: "{{ sendgrid_credentials_secret_name }}"
+        key: SENDGRID_API_KEY
+  - name: SENDGRID_ACCUMULATED_METRICS
+    value: "{{ sendgrid_accumulated_metrics }}"
+  - name: SENDGRID_LOCATION
+    value: "{{ sendgrid_location }}"
+  - name: SENDGRID_TIME_OFFSET
+    value: "{{ sendgrid_time_offset }}"
