@@ -10,6 +10,7 @@ Once the deployed prometheus-exporter operator is up and running and watching fo
 1. [Elasticsearch](#elasticsearch)
 1. [AWS CloudWatch](#aws-cloudwatch)
 1. [Probe](#probe)
+1. [Sendgrid](#sendgrid)
 
 ## Memcached
 
@@ -211,4 +212,24 @@ $ make probe-create
 * Once tested, delete the created objects:
 ```bash
 $ make probe-delete
+```
+
+## Sendgrid
+
+* Official doc: https://github.com/chatwork/sendgrid-stats-exporter
+
+### CR needed extra object
+
+* **The Secret should have been previously created as the operator expects it**:
+  * **[sendgrid-secret--example](sendgrid/sendgrid-secret.yaml) (Remember to set the object name on the CR field `configurationSecretName`)**
+
+### Deploy example
+
+* Create `sendgrid-exporter` example ([example-secret](sendgrid/sendgrid-secret.yaml), [example-CR](sendgrid/sendgrid-cr.yaml)):
+```bash
+$ make sendgrid-create
+```
+* Once tested, delete the created objects:
+```bash
+$ make sendgrid-delete
 ```

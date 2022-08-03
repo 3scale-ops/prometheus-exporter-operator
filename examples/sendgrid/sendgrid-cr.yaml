@@ -1,0 +1,11 @@
+apiVersion: monitoring.3scale.net/v1alpha1
+kind: PrometheusExporter
+metadata:
+  name: production
+spec:
+  type: sendgrid
+  grafanaDashboard:
+    label:
+      key: monitoring-key
+      value: middleware
+  sendgridCredentialsSecretName: prometheus-exporter-sendgrid-production
