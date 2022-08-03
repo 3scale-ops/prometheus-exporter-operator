@@ -9,7 +9,11 @@
 
 A Kubernetes Operator based on the Operator SDK to centralize the setup of 3rd party prometheus exporters on **Kubernetes/OpenShift**, with a collection of grafana dashboards.
 
-You can setup different prometheus exporters to monitor the **internals from different databases**, **HTTP/TCP endpoints** (availability, latency, SSL/TLS certificate expiration...), or even any available **cloudwatch metric from any AWS Service**, by just providing a few parameters like *dbHost* or *dbPort* (operator manage the container image, port, argument, command, volumes... and also prometheus `ServiceMonitor` and `GrafanaDashboard` k8s objects).
+By just providing a few parameters like *dbHost* or *dbPort* (operator manage the container image, port, argument, command, volumes... and also prometheus `ServiceMonitor` and `GrafanaDashboard` k8s objects), you can setup different prometheus exporters to monitor:
+* The **internals from different databases**
+* **HTTP/TCP endpoints** (availability, latency, SSL/TLS certificate expiration...)
+* Any available **cloudwatch metric from any AWS Service**
+* Sendgrid email statistics (delivered, bounces, errors. spam...)
 
 Current prometheus exporters `types` supported, managed by same prometheus-exporter-operator:
 * memcached
@@ -20,6 +24,7 @@ Current prometheus exporters `types` supported, managed by same prometheus-expor
 * es (elasticsearch)
 * cloudwatch
 * probe (blackbox)
+* sendgrid
 
 The operator manages the lifecycle of the following objects:
 * Deployment (one per CR)
@@ -81,6 +86,9 @@ Operator is available at [OperatorHub.io](https://operatorhub.io/operator/promet
 
 ### Blackbox probe example dashboard
 <img src="img/example-probe-dashboard.png" height="250px" alt="Example Blackbox Probe Dashboard"></img>
+
+### Sendgrid example dashboard
+<img src="img/example-sendgrid-dashboard.png" height="250px" alt="Example Sendgrid Dashboard"></img>
 
 ## PrometheusRules
 

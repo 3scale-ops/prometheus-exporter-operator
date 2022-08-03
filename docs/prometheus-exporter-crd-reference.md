@@ -162,3 +162,15 @@ Specific CR fields per exporter type:
 
 * Image, port, resources, liveness, readiness default values can be found at [ansible-probe-vars](../roles/prometheusexporter/exporters/probe/vars.yml)
 * Real `probe` example can be found on [examples](../examples/README.md#probe) directory.
+
+### CR Spec Custom Type Sendgrid
+
+| **Field** | **Type** | **Required** | **Default value** | **Description** |
+|:---:|:---:|:---:|:---:|:---:|
+| `sendgridCredentialsSecretName` | `string` | Yes | `prometheus-exporter-sendgrid-${CR_NAME}` | Secret name containing Sendgrid username/apikey |
+| `sendgridAccumulatedMetrics` | `bool` | No | `True` | Monthly acumulated metrics (`true`) instead of daily metrics (`false`) |
+| `sendgridLocation` | `string` | No | | Time zone (empty means UTC) |
+| `sendgridTimeOffet` | `int` | No | `0` | Offset in seconds from UTC as an integer (needed along with location) |
+
+* Image, port, resources, liveness, readiness default values can be found at [ansible-sendgrid-vars](../roles/prometheusexporter/exporters/sendgrid/vars.yml)
+* Real `sendgrid` example can be found on [examples](../examples/README.md#sendgrid) directory.
