@@ -10,9 +10,9 @@ NAMESPACE ?= prometheus-exporter-operator-system
 
 ## General ##
 
-all: memcached-create redis-create mysql-create postgresql-create sphinx-create elasticsearch-create cloudwatch-create probe-create ## GENERAL - Create all examples
+all: memcached-create redis-create mysql-create postgresql-create sphinx-create elasticsearch-create cloudwatch-create probe-create sendgrid-create ## GENERAL - Create all examples
 
-clean: memcached-delete redis-delete mysql-delete postgresql-delete sphinx-delete elasticsearch-delete cloudwatch-delete probe-delete ## GENERAL - Delete all examples
+clean: memcached-delete redis-delete mysql-delete postgresql-delete sphinx-delete elasticsearch-delete cloudwatch-delete probe-delete sendgrid-delete ## GENERAL - Delete all examples
 
 ## Memcached ##
 
