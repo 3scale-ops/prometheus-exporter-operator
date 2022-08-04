@@ -221,7 +221,7 @@ $ make probe-delete
 ### CR needed extra object
 
 * **The Secret should have been previously created as the operator expects it**:
-  * **[sendgrid-secret--example](sendgrid/sendgrid-secret.yaml) (Remember to set the object name on the CR field `configurationSecretName`)**
+  * **[sendgrid-secret-example](sendgrid/sendgrid-secret.yaml) (Remember to set the object name on the CR field `sendgridCredentialsSecretName`)**
 
 ### Deploy example
 
