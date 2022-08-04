@@ -6,6 +6,13 @@ spec:
   groups:
     - name: prometheus-exporter-sendgrid.rules
       rules:
+      - alert: SendgridDown
+        expr: absent(sendgrid_delivered)
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          message: "Sendgrid {{ $labels.prometheus_exporter }} is DOWN"
       - alert: SendgridRequestsHigh
         expr: sendgrid_requests > 10000
         for: 5m
