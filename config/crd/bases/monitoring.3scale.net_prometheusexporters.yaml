@@ -204,6 +204,9 @@ spec:
                 enum:
                 - info
                 - debug
+              probeTargetLabel:
+                description: For probe exporter, specifies the Prometheus label used to distinguish among monitored targets on grafana dashboard
+                type: string
             type: object
             required:
             - type
