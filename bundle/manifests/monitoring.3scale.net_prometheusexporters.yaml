@@ -134,6 +134,10 @@ spec:
               port:
                 description: Prometheus exporter port where metrics are available
                 type: integer
+              probeTargetLabel:
+                description: For probe exporter, specifies the Prometheus label used
+                  to distinguish among monitored targets on grafana dashboard
+                type: string
               readinessProbe:
                 description: Readiness probe
                 properties:
