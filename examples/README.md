@@ -198,14 +198,14 @@ $ make cloudwatch-delete
   * **[probe-secret-example](probe/probe-secret.yaml) (Remember to set the object name on the CR field `configurationSecretName` replacing previous `configurationConfigmapName`)**
 
 > **NOTE**
-><br /> To deploy a probe exporter (blackbox exporter) it is just needed the configmap (or secret) with blackbox modules configuration, and a single `PrometheusExporter` custom resource of type `probe`. But then, in order to be able to scrape different targets, you need to deploy for every endpoint that you want to monitor, a prometheus `ServiceMonitor` resource with the `selector.matchLabels` pointing to the deployed probe exporter `app: prometheus-exporter-probe-${CR_NAME}`, and then configure the specific module and target, with a proper relabeling of source label `__param_target` into target label `target` (which is used in the deployed grafana dashboard and possible prometheus alerts).
+><br /> To deploy a probe exporter (blackbox exporter) it is just needed the configmap (or secret) with blackbox modules configuration, and a single `PrometheusExporter` custom resource of type `probe`. But then, in order to be able to scrape different targets, you need to deploy for every endpoint that you want to monitor, a prometheus `Probe` resource with the `prober.url` pointing to the deployed probe exporter service `prometheus-exporter-probe-${CR_NAME}.${NAMESPACE}.svc:9115`, and then configure the specific module and target.
 
-### Target ServiceMonitor extra objects
-  * **[probe-target-service-monitor-example](probe/probe-target-service-monitor.yaml) (Remember to set the `selector.matchLabels` pointing to the deployed probe exporter `app: prometheus-exporter-probe-${CR_NAME}`)**
+### Target Probe extra objects
+  * **[probe-target-probe-example](probe/probe-target-probe.yaml) (Remember to set the `prober.url` pointing to the deployed probe exporter service `prometheus-exporter-probe-${CR_NAME}.${NAMESPACE}.svc:9115`)**
 
 ### Deploy example
 
-* Create `probe-exporter` example ([example-configmap](probe/probe-configmap.yaml), [example-CR](probe/probe-cr.yaml), [example-target-service-monitor](probe/probe-target-service-monitor.yaml)):
+* Create `probe-exporter` example ([example-configmap](probe/probe-configmap.yaml), [example-CR](probe/probe-cr.yaml), [example-target-probe](probe/probe-target-probe.yaml)):
 ```bash
 $ make probe-create
 ```
