@@ -2,7 +2,7 @@
 
 # Exporter
 image_name: "quay.io/prometheus/blackbox-exporter"
-image_version: "v0.18.0"
+image_version: "v0.22.0"
 port: 9115
 liveness_probe_timeout_seconds: 3
 liveness_probe_period_seconds: 15
