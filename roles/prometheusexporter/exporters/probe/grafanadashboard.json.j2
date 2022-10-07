@@ -57,11 +57,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "probe_duration_seconds{namespace=\"$namespace\", service=~\".*$prometheus_exporter\", target=~\"$target\"}",
+          "expr": "probe_duration_seconds{ {{ probe_target_label }}=~\"$target\"}",
           "format": "time_series",
           "interval": "$interval",
           "intervalFactor": 1,
-          "legendFormat": "{{ '{{' }} target {{ '}}' }}",
+          "legendFormat": "{{ '{{' }} {{ probe_target_label }} {{ '}}' }}",
           "refId": "A"
         }
       ],
@@ -186,7 +186,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "probe_success{namespace=\"$namespace\", service=~\".*$prometheus_exporter\", target=~\"$target\"}",
+          "expr": "probe_success{ {{ probe_target_label }}=~\"$target\"}",
           "format": "time_series",
           "interval": "$interval",
           "intervalFactor": 1,
@@ -256,7 +256,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "probe_http_duration_seconds{namespace=\"$namespace\", service=~\".*$prometheus_exporter\", target=~\"$target\"}",
+          "expr": "probe_http_duration_seconds{ {{ probe_target_label }}=~\"$target\"}",
           "format": "time_series",
           "interval": "$interval",
           "intervalFactor": 1,
@@ -344,7 +344,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "probe_duration_seconds{namespace=\"$namespace\", service=~\".*$prometheus_exporter\", target=~\"$target\"}",
+          "expr": "probe_duration_seconds{ {{ probe_target_label }}=~\"$target\"}",
           "format": "time_series",
           "interval": "$interval",
           "intervalFactor": 1,
@@ -460,7 +460,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "probe_http_status_code{namespace=\"$namespace\", service=~\".*$prometheus_exporter\", target=~\"$target\"}",
+          "expr": "probe_http_status_code{ {{ probe_target_label }}=~\"$target\"}",
           "format": "time_series",
           "interval": "$interval",
           "intervalFactor": 1,
@@ -556,7 +556,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "probe_http_version{namespace=\"$namespace\", service=~\".*$prometheus_exporter\", target=~\"$target\"}",
+          "expr": "probe_http_version{ {{ probe_target_label }}=~\"$target\"}",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -643,7 +643,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "probe_http_ssl{namespace=\"$namespace\", service=~\".*$prometheus_exporter\", target=~\"$target\"}",
+          "expr": "probe_http_ssl{ {{ probe_target_label }}=~\"$target\"}",
           "format": "time_series",
           "interval": "$interval",
           "intervalFactor": 1,
@@ -742,7 +742,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "probe_ssl_earliest_cert_expiry{namespace=\"$namespace\", service=~\".*$prometheus_exporter\", target=~\"$target\"} - time()",
+          "expr": "probe_ssl_earliest_cert_expiry{ {{ probe_target_label }}=~\"$target\"} - time()",
           "format": "time_series",
           "interval": "$interval",
           "intervalFactor": 1,
@@ -821,7 +821,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "avg(probe_duration_seconds{namespace=\"$namespace\", service=~\".*$prometheus_exporter\", target=~\"$target\"})",
+          "expr": "avg(probe_duration_seconds{ {{ probe_target_label }}=~\"$target\"})",
           "format": "time_series",
           "interval": "$interval",
           "intervalFactor": 1,
@@ -905,7 +905,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "avg(probe_dns_lookup_time_seconds{namespace=\"$namespace\", service=~\".*$prometheus_exporter\", target=~\"$target\"})",
+          "expr": "avg(probe_dns_lookup_time_seconds{ {{ probe_target_label }}=~\"$target\"})",
           "format": "time_series",
           "interval": "$interval",
           "intervalFactor": 1,
@@ -1006,14 +1006,14 @@
           ]
         },
         "datasource": "$datasource",
-        "definition": "label_values(probe_success{namespace=\"$namespace\",service=~\".*$prometheus_exporter\"}, target)",
+        "definition": "label_values(probe_success{}, {{ probe_target_label }})",
         "hide": 0,
         "includeAll": true,
         "label": null,
         "multi": true,
         "name": "target",
         "options": [],
-        "query": "label_values(probe_success{namespace=\"$namespace\",service=~\".*$prometheus_exporter\"}, target)",
+        "query": "label_values(probe_success{}, {{ probe_target_label }})",
         "refresh": 1,
         "regex": "",
         "skipUrlSync": false,

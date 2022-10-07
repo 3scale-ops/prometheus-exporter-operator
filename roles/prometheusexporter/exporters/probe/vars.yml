@@ -20,6 +20,7 @@ resources_limits_memory: "64Mi"
 # Custom
 configuration_configmap_name: "prometheus-exporter-{{ type }}-{{ ansible_operator_meta.name }}"
 log_level: "debug"
+probe_target_label: "instance"
 
 ###### Example of ConfigMap
 #
