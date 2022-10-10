@@ -1,0 +1,12 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: prometheus-exporter-probe-http-kubernetes-io
+spec:
+  module: http_2xx
+  prober:
+    url: prometheus-exporter-probe-staging-blackbox.prometheus-exporter-operator-system.svc:9115
+  targets:
+    staticConfig:
+      static:
+        - https://kubernetes.io
