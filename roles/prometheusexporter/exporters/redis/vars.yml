@@ -2,7 +2,7 @@
 
 # Exporter
 image_name: "oliver006/redis_exporter"
-image_version: "v1.3.5"
+image_version: "v1.44.0"
 port: 9121
 liveness_probe_timeout_seconds: 3
 liveness_probe_period_seconds: 15
