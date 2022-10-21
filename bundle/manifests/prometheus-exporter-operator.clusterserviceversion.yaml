@@ -30,11 +30,11 @@ metadata:
     createdAt: "2020-06-08 00:00:00"
     description: Operator to setup 3rd party prometheus exporters, with a collection
       of grafana dashboards
-    operators.operatorframework.io/builder: operator-sdk-v1.13.0+git
+    operators.operatorframework.io/builder: operator-sdk-v1.24.0
     operators.operatorframework.io/project_layout: ansible.sdk.operatorframework.io/v1
     repository: https://github.com/3scale-ops/prometheus-exporter-operator
     support: Red Hat, Inc.
-  name: prometheus-exporter-operator.v0.5.1-alpha.5
+  name: prometheus-exporter-operator.v0.6.0-alpha.2
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
@@ -95,7 +95,9 @@ spec:
   install:
     spec:
       deployments:
-      - name: prometheus-exporter-operator-controller-manager
+      - label:
+          control-plane: controller-manager
+        name: prometheus-exporter-operator-controller-manager
         spec:
           replicas: 1
           selector:
@@ -104,6 +106,8 @@ spec:
           strategy: {}
           template:
             metadata:
+              annotations:
+                kubectl.kubernetes.io/default-container: manager
               labels:
                 control-plane: controller-manager
             spec:
@@ -120,7 +124,7 @@ spec:
                   valueFrom:
                     fieldRef:
                       fieldPath: metadata.annotations['olm.targetNamespaces']
-                image: quay.io/3scale/prometheus-exporter-operator:v0.5.1-alpha.5
+                image: quay.io/3scale/prometheus-exporter-operator:v0.6.0-alpha.2
                 livenessProbe:
                   httpGet:
                     path: /healthz
@@ -139,9 +143,18 @@ spec:
                   initialDelaySeconds: 5
                   periodSeconds: 10
                   timeoutSeconds: 5
-                resources: {}
+                resources:
+                  limits:
+                    cpu: 500m
+                    memory: 512Mi
+                  requests:
+                    cpu: 10m
+                    memory: 128Mi
                 securityContext:
                   allowPrivilegeEscalation: false
+                  capabilities:
+                    drop:
+                    - ALL
               securityContext:
                 runAsNonRoot: true
               serviceAccountName: prometheus-exporter-operator-controller-manager
@@ -294,4 +307,4 @@ spec:
   provider:
     name: Red Hat
     url: https://www.redhat.com
-  version: 0.5.1-alpha.5
+  version: 0.6.0-alpha.2
