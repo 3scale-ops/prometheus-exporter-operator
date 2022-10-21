@@ -12,7 +12,7 @@
 
 - name: Get information about existing api-groups in the cluster for PrometheusExporter {{ ansible_operator_meta.name }} on Namespace {{ ansible_operator_meta.namespace }}
   set_fact:
-    api_groups: "{{ lookup('k8s', cluster_info='api_groups') }}"
+    api_groups: "{{ lookup('kubernetes.core.k8s', cluster_info='api_groups') }}"
 
 - name: Convert serviceMonitor.enabled boolean var into ansible service_monitor_state state var for PrometheusExporter {{ ansible_operator_meta.name }} on Namespace  { ansible_operator_meta.namespace }}
   set_fact:
