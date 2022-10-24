@@ -18,19 +18,11 @@ spec:
         - name: mysql-server
           image: mysql:5.6
           env:
-            - name: MYSQL_USER
-              value: exporter
-            - name: MYSQL_PASSWORD
-              value: "123456789"
-            - name: MYSQL_ROOT_PASSWORD
-              value: "123456789"
+            - name: MYSQL_ALLOW_EMPTY_PASSWORD
+              value: "yes"
           readinessProbe:
-            exec:
-              command:
-              - /bin/sh
-              - -i
-              - -c
-              - mysql -h localhost -u root -p123456789 -e 'SELECT 1'
+            tcpSocket:
+              port: 3306
           resources:
             requests:
               cpu: 100m

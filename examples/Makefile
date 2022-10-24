@@ -36,7 +36,8 @@ mysql-create: ## MYSQL EXAMPLE - Create: CR-secret (connection string), CR-DB (w
 	$(KUBE_CLIENT) apply -f mysql/ --validate=false -n $(NAMESPACE)
 	sleep 30
 	$(KUBE_CLIENT) wait --timeout=180s --for condition=ready pod mysql-server-0 -n $(NAMESPACE)
-	$(KUBE_CLIENT) exec mysql-server-0 -n $(NAMESPACE) -- mysql -h localhost -u root -p123456789 -e "GRANT PROCESS, REPLICATION CLIENT, SELECT ON *.* TO 'exporter'@'%';"
+	$(KUBE_CLIENT) exec mysql-server-0 -n $(NAMESPACE) -- mysql -u root -h localhost -e "CREATE USER 'exporter'@'%' IDENTIFIED BY '123456789';"
+	$(KUBE_CLIENT) exec mysql-server-0 -n $(NAMESPACE) -- mysql -u root -h localhost -e "GRANT PROCESS, REPLICATION CLIENT, SELECT ON *.* TO 'exporter'@'%';"
 
 mysql-delete: ## MYSQL EXAMPLE - Delete: CR, CR-DB, CR-secret
 	$(KUBE_CLIENT) delete -f mysql/ -n $(NAMESPACE) || true
