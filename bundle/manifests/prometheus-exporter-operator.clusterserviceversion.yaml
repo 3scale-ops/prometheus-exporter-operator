@@ -34,7 +34,7 @@ metadata:
     operators.operatorframework.io/project_layout: ansible.sdk.operatorframework.io/v1
     repository: https://github.com/3scale-ops/prometheus-exporter-operator
     support: Red Hat, Inc.
-  name: prometheus-exporter-operator.v0.6.0
+  name: prometheus-exporter-operator.v0.6.1
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
@@ -124,7 +124,7 @@ spec:
                   valueFrom:
                     fieldRef:
                       fieldPath: metadata.annotations['olm.targetNamespaces']
-                image: quay.io/3scale/prometheus-exporter-operator:v0.6.0
+                image: quay.io/3scale/prometheus-exporter-operator:v0.6.1
                 livenessProbe:
                   httpGet:
                     path: /healthz
@@ -145,8 +145,8 @@ spec:
                   timeoutSeconds: 5
                 resources:
                   limits:
-                    cpu: 500m
-                    memory: 512Mi
+                    cpu: "1"
+                    memory: 1Gi
                   requests:
                     cpu: 10m
                     memory: 128Mi
@@ -307,4 +307,4 @@ spec:
   provider:
     name: Red Hat
     url: https://www.redhat.com
-  version: 0.6.0
+  version: 0.6.1
