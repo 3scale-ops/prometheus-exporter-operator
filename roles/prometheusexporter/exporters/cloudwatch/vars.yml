@@ -14,7 +14,7 @@ readiness_probe_success_threshold: 1
 readiness_probe_failure_threshold: 5
 resources_requests_cpu: "50m"
 resources_requests_memory: "128Mi"
-resources_limits_cpu: "100m"
+resources_limits_cpu: "500m"
 resources_limits_memory: "256Mi"
 
 # Custom
