@@ -1,12 +1,23 @@
+{% if grafana_dashboard_api_version == "v1alpha1" %}
 apiVersion: integreatly.org/v1alpha1
+{% elif grafana_dashboard_api_version == "v1beta1" %}
+apiVersion: grafana.integreatly.org/v1beta1
+{% endif %}
 kind: GrafanaDashboard
 metadata:
   name: "prometheus-exporter-{{ type }}"
   namespace: "{{ ansible_operator_meta.namespace }}"
   labels:
     prometheus_exporter_type: "{{ type }}"
+{% if grafana_dashboard_api_version == "v1alpha1" %}
     "{{ grafana_dashboard.label.key | default(grafana_dashboard_label_key) }}": "{{ grafana_dashboard.label.value | default(grafana_dashboard_label_value) }}"
+{% endif %}
 spec:
+{% if grafana_dashboard_api_version == "v1beta1" %}
+  instanceSelector:
+    matchLabels:
+      "{{ grafana_dashboard.label.key | default(grafana_dashboard_label_key) }}": "{{ grafana_dashboard.label.value | default(grafana_dashboard_label_value) }}"
+{% endif %}
   json: >
 {## <grafana_dashboard> ##}
 {% filter indent(4, True) %}
