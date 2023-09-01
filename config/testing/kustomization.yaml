@@ -18,6 +18,7 @@ resources:
 - ../manager
 - external-apis/servicemonitors.monitoring.coreos.com.yaml
 - external-apis/grafanadashboards.integreatly.org.yaml
+- external-apis/grafanadashboards.grafana.integreatly.org.yaml
 images:
 - name: testing
   newName: testing-operator
