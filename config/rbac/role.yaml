@@ -58,6 +58,7 @@ rules:
       - watch
   - apiGroups:
       - integreatly.org
+      - grafana.integreatly.org
     resources:
       - grafanadashboards
     verbs:
