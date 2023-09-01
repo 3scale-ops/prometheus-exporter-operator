@@ -74,6 +74,12 @@ spec:
                 type: object
               grafanaDashboard:
                 properties:
+                  apiVersion:
+                    description: GrafanaDashboard custom resource apiVersion
+                    enum:
+                    - v1alpha1
+                    - v1beta1
+                    type: string
                   enabled:
                     description: Create (true) or not (false) GrafanaDashboard object
                     type: boolean
