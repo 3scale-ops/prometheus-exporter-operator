@@ -19,6 +19,7 @@ spec:
     label:
       key: monitoring-key
       value: middleware
+    apiVersion: grafana.integreatly.org/v1beta1
   extraLabel:
     key: tier
     value: frontend
@@ -59,6 +60,7 @@ spec:
 | `grafanaDashboard.enabled` | `bool` | No | `true` | Create (`true`) or not (`false`) GrafanaDashboard object |
 | `grafanaDashboard.label.key` | `string` | No | discovery | Label `key` used by grafana-operator for dashboard discovery |
 | `grafanaDashboard.label.value` | `string` | No | enabled | Label `value` used by grafana-operator for dashboard discovery |
+| `grafanaDashboard.apiVersion` | `string` | No | v1alpha1 | GrafanaDashboard custom resource apiVersion |
 | `extraLabel.key` | `string` | No | - | Add extra label `key` to all created resources (example `tier`) |
 | `extraLabel.value` | `string` | No | - | Add extra label `value` to all created resources (example `frontend`) |
 | `image.name` | `string` | No | Depends on exporter | Prometheus exporter image name |
