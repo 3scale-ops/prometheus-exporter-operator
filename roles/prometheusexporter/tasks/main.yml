@@ -33,6 +33,16 @@
     grafana_dashboard_state: "absent"
   when: grafana_dashboard.enabled is defined and grafana_dashboard.enabled|bool == false
 
+- name: Convert possible grafanaDashboard.apiVersion v1alpha1 string var into ansible grafana_dashboard_api_version var for PrometheusExporter {{ ansible_operator_meta.name }} on Namespace  { ansible_operator_meta.namespace }}
+  set_fact:
+    grafana_dashboard_api_version: "v1alpha1"
+  when: grafana_dashboard.api_version is defined and grafana_dashboard.api_version|string == "v1alpha1"
+
+- name: Convert possible grafanaDashboard.apiVersion v1beta1 string var into ansible grafana_dashboard_api_version var for PrometheusExporter {{ ansible_operator_meta.name }} on Namespace  { ansible_operator_meta.namespace }}
+  set_fact:
+    grafana_dashboard_api_version: "v1beta1"
+  when: grafana_dashboard.api_version is defined and grafana_dashboard.api_version|string == "v1beta1"
+
 - name: Manage GrafanaDashboard (if integreatly.org api-group exists) for PrometheusExporter {{ ansible_operator_meta.name }} on Namespace {{ ansible_operator_meta.namespace }}
   k8s:
     state: "{{ grafana_dashboard_state }}"
@@ -41,3 +51,5 @@
   loop:
     - name: "grafanadashboard.yml.j2"
       api_exists: "{{ True if 'integreatly.org' in api_groups else False }}"
+    - name: "grafanadashboard.yml.j2"
+      api_exists: "{{ True if 'grafana.integreatly.org' in api_groups else False }}"
