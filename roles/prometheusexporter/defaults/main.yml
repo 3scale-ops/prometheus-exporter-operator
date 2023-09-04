@@ -11,3 +11,4 @@ service_monitor_interval: "30s"
 grafana_dashboard_state: "present" # Converted to ansible state "absent" with an ansible set_fact task if CR boolean grafanaDashboard.enabled = false
 grafana_dashboard_label_key: "discovery"
 grafana_dashboard_label_value: "enabled"
+grafana_dashboard_api_version: "v1alpha1" # Converted to ansible "v1beta1" with an ansible set_fact task if CR grafanaDashboard.apiVersion = v1beta1
