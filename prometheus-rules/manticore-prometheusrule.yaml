@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: prometheus-exporter-manticore
+spec:
+  groups:
+    - name: prometheus-exporter-manticore.rules
+      rules:
+      - alert: ManticoreDown
+        expr: absent(manticore_uptime_seconds) == 1
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          message: "Manticore instance {{ $labels.prometheus_exporter }} is DOWN"
