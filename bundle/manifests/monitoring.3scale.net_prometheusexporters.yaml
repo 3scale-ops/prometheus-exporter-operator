@@ -56,12 +56,12 @@ spec:
                   connection string definition (DSN)
                 type: string
               dbHost:
-                description: For redis, memcached, sphinx and es exporters, the db
-                  host to monitor
+                description: For redis, memcached, sphinx, manticore and es exporters,
+                  the db host to monitor
                 type: string
               dbPort:
-                description: For redis, memcached, sphinx and es exporters, the db
-                  port to monitor
+                description: For redis, memcached, sphinx, manticore and es exporters,
+                  the db port to monitor
                 type: integer
               extraLabel:
                 properties:
@@ -228,6 +228,7 @@ spec:
                 - cloudwatch
                 - probe
                 - sendgrid
+                - manticore
                 type: string
             required:
             - type
