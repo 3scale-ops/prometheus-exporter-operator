@@ -21,6 +21,7 @@ Current prometheus exporters `types` supported, managed by same prometheus-expor
 * mysql
 * postgresql
 * sphinx
+* manticore
 * es (elasticsearch)
 * cloudwatch
 * probe (blackbox)
@@ -77,6 +78,9 @@ Operator is available at [OperatorHub.io](https://operatorhub.io/operator/promet
 
 ### Sphinx example dashboard
 <img src="img/example-sphinx-dashboard.png" height="250px" alt="Example Sphinx Dashboard"></img>
+
+### Manticore example dashboard
+<img src="img/example-manticore-dashboard.png" height="250px" alt="Example Manticore Dashboard"></img>
 
 ### Elasticsearch example dashboard
 <img src="img/example-es-dashboard.png" height="250px" alt="Example Elasticsearch Dashboard"></img>
