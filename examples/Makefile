@@ -58,6 +58,14 @@ sphinx-create: ## SPHINX EXAMPLE - Create: CR (you need to provide a sphinx inst
 sphinx-delete: ## SPHINX EXAMPLE - Delete: CR
 	$(KUBE_CLIENT) delete -f sphinx/ -n $(NAMESPACE) || true
 
+## Manticore ##
+
+manticore-create: ## MANTICORE EXAMPLE - Create: CR (you need to provide a manticore instance in advance)
+	$(KUBE_CLIENT) apply -f manticore/ --validate=false -n $(NAMESPACE)
+
+manticore-delete: ## MANTICORE EXAMPLE - Delete: CR
+	$(KUBE_CLIENT) delete -f manticore/ -n $(NAMESPACE) || true
+
 ## Elasticsearch ##
 
 elasticsearch-create:  ## ELASTICSEARCH EXAMPLE - Create: CR (you need to provide a ES cluster in advance)
