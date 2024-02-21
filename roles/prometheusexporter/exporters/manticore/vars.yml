@@ -1,0 +1,22 @@
+---
+
+# Exporter
+image_name: "manticoresearch/prometheus-exporter"
+image_version: "6.2.13.0"
+port: 8081
+liveness_probe_timeout_seconds: 3
+liveness_probe_period_seconds: 15
+liveness_probe_success_threshold: 1
+liveness_probe_failure_threshold: 5
+readiness_probe_timeout_seconds: 3
+readiness_probe_period_seconds: 30
+readiness_probe_success_threshold: 1
+readiness_probe_failure_threshold: 5
+resources_requests_cpu: "25m"
+resources_requests_memory: "32Mi"
+resources_limits_cpu: "200m"
+resources_limits_memory: "64Mi"
+
+# Custom
+db_host: "system-searchd"
+db_port: 9306
