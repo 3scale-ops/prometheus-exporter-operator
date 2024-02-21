@@ -1,0 +1,15 @@
+apiVersion: monitoring.3scale.net/v1alpha1
+kind: PrometheusExporter
+metadata:
+  name: staging-system-searchd
+spec:
+  type: manticore
+  grafanaDashboard:
+    label:
+      key: monitoring-key
+      value: middleware
+  extraLabel:
+    key: threescale_component
+    value: system
+  dbHost: system-searchd
+  dbPort: 9306
