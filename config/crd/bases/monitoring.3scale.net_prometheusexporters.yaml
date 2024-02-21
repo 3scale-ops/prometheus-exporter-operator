@@ -41,6 +41,7 @@ spec:
                 - mysql
                 - postgresql
                 - sphinx
+                - manticore
                 - es
                 - cloudwatch
                 - probe
@@ -173,10 +174,10 @@ spec:
                 type: object
               dbHost:
                 type: string
-                description: For redis, memcached, sphinx and es exporters, the db host to monitor
+                description: For redis, memcached, sphinx, manticore and es exporters, the db host to monitor
               dbPort:
                 type: integer
-                description: For redis, memcached, sphinx and es exporters, the db port to monitor
+                description: For redis, memcached, sphinx, manticore and es exporters, the db port to monitor
               dbCheckKeys:
                 type: string
                 description: For redis exporter, the optional redis keys to monitor
