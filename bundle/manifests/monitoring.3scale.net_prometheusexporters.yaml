@@ -224,11 +224,11 @@ spec:
                 - mysql
                 - postgresql
                 - sphinx
+                - manticore
                 - es
                 - cloudwatch
                 - probe
                 - sendgrid
-                - manticore
                 type: string
             required:
             - type
