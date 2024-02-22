@@ -140,6 +140,22 @@ $ make sphinx-create
 $ make sphinx-delete
 ```
 
+## Manticore
+
+* Official doc: https://github.com/manticoresoftware/manticoresearch-prometheus
+
+### Deploy example
+
+* **Make sure you have a Manticore instance available, and dbHost/dbPort are correctly set on CR example file**
+* Create `manticore-exporter` example ([example-CR](manticore/manticore-cr.yaml)):
+```bash
+$ make manticore-create
+```
+* Once tested, delete created objects:
+```bash
+$ make manticore-delete
+```
+
 ## Elasticsearch
 
 * Official doc: https://github.com/justwatchcom/elasticsearch_exporter

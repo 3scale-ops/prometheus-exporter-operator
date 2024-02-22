@@ -54,7 +54,7 @@ spec:
 
 | **Field** | **Type** | **Required** | **Default value (some depends on type)** | **Description** |
 |:---:|:---:|:---:|:---:|:---:|
-| `type` | `string` | Yes | `none` | Supported prometheus-exporter types: `memcached`, `redis`, `mysql`, `postgresql`, `sphinx`, `es`, `cloudwatch`, `probe` |
+| `type` | `string` | Yes | `none` | Supported prometheus-exporter types: `memcached`, `redis`, `mysql`, `postgresql`, `sphinx`, `es`, `cloudwatch`, `probe`, `sendgrid`, `manticore` |
 | `serviceMonitor.enabled` | `bool` | No | `true` | Create (`true`) or not (`false`) ServiceMonitor object |
 | `serviceMonitor.interval` | `string` | No | `30s` | Prometheus scrape interval |
 | `grafanaDashboard.enabled` | `bool` | No | `true` | Create (`true`) or not (`false`) GrafanaDashboard object |

@@ -1,7 +1,7 @@
 ---
 
 ## Main
-type: "none" # memcached, redis, mysql, postgresql, sphinx, es, cloudwatch, sendgrid
+type: "none" # memcached, redis, mysql, postgresql, sphinx, es, cloudwatch, sendgrid, manticore
 
 ## ServiceMonitor config
 service_monitor_state: "present" # Converted to ansible state "absent" with an ansible set_fact task if CR boolean serviceMonitor.enabled = false

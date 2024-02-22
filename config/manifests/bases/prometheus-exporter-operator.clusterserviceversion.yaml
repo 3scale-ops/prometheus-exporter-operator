@@ -38,6 +38,7 @@ spec:
     * mysql
     * postgresql
     * sphinx
+    * manticore
     * es (elasticsearch)
     * cloudwatch
     * probe (blackbox)
@@ -99,6 +100,7 @@ spec:
   - cloudwatch
   - blackbox
   - sendgrid
+  - manticore
   links:
   - name: GitHub
     url: https://github.com/3scale-ops/prometheus-exporter-operator
