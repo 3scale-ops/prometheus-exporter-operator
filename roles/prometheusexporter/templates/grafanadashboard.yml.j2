@@ -14,6 +14,7 @@ metadata:
 {% endif %}
 spec:
 {% if grafana_dashboard_api_version == "v1beta1" %}
+  allowCrossNamespaceImport: true
   instanceSelector:
     matchLabels:
       "{{ grafana_dashboard.label.key | default(grafana_dashboard_label_key) }}": "{{ grafana_dashboard.label.value | default(grafana_dashboard_label_value) }}"
