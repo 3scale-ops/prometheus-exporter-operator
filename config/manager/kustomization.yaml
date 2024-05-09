@@ -8,4 +8,4 @@ kind: Kustomization
 images:
 - name: controller
   newName: quay.io/3scale/prometheus-exporter-operator
-  newTag: v0.8.0
+  newTag: v0.8.1
