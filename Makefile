@@ -267,5 +267,5 @@ kind-deploy: docker-build $(KIND) ## Deploys the operator in the k8s kind cluste
 	$(KUSTOMIZE) build config/testing | kubectl apply -f -
 
 test-e2e: export KUBECONFIG = ${PWD}/kubeconfig
-test-e2e: kind-create kind-deploy $(KUTTL) ## Run kuttl e2e tests in the k8s kind cluster
+test-e2e: kind-create kustomize kind-deploy $(KUTTL) ## Run kuttl e2e tests in the k8s kind cluster
 	$(KUTTL) test
