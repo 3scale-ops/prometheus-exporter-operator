@@ -17,8 +17,8 @@ spec:
   grafanaDashboard:
     enabled: true
     label:
-      key: monitoring-key
-      value: middleware
+      key: discovery
+      value: enabled
     apiVersion: grafana.integreatly.org/v1beta1
   extraLabel:
     key: tier

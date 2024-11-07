@@ -6,7 +6,7 @@ spec:
   type: es
   grafanaDashboard:
     label:
-      key: monitoring-key
-      value: middleware
+      key: discovery
+      value: enabled
   dbHost: https://vpc-staging-es.us-east-1.es.amazonaws.com
   dbPort: 443
