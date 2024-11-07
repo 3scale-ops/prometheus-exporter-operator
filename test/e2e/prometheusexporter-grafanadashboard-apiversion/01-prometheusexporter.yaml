@@ -7,7 +7,7 @@ spec:
   type: memcached
   grafanaDashboard:
     label:
-      key: autodiscovery
+      key: discovery
       value: enabled
     apiVersion: v1beta1
   dbHost: your-memcached-host

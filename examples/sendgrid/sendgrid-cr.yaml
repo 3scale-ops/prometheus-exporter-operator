@@ -6,6 +6,6 @@ spec:
   type: sendgrid
   grafanaDashboard:
     label:
-      key: monitoring-key
-      value: middleware
+      key: discovery
+      value: enabled
   sendgridCredentialsSecretName: prometheus-exporter-sendgrid-production

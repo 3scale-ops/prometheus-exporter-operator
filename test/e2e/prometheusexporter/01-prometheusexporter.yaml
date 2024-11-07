@@ -7,7 +7,7 @@ spec:
   type: memcached
   grafanaDashboard:
     label:
-      key: autodiscovery
+      key: discovery
       value: enabled
   dbHost: your-memcached-host
   dbPort: 11211
