@@ -6,7 +6,7 @@ spec:
   type: cloudwatch
   grafanaDashboard:
     label:
-      key: monitoring-key
-      value: middleware
+      key: discovery
+      value: enabled
   awsCredentialsSecretName: prometheus-exporter-cloudwatch-staging-aws-cw
   configurationConfigmapName: prometheus-exporter-cloudwatch-staging-aws-cw

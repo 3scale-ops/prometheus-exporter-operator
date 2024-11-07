@@ -6,6 +6,6 @@ spec:
   type: probe
   grafanaDashboard:
     label:
-      key: monitoring-key
-      value: middleware
+      key: discovery
+      value: enabled
   configurationConfigmapName: prometheus-exporter-probe-staging-blackbox

@@ -6,8 +6,8 @@ spec:
   type: redis
   grafanaDashboard:
     label:
-      key: monitoring-key
-      value: middleware
+      key: discovery
+      value: enabled
   extraLabel:
     key: threescale_component
     value: system
