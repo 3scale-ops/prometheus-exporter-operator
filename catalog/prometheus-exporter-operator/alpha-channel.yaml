@@ -1,0 +1,22 @@
+---
+entries:
+  - name: prometheus-exporter-operator.v0.4.0
+  - name: prometheus-exporter-operator.v0.4.1
+    replaces: prometheus-exporter-operator.v0.4.0
+  - name: prometheus-exporter-operator.v0.5.0
+    replaces: prometheus-exporter-operator.v0.4.1
+  - name: prometheus-exporter-operator.v0.6.0
+    replaces: prometheus-exporter-operator.v0.5.0
+  - name: prometheus-exporter-operator.v0.6.1
+    replaces: prometheus-exporter-operator.v0.6.0
+  - name: prometheus-exporter-operator.v0.6.2
+    replaces: prometheus-exporter-operator.v0.6.1
+  - name: prometheus-exporter-operator.v0.7.0
+    replaces: prometheus-exporter-operator.v0.6.2
+  - name: prometheus-exporter-operator.v0.8.0
+    replaces: prometheus-exporter-operator.v0.7.0
+  - name: prometheus-exporter-operator.v0.8.1
+    replaces: prometheus-exporter-operator.v0.8.0
+name: alpha
+package: prometheus-exporter-operator
+schema: olm.channel

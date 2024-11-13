@@ -1,4 +1,3 @@
-# VERSION defines the project version for the bundle.
 # Update this value when you upgrade the version of your project.
 # To re-generate a bundle for another specific version without changing the standard setup, you can:
 # - use the VERSION as arg of the bundle target (e.g make bundle VERSION=0.0.2)
@@ -35,6 +34,9 @@ IMAGE_TAG_BASE ?= quay.io/3scale/prometheus-exporter-operator
 # You can use it as an arg. (E.g make bundle-build BUNDLE_IMG=<some-registry>/<project-name-bundle>:<tag>)
 BUNDLE_IMG ?= $(IMAGE_TAG_BASE)-bundle:v$(VERSION)
 
+# The image contailer file for the bundle
+BUNDLE_CONTAINER_FILE = "bundle.Dockerfile"
+
 # BUNDLE_GEN_FLAGS are the flags passed to the operator-sdk generate bundle command
 BUNDLE_GEN_FLAGS ?= -q --overwrite --version $(VERSION) $(BUNDLE_METADATA_OPTS)
 
@@ -49,8 +51,13 @@ endif
 # Image URL to use all building/pushing image targets
 IMG ?= $(IMAGE_TAG_BASE):v$(VERSION)
 
+# Container runtime
+CONTAINER_RUNTIME ?= docker
+CONTAINER_CTX = .
+CONTAINER_FILE = "Dockerfile"
+
 .PHONY: all
-all: docker-build
+all: container-build
 
 ##@ General
 
@@ -75,13 +82,17 @@ help: ## Display this help.
 run: ansible-operator ## Run against the configured Kubernetes cluster in ~/.kube/config
 	ANSIBLE_ROLES_PATH="$(ANSIBLE_ROLES_PATH):$(shell pwd)/roles" $(ANSIBLE_OPERATOR) run
 
-.PHONY: docker-build
-docker-build: ## Build docker image with the manager.
-	docker build -t ${IMG} .
+.PHONY: container-build
+container-build: ## Build docker  with the manager.
+	${CONTAINER_RUNTIME} buildx build \
+		--platform linux/arm64,linux/amd64 \
+		--tag $(IMG) --file $(CONTAINER_FILE) $(CONTAINER_CTX)
 
-.PHONY: docker-push
-docker-push: ## Push docker image with the manager.
-	docker push ${IMG}
+.PHONY: container-push
+container-push: ## Push docker image with the manager.
+	${CONTAINER_RUNTIME} buildx build --push \
+		--platform linux/arm64,linux/amd64 \
+		--tag $(IMG) --file $(CONTAINER_FILE) $(CONTAINER_CTX)
 
 ##@ Deployment
 
@@ -146,11 +157,13 @@ bundle: operator-sdk kustomize ## Generate bundle manifests and metadata, then v
 
 .PHONY: bundle-build
 bundle-build: ## Build the bundle image.
-	docker build -f bundle.Dockerfile -t $(BUNDLE_IMG) .
+	$(MAKE) container-build \
+		IMG=$(BUNDLE_IMG) CONTAINER_FILE=$(BUNDLE_CONTAINER_FILE)
 
 .PHONY: bundle-push
 bundle-push: ## Push the bundle image.
-	$(MAKE) docker-push IMG=$(BUNDLE_IMG)
+	$(MAKE) container-push \
+		IMG=$(BUNDLE_IMG) CONTAINER_FILE=$(BUNDLE_CONTAINER_FILE)
 
 .PHONY: opm
 OPM = ./bin/opm
@@ -168,6 +181,7 @@ OPM = $(shell which opm)
 endif
 endif
 
+
 # A comma-separated list of bundle images (e.g. make catalog-build BUNDLE_IMGS=example.com/operator-bundle:v0.1.0,example.com/operator-bundle:v0.2.0).
 # These images MUST exist in a registry and be pull-able.
 BUNDLE_IMGS ?= $(BUNDLE_IMG)
@@ -175,7 +189,13 @@ BUNDLE_IMGS ?= $(BUNDLE_IMG)
 # The image tag given to the resulting catalog image (e.g. make catalog-build CATALOG_IMG=example.com/operator-catalog:v0.2.0).
 CATALOG_IMG ?= $(IMAGE_TAG_BASE)-catalog:v$(VERSION)
 
-# Custom default catalog base image to append bundles to
+# The image contailer file for the catalog
+CATALOG_CONTAINER_FILE = "catalog/Dockerfile"
+
+# The image docker context for the catalog
+CATALOG_CONTAINER_CTX = "catalog/"
+
+# Default catalog base image to append bundles to
 CATALOG_BASE_IMG ?= $(IMAGE_TAG_BASE)-catalog:latest
 
 # Set CATALOG_BASE_IMG to an existing catalog image tag to add $BUNDLE_IMGS to that image.
@@ -183,17 +203,43 @@ ifneq ($(origin CATALOG_BASE_IMG), undefined)
 FROM_INDEX_OPT := --from-index $(CATALOG_BASE_IMG)
 endif
 
-# Build a catalog image by adding bundle images to an empty catalog using the operator package manager tool, 'opm'.
-# This recipe invokes 'opm' in 'semver' bundle add mode. For more information on add modes, see:
-# https://github.com/operator-framework/community-operators/blob/7f1438c/docs/packaging-operator.md#updating-your-existing-operator
+catalog-render: opm ## Render the clusterserviceversion yaml
+	$(OPM) render $(BUNDLE_IMGS) -oyaml > catalog/prometheus-exporter-operator/objects/prometheus-exporter-operator.v$(VERSION).clusterserviceversion.yaml
+
+catalog-update: ## Add catalog entry if missing
+	grep -q 'name: prometheus-exporter-operator.v$(VERSION)' $(CATALOG_CHANNEL_FILE) || \
+		yq -i '.entries += {"name": "prometheus-exporter-operator.v$(VERSION)","replaces":"$(shell yq '.entries[-1].name' $(CATALOG_CHANNEL_FILE))"}' $(CATALOG_CHANNEL_FILE)
+
+.PHONY: catalog-add-bundle-to-alpha
+catalog-add-bundle-to-alpha: opm catalog-render ## Adds the alpha bundle to a file based catalog
+	$(MAKE) catalog-update CATALOG_CHANNEL_FILE=catalog/prometheus-exporter-operator/alpha-channel.yaml
+
+.PHONY: catalog-add-bundle-to-stable
+catalog-add-bundle-to-stable: opm catalog-render catalog-add-bundle-to-alpha ## Adds a bundle to a file based catalog
+	$(MAKE) catalog-update CATALOG_CHANNEL_FILE=catalog/prometheus-exporter-operator/stable-channel.yaml
+
+.PHONY: catalog-add-bundle
+catalog-add-bundle: opm catalog-render ## Adds a bundle to a file based catalog
+	if echo $(VERSION) | grep -q 'alpha'; \
+		then $(MAKE) catalog-add-bundle-to-alpha; \
+		else $(MAKE) catalog-add-bundle-to-stable; \
+	fi
+
+# Validate the catalog.
+.PHONY: catalog-validate
+catalog-validate: ## Push a catalog image.
+	$(OPM) validate catalog/prometheus-exporter-operator
+
 .PHONY: catalog-build
-catalog-build: opm ## Build a catalog image.
-	$(OPM) index add --container-tool docker --mode semver --tag $(CATALOG_IMG) --bundles $(BUNDLE_IMGS) $(FROM_INDEX_OPT)
+catalog-build:  opm catalog-validate  ## Build the bundle image.
+	$(MAKE) container-build \
+		IMG=$(CATALOG_IMG) CONTAINER_FILE=$(CATALOG_CONTAINER_FILE) CONTAINER_CTX=$(CATALOG_CONTAINER_CTX)
 
 # Push the catalog image.
 .PHONY: catalog-push
 catalog-push: ## Push a catalog image.
-	$(MAKE) docker-push IMG=$(CATALOG_IMG)
+	$(MAKE) container-push\
+		IMG=$(CATALOG_IMG) CONTAINER_FILE=$(CATALOG_CONTAINER_FILE) CONTAINER_CTX=$(CATALOG_CONTAINER_CTX)
 
 #############################################
 #### Custom Targets with extra binaries #####
@@ -240,10 +286,14 @@ prepare-stable-release: bundle ## Prepare stable release
 	$(MAKE) bundle CHANNELS=alpha,stable DEFAULT_CHANNEL=alpha
 
 catalog-retag-latest:
-	docker tag $(CATALOG_IMG) $(CATALOG_BASE_IMG)
-	$(MAKE) docker-push IMG=$(CATALOG_BASE_IMG)
+	$(MAKE) container-push \
+			IMG=$(CATALOG_BASE_IMG) CONTAINER_FILE=$(CATALOG_CONTAINER_FILE) CONTAINER_CTX=$(CATALOG_CONTAINER_CTX)
 
-bundle-publish: bundle-build bundle-push catalog-build catalog-push catalog-retag-latest ## Publish new release in catalog
+bundle-publish: bundle-build bundle-push ## Publish new bundle
+
+catalog-publish: catalog-add-bundle catalog-build catalog-push catalog-retag-latest ## Builds and pushes the catalog image
+
+release-publish: container-push bundle-push catalog-publish ## Publish a new stable release (operator, catalog and bundle)
 
 get-new-release:
 	@hack/new-release.sh v$(VERSION)
@@ -261,11 +311,13 @@ kind-delete: $(KIND) ## Deletes the k8s kind cluster
 	$(KIND) delete cluster
 
 kind-deploy: export KUBECONFIG = ${PWD}/kubeconfig
-kind-deploy: docker-build $(KIND) ## Deploys the operator in the k8s kind cluster
+kind-deploy: kustomize $(KIND) ## Deploys the operator in the k8s kind cluster
+	${CONTAINER_RUNTIME} build --tag $(IMG) \
+		--file $(CONTAINER_FILE) $(CONTAINER_CTX)
 	$(KIND) load docker-image $(IMG)
 	cd config/manager && $(KUSTOMIZE) edit set image controller=${IMG}
 	$(KUSTOMIZE) build config/testing | kubectl apply -f -
 
 test-e2e: export KUBECONFIG = ${PWD}/kubeconfig
 test-e2e: kind-create kustomize kind-deploy $(KUTTL) ## Run kuttl e2e tests in the k8s kind cluster
-	$(KUTTL) test
+	$(KUTTL)
