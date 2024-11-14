@@ -1,8 +1,7 @@
 ---
-
 # Exporter
 image_name: "chatwork/sendgrid-stats-exporter"
-image_version: "0.0.9"
+image_version: "v0.0.10"
 port: 9154
 liveness_probe_timeout_seconds: 3
 liveness_probe_period_seconds: 15
@@ -22,7 +21,6 @@ sendgrid_credentials_secret_name: "prometheus-exporter-{{ type }}-{{ ansible_ope
 sendgrid_accumulated_metrics: "True"
 sendgrid_location: ""
 sendgrid_time_offset: "0"
-
 ###### Example of Secret
 #
 # If you don't specify CR field sendgridCredentialsSecretName, it will be used default Secret name "prometheus-exporter-sendgrid-{{ CR_NAME }}"
