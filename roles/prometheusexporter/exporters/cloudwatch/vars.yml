@@ -1,8 +1,7 @@
 ---
-
 # Exporter
 image_name: "prom/cloudwatch-exporter"
-image_version: "cloudwatch_exporter-0.11.0"
+image_version: "v0.16.0"
 port: 9106
 liveness_probe_timeout_seconds: 45
 liveness_probe_period_seconds: 60
@@ -20,7 +19,6 @@ resources_limits_memory: "256Mi"
 # Custom
 aws_credentials_secret_name: "prometheus-exporter-{{ type }}-{{ ansible_operator_meta.name }}"
 configuration_configmap_name: "prometheus-exporter-{{ type }}-{{ ansible_operator_meta.name }}"
-
 ###### Example of Secret
 #
 # If you don't specify CR field awsCredentialsSecretName, it will be used default Secret name "prometheus-exporter-cloudwatch-{{ CR_NAME }}"
