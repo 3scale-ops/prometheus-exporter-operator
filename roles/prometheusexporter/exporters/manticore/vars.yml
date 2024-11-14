@@ -1,8 +1,7 @@
 ---
-
 # Exporter
 image_name: "manticoresearch/prometheus-exporter"
-image_version: "6.2.13.0"
+image_version: "6.3.2.0"
 port: 8081
 liveness_probe_timeout_seconds: 3
 liveness_probe_period_seconds: 15
