@@ -83,16 +83,20 @@ run: ansible-operator ## Run against the configured Kubernetes cluster in ~/.kub
 	ANSIBLE_ROLES_PATH="$(ANSIBLE_ROLES_PATH):$(shell pwd)/roles" $(ANSIBLE_OPERATOR) run
 
 .PHONY: container-build
-container-build: ## Build docker  with the manager.
+container-build: ## Build container  with the manager.
 	${CONTAINER_RUNTIME} buildx build \
 		--platform linux/arm64,linux/amd64 \
 		--tag $(IMG) --file $(CONTAINER_FILE) $(CONTAINER_CTX)
 
 .PHONY: container-push
-container-push: ## Push docker image with the manager.
+container-push: ## Push container image with the manager.
 	${CONTAINER_RUNTIME} buildx build --push \
 		--platform linux/arm64,linux/amd64 \
 		--tag $(IMG) --file $(CONTAINER_FILE) $(CONTAINER_CTX)
+
+.PHONY: container-image-name
+container-image-name: ## Outputs the container image
+	@echo $(IMG)
 
 ##@ Deployment
 
@@ -165,6 +169,9 @@ bundle-push: ## Push the bundle image.
 	$(MAKE) container-push \
 		IMG=$(BUNDLE_IMG) CONTAINER_FILE=$(BUNDLE_CONTAINER_FILE)
 
+bundle-image-name: ## Outputs the bundle image name
+	@$(MAKE) container-image-name IMG=$(BUNDLE_IMG)
+
 .PHONY: opm
 OPM = ./bin/opm
 opm: ## Download opm locally if necessary.
@@ -206,17 +213,17 @@ endif
 catalog-render: opm ## Render the clusterserviceversion yaml
 	$(OPM) render $(BUNDLE_IMGS) -oyaml > catalog/prometheus-exporter-operator/objects/prometheus-exporter-operator.v$(VERSION).clusterserviceversion.yaml
 
-catalog-update: ## Add catalog entry if missing
+catalog-add-entry: ## Add catalog entry if missing
 	grep -q 'name: prometheus-exporter-operator.v$(VERSION)' $(CATALOG_CHANNEL_FILE) || \
 		yq -i '.entries += {"name": "prometheus-exporter-operator.v$(VERSION)","replaces":"$(shell yq '.entries[-1].name' $(CATALOG_CHANNEL_FILE))"}' $(CATALOG_CHANNEL_FILE)
 
 .PHONY: catalog-add-bundle-to-alpha
 catalog-add-bundle-to-alpha: opm catalog-render ## Adds the alpha bundle to a file based catalog
-	$(MAKE) catalog-update CATALOG_CHANNEL_FILE=catalog/prometheus-exporter-operator/alpha-channel.yaml
+	$(MAKE) catalog-add-entry CATALOG_CHANNEL_FILE=catalog/prometheus-exporter-operator/alpha-channel.yaml
 
 .PHONY: catalog-add-bundle-to-stable
 catalog-add-bundle-to-stable: opm catalog-render catalog-add-bundle-to-alpha ## Adds a bundle to a file based catalog
-	$(MAKE) catalog-update CATALOG_CHANNEL_FILE=catalog/prometheus-exporter-operator/stable-channel.yaml
+	$(MAKE) catalog-add-entry CATALOG_CHANNEL_FILE=catalog/prometheus-exporter-operator/stable-channel.yaml
 
 .PHONY: catalog-add-bundle
 catalog-add-bundle: opm catalog-render ## Adds a bundle to a file based catalog
@@ -230,14 +237,16 @@ catalog-add-bundle: opm catalog-render ## Adds a bundle to a file based catalog
 catalog-validate: ## Push a catalog image.
 	$(OPM) validate catalog/prometheus-exporter-operator
 
-.PHONY: catalog-build
+.PHONY: catalog-update
+catalog-update: opm catalog-add-bundle catalog-validate  ## Update and generate new release catalog files
+
 catalog-build:  opm catalog-validate  ## Build the bundle image.
 	$(MAKE) container-build \
 		IMG=$(CATALOG_IMG) CONTAINER_FILE=$(CATALOG_CONTAINER_FILE) CONTAINER_CTX=$(CATALOG_CONTAINER_CTX)
 
 # Push the catalog image.
 .PHONY: catalog-push
-catalog-push: ## Push a catalog image.
+catalog-push: opm catalog-validate ## Push a catalog image.
 	$(MAKE) container-push\
 		IMG=$(CATALOG_IMG) CONTAINER_FILE=$(CATALOG_CONTAINER_FILE) CONTAINER_CTX=$(CATALOG_CONTAINER_CTX)
 

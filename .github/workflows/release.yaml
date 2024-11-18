@@ -1,0 +1,97 @@
+name: release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - bundle/manifests/**
+
+jobs:
+  check:
+    name: Check if it's a stable release
+    runs-on: ubuntu-24.04
+    outputs:
+      stable-release: ${{ env.NEW_RELEASE }}
+    steps:
+      - uses: actions/checkout@v4.2.2
+
+      - uses: actions/cache@v4.1.2
+        with:
+          key: ${{ runner.os }}-bin
+          path: ./bin
+
+      - id: new-release
+        name: Check if it's a stable release
+        run: |
+          echo "NEW_RELEASE=$(make get-new-release)" >> $GITHUB_ENV
+
+  build:
+    if: needs.check.outputs.stable-release != ''
+    name: Build and push the stable release images for the operator and the bundle
+    needs: check
+    runs-on: ubuntu-24.04
+    env:
+      RELEASE: ${{ needs.check.outputs.stable-release }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4.2.2
+
+      - uses: actions/cache@v4.1.2
+        with:
+          key: ${{ runner.os }}-bin
+          path: ./bin
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to quay.io/3scale
+        uses: docker/login-action@v3
+        with:
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+          registry: quay.io
+          username: ${{ secrets.REGISTRY_USER }}
+
+      - name: Build and push operator container image
+        run: make container-push
+
+      - name: Build and push bundle container image
+        run: make bundle-push
+
+      - id: bundle-image-name
+        name: Retrieves the bundle image name
+        run: echo  "BUNDLE_IMAGE=$(make -s bundle-image-name)" >> $GITHUB_OUTPUT
+
+      - name: Update catalog files with the new bundle
+        run: make catalog-update
+
+      - name: Create a new draft-release in github
+        run: gh release create "${{ env.RELEASE }}" --draft --title "${{ env.RELEASE }}" --generate-notes
+
+      - env:
+          CI_COMMIT_AUTHOR_EMAIL: 3scale-robot@users.noreply.github.com
+          CI_COMMIT_AUTHOR_NAME: 3scale-robot
+          CATALOG_RELEASE_BRANCH: catalog/${{ needs.check.outputs.stable-release }}
+          CATALOG_RELEASE_PR_TITLE: "release: catalog for bundle ${{ needs.check.outputs.stable-release }}"
+          CATALOG_RELEASE_PR_BODY: |
+            This PR updates the catalog inventory files with the new bundle [${{ needs.check.outputs.stable-release }}](https://github.com/${GITHUB_REPOSITORY}/releases/tag/${{ needs.check.outputs.stable-release }}).
+
+            [${{ steps.bundle-image-name.outputs.BUNDLE_IMAGE }}](https://${{ steps.bundle-image-name.outputs.BUNDLE_IMAGE }})
+
+            Please review and merge this PR to build and release the new catalog.
+
+            /kind release
+            /priority important-soon
+        name: GIT commit and push catalog
+        run: |
+          git config --global user.name "${{ env.CI_COMMIT_AUTHOR_NAME }}"
+          git config --global user.email "${{ env.CI_COMMIT_AUTHOR_EMAIL }}"
+          git ls-remote --exit-code --heads origin refs/heads/${{ env.CATALOG_RELEASE_BRANCH }} && git push origin -d ${{ env.CATALOG_RELEASE_BRANCH }}
+          git checkout -b ${{ env.CATALOG_RELEASE_BRANCH }}
+          git add catalog
+          git commit -m "${{ env.CATALOG_RELEASE_PR_TITLE }}"
+          git push --set-upstream origin ${{ env.CATALOG_RELEASE_BRANCH }}
+          gh pr create -B main -H ${{ env.CATALOG_RELEASE_BRANCH }} --title "${{ env.CATALOG_RELEASE_PR_TITLE }}" --body "${{ env.CATALOG_RELEASE_PR_BODY }}"
