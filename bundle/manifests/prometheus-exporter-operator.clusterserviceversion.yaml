@@ -34,7 +34,7 @@ metadata:
     operators.operatorframework.io/project_layout: ansible.sdk.operatorframework.io/v1
     repository: https://github.com/3scale-ops/prometheus-exporter-operator
     support: Red Hat, Inc.
-  name: prometheus-exporter-operator.v0.8.1
+  name: prometheus-exporter-operator.v0.8.2-alpha.1
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
@@ -125,7 +125,7 @@ spec:
                   valueFrom:
                     fieldRef:
                       fieldPath: metadata.annotations['olm.targetNamespaces']
-                image: quay.io/3scale/prometheus-exporter-operator:v0.8.1
+                image: quay.io/3scale/prometheus-exporter-operator:v0.8.2-alpha.1
                 livenessProbe:
                   httpGet:
                     path: /healthz
@@ -310,4 +310,4 @@ spec:
   provider:
     name: Red Hat
     url: https://www.redhat.com
-  version: 0.8.1
+  version: 0.8.2-alpha.1
