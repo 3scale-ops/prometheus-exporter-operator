@@ -31,6 +31,6 @@ make prepare-stable-release
 - As part of the release workflow, a:
 
   - Release Draft will be published, review the changelog, adding any missing information and publish the release.
-  - A new Pull Request will opem with the updated catalog including the new release.
+  - A new Pull Request will open with the updated catalog including the new release.
 
 - Review the Catalog Pull Request and merge it to publish the trigger the [Release Catalog GitHub Action](https://github.com/3scale-ops/prometheus-exporter-operator/actions/workflows/release-catalog.yaml). This action will automatically build and publish the new catalog image.
