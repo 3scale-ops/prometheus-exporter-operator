@@ -205,6 +205,9 @@ CATALOG_CONTAINER_CTX = "catalog/"
 # Default catalog base image to append bundles to
 CATALOG_BASE_IMG ?= $(IMAGE_TAG_BASE)-catalog:latest
 
+# Default catalog channel file
+CATALOG_CHANNEL_FILE ?= catalog/prometheus-exporter-operator/stable-channel.yaml
+
 # Set CATALOG_BASE_IMG to an existing catalog image tag to add $BUNDLE_IMGS to that image.
 ifneq ($(origin CATALOG_BASE_IMG), undefined)
 FROM_INDEX_OPT := --from-index $(CATALOG_BASE_IMG)
@@ -214,7 +217,7 @@ catalog-render: opm ## Render the clusterserviceversion yaml
 	$(OPM) render $(BUNDLE_IMGS) -oyaml > catalog/prometheus-exporter-operator/objects/prometheus-exporter-operator.v$(VERSION).clusterserviceversion.yaml
 
 catalog-add-entry: ## Add catalog entry if missing
-	grep -q 'name: prometheus-exporter-operator.v$(VERSION)' $(CATALOG_CHANNEL_FILE) || \
+	grep -Eq 'name: prometheus-exporter-operator\.v$(VERSION)$$' $(CATALOG_CHANNEL_FILE) || \
 		yq -i '.entries += {"name": "prometheus-exporter-operator.v$(VERSION)","replaces":"$(shell yq '.entries[-1].name' $(CATALOG_CHANNEL_FILE))"}' $(CATALOG_CHANNEL_FILE)
 
 .PHONY: catalog-add-bundle-to-alpha
