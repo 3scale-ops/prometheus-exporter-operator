@@ -67,6 +67,14 @@ spec:
         {{ key | safe }}: {{ value | safe }}
 {% endfor %}
 {% endif %}
+
+{% if tolerations is defined %}
+      tolerations:
+{% filter indent(8, True) %}
+{{ tolerations | to_nice_yaml }}
+{% endfilter %}
+{% endif %}
+
 {## <volumes> ##}
 {% filter indent(6, True) %}
 

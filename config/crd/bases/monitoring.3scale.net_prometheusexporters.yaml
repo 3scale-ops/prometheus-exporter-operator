@@ -12,218 +12,271 @@ spec:
     singular: prometheusexporter
   scope: Namespaced
   versions:
-  - name: v1alpha1
-    schema:
-      openAPIV3Schema:
-        description: PrometheusExporter is the Schema for the prometheusexporters API
-        properties:
-          apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
-            type: string
-          kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
-            type: string
-          metadata:
-            type: object
-          spec:
-            description: Spec defines the desired state of PrometheusExporter
-            properties:
-              type:
-                type: string
-                description: 'Supported prometheus-exporter types'
-                enum:
-                - memcached
-                - redis
-                - mysql
-                - postgresql
-                - sphinx
-                - manticore
-                - es
-                - cloudwatch
-                - probe
-                - sendgrid
-              serviceMonitor:
-                type: object
-                properties:
-                  enabled:
-                    type: boolean
-                    description: Create (true) or not (false) ServiceMonitor object
-                  interval:
-                    type: string
-                    description: Prometheus scrape interval (example 30s)
-              grafanaDashboard:
-                type: object
-                properties:
-                  enabled:
-                    type: boolean
-                    description: Create (true) or not (false) GrafanaDashboard object
-                  label:
-                    type: object
+    - name: v1alpha1
+      schema:
+        openAPIV3Schema:
+          description: PrometheusExporter is the Schema for the prometheusexporters API
+          properties:
+            apiVersion:
+              description:
+                "APIVersion defines the versioned schema of this representation
+                of an object. Servers should convert recognized schemas to the latest
+                internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources"
+              type: string
+            kind:
+              description:
+                "Kind is a string value representing the REST resource this
+                object represents. Servers may infer this from the endpoint the client
+                submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds"
+              type: string
+            metadata:
+              type: object
+            spec:
+              description: Spec defines the desired state of PrometheusExporter
+              properties:
+                tolerations:
+                  description: Tolerations allow the pods to schedule onto nodes
+                    with matching taints
+                  items:
+                    description:
+                      The pod this Toleration is attached to tolerates
+                      any taint that matches the triple <key,value,effect> using
+                      the matching operator <operator>.
                     properties:
+                      effect:
+                        description: Effect indicates the taint effect to match.
+                          Empty means match all taint effects. When specified, allowed
+                          values are NoSchedule, PreferNoSchedule and NoExecute.
+                        type: string
                       key:
+                        description:
+                          Key is the taint key that the toleration applies
+                          to. Empty means match all taint keys. If the key is empty,
+                          operator must be Exists; this combination means to match
+                          all values and all keys.
                         type: string
-                        description: Label key used by grafana-operator for dashboard discovery
+                      operator:
+                        description: Operator represents a key's relationship to
+                          the value. Valid operators are Exists and Equal. Defaults
+                          to Equal. Exists is equivalent to wildcard for value,
+                          so that a pod can tolerate all taints of a particular
+                          category.
+                        type: string
+                      tolerationSeconds:
+                        description: TolerationSeconds represents the period of
+                          time the toleration (which must be of effect NoExecute,
+                          otherwise this field is ignored) tolerates the taint.
+                          By default, it is not set, which means tolerate the taint
+                          forever (do not evict). Zero and negative values will
+                          be treated as 0 (evict immediately) by the system.
+                        format: int64
+                        type: integer
                       value:
+                        description:
+                          Value is the taint value the toleration matches
+                          to. If the operator is Exists, the value should be empty,
+                          otherwise just a regular string.
                         type: string
-                        description: Label value used by grafana-operator for dashboard discovery
-                  apiVersion:
-                    type: string
-                    description: GrafanaDashboard custom resource apiVersion
-                    enum:
-                    - v1alpha1
-                    - v1beta1
-              extraLabel:
-                type: object
-                properties:
-                  key:
-                    type: string
-                    description: Add extra label key to all created resources
-                  value:
-                    type: string
-                    description: Add extra label value to all created resources
-              image:
-                type: object
-                properties:
-                  name:
-                    type: string
-                    description: Prometheus exporter image name
-                  version:
-                    type: string
-                    description: Prometheus exporter image tag version
-              port:
-                type: integer
-                description: Prometheus exporter port where metrics are available
-              resources:
-                description: Prometheus exporter resources required.
-                properties:
-                  limits:
-                    additionalProperties:
-                      anyOf:
-                      - type: integer
-                      - type: string
-                      pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                      x-kubernetes-int-or-string: true
-                    description: 'Limits describes the maximum amount of compute
-                      resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
                     type: object
-                  requests:
-                    additionalProperties:
-                      anyOf:
-                      - type: integer
-                      - type: string
-                      pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                      x-kubernetes-int-or-string: true
-                    description: 'Requests describes the minimum amount of compute
-                      resources required. If Requests is omitted for a container,
-                      it defaults to Limits if that is explicitly specified, otherwise
-                      to an implementation-defined value. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
-                    type: object
-                type: object
-              livenessProbe:
-                description: Readiness probe
-                properties:
-                  failureThreshold:
-                    description: Minimum consecutive failures for the probe to be
-                      considered failed after having succeeded
-                    format: int32
-                    type: integer
-                  periodSeconds:
-                    description: How often (in seconds) to perform the probe
-                    format: int32
-                    type: integer
-                  successThreshold:
-                    description: Minimum consecutive successes for the probe to be
-                      considered successful after having failed
-                    format: int32
-                    type: integer
-                  timeoutSeconds:
-                    description: Number of seconds after which the probe times out
-                    format: int32
-                    type: integer
-                type: object
-              readinessProbe:
-                description: Readiness probe
-                properties:
-                  failureThreshold:
-                    description: Minimum consecutive failures for the probe to be
-                      considered failed after having succeeded
-                    format: int32
-                    type: integer
-                  periodSeconds:
-                    description: How often (in seconds) to perform the probe
-                    format: int32
-                    type: integer
-                  successThreshold:
-                    description: Minimum consecutive successes for the probe to be
-                      considered successful after having failed
-                    format: int32
-                    type: integer
-                  timeoutSeconds:
-                    description: Number of seconds after which the probe times out
-                    format: int32
-                    type: integer
-                type: object
-              nodeSelector:
-                additionalProperties:
+                  type: array
+                type:
                   type: string
-                description: Map of nodeSelector key-value pairs
-                type: object
-              dbHost:
-                type: string
-                description: For redis, memcached, sphinx, manticore and es exporters, the db host to monitor
-              dbPort:
-                type: integer
-                description: For redis, memcached, sphinx, manticore and es exporters, the db port to monitor
-              dbCheckKeys:
-                type: string
-                description: For redis exporter, the optional redis keys to monitor
-              dbConnectionStringSecretName:
-                type: string
-                description: For mysql and postgresql exporters, the Secret name containing connection string definition (DSN)
-              awsCredentialsSecretName:
-                type: string
-                description: For cloudwatch exporter, the Secret name containing AWS IAM credentials (AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY)
-              configurationConfigmapName:
-                type: string
-                description: For cloudwatch exporter, the ConfigMap name containing Cloudwatch config.yml (Services, Dimensions, Tags used for autodiscovery...). For probe exporter, ConfigMap name containing blackbox modules configuration.
-              configurationSecretName:
-                description: For probe exporter, optional Secret name containing blackbox modules configuration. Replaces usage of configurationConfigmapName (in case config includes sensitive data and so you prefer to use a Secret)
-                type: string
-              sendgridCredentialsSecretName:
-                description: For sendgrid exporter, Secret name containing Sendgrid username and apikey
-                type: string
-              sendgridAccumulatedMetrics:
-                description: For sendgrid exporter, configures monthly acumulated metrics (true) instead of daily metrics (false)
-                type: boolean
-              sendgridLocation:
-                description: For sendgrid exporter, configures time zone
-                type: string
-              sendgridTimeOffset:
-                description: For sendgrid exporter, specifies the offset in seconds from UTC as an integer (needed along with location)
-                type: integer
-              logLevel:
-                type: string
-                description: For probe exporter, log level of the exporter
-                enum:
-                - info
-                - debug
-              probeTargetLabel:
-                description: For probe exporter, specifies the Prometheus label used to distinguish among monitored targets on grafana dashboard
-                type: string
-            type: object
-            required:
-            - type
-            x-kubernetes-preserve-unknown-fields: true
-          status:
-            description: Status defines the observed state of PrometheusExporter
-            type: object
-            x-kubernetes-preserve-unknown-fields: true
-        type: object
-    served: true
-    storage: true
-    subresources:
-      status: {}
+                  description: "Supported prometheus-exporter types"
+                  enum:
+                    - memcached
+                    - redis
+                    - mysql
+                    - postgresql
+                    - sphinx
+                    - manticore
+                    - es
+                    - cloudwatch
+                    - probe
+                    - sendgrid
+                serviceMonitor:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      description: Create (true) or not (false) ServiceMonitor object
+                    interval:
+                      type: string
+                      description: Prometheus scrape interval (example 30s)
+                grafanaDashboard:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      description: Create (true) or not (false) GrafanaDashboard object
+                    label:
+                      type: object
+                      properties:
+                        key:
+                          type: string
+                          description: Label key used by grafana-operator for dashboard discovery
+                        value:
+                          type: string
+                          description: Label value used by grafana-operator for dashboard discovery
+                    apiVersion:
+                      type: string
+                      description: GrafanaDashboard custom resource apiVersion
+                      enum:
+                        - v1alpha1
+                        - v1beta1
+                extraLabel:
+                  type: object
+                  properties:
+                    key:
+                      type: string
+                      description: Add extra label key to all created resources
+                    value:
+                      type: string
+                      description: Add extra label value to all created resources
+                image:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      description: Prometheus exporter image name
+                    version:
+                      type: string
+                      description: Prometheus exporter image tag version
+                port:
+                  type: integer
+                  description: Prometheus exporter port where metrics are available
+                resources:
+                  description: Prometheus exporter resources required.
+                  properties:
+                    limits:
+                      additionalProperties:
+                        anyOf:
+                          - type: integer
+                          - type: string
+                        pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                        x-kubernetes-int-or-string: true
+                      description:
+                        "Limits describes the maximum amount of compute
+                        resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/"
+                      type: object
+                    requests:
+                      additionalProperties:
+                        anyOf:
+                          - type: integer
+                          - type: string
+                        pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                        x-kubernetes-int-or-string: true
+                      description:
+                        "Requests describes the minimum amount of compute
+                        resources required. If Requests is omitted for a container,
+                        it defaults to Limits if that is explicitly specified, otherwise
+                        to an implementation-defined value. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/"
+                      type: object
+                  type: object
+                livenessProbe:
+                  description: Readiness probe
+                  properties:
+                    failureThreshold:
+                      description:
+                        Minimum consecutive failures for the probe to be
+                        considered failed after having succeeded
+                      format: int32
+                      type: integer
+                    periodSeconds:
+                      description: How often (in seconds) to perform the probe
+                      format: int32
+                      type: integer
+                    successThreshold:
+                      description:
+                        Minimum consecutive successes for the probe to be
+                        considered successful after having failed
+                      format: int32
+                      type: integer
+                    timeoutSeconds:
+                      description: Number of seconds after which the probe times out
+                      format: int32
+                      type: integer
+                  type: object
+                readinessProbe:
+                  description: Readiness probe
+                  properties:
+                    failureThreshold:
+                      description:
+                        Minimum consecutive failures for the probe to be
+                        considered failed after having succeeded
+                      format: int32
+                      type: integer
+                    periodSeconds:
+                      description: How often (in seconds) to perform the probe
+                      format: int32
+                      type: integer
+                    successThreshold:
+                      description:
+                        Minimum consecutive successes for the probe to be
+                        considered successful after having failed
+                      format: int32
+                      type: integer
+                    timeoutSeconds:
+                      description: Number of seconds after which the probe times out
+                      format: int32
+                      type: integer
+                  type: object
+                nodeSelector:
+                  additionalProperties:
+                    type: string
+                  description: Map of nodeSelector key-value pairs
+                  type: object
+                dbHost:
+                  type: string
+                  description: For redis, memcached, sphinx, manticore and es exporters, the db host to monitor
+                dbPort:
+                  type: integer
+                  description: For redis, memcached, sphinx, manticore and es exporters, the db port to monitor
+                dbCheckKeys:
+                  type: string
+                  description: For redis exporter, the optional redis keys to monitor
+                dbConnectionStringSecretName:
+                  type: string
+                  description: For mysql and postgresql exporters, the Secret name containing connection string definition (DSN)
+                awsCredentialsSecretName:
+                  type: string
+                  description: For cloudwatch exporter, the Secret name containing AWS IAM credentials (AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY)
+                configurationConfigmapName:
+                  type: string
+                  description: For cloudwatch exporter, the ConfigMap name containing Cloudwatch config.yml (Services, Dimensions, Tags used for autodiscovery...). For probe exporter, ConfigMap name containing blackbox modules configuration.
+                configurationSecretName:
+                  description: For probe exporter, optional Secret name containing blackbox modules configuration. Replaces usage of configurationConfigmapName (in case config includes sensitive data and so you prefer to use a Secret)
+                  type: string
+                sendgridCredentialsSecretName:
+                  description: For sendgrid exporter, Secret name containing Sendgrid username and apikey
+                  type: string
+                sendgridAccumulatedMetrics:
+                  description: For sendgrid exporter, configures monthly acumulated metrics (true) instead of daily metrics (false)
+                  type: boolean
+                sendgridLocation:
+                  description: For sendgrid exporter, configures time zone
+                  type: string
+                sendgridTimeOffset:
+                  description: For sendgrid exporter, specifies the offset in seconds from UTC as an integer (needed along with location)
+                  type: integer
+                logLevel:
+                  type: string
+                  description: For probe exporter, log level of the exporter
+                  enum:
+                    - info
+                    - debug
+                probeTargetLabel:
+                  description: For probe exporter, specifies the Prometheus label used to distinguish among monitored targets on grafana dashboard
+                  type: string
+              type: object
+              required:
+                - type
+              x-kubernetes-preserve-unknown-fields: true
+            status:
+              description: Status defines the observed state of PrometheusExporter
+              type: object
+              x-kubernetes-preserve-unknown-fields: true
+          type: object
+      served: true
+      storage: true
+      subresources:
+        status: {}
