@@ -19,6 +19,8 @@ entries:
     replaces: prometheus-exporter-operator.v0.8.0
   - name: prometheus-exporter-operator.v0.8.2-alpha.1
     replaces: prometheus-exporter-operator.v0.8.1
+  - name: prometheus-exporter-operator.v0.8.2-alpha.2
+    replaces: prometheus-exporter-operator.v0.8.2-alpha.1
 name: alpha
 package: prometheus-exporter-operator
 schema: olm.channel

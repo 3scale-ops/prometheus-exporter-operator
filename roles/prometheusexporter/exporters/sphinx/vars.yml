@@ -1,8 +1,7 @@
 ---
-
 # Exporter
 image_name: "foxdalas/sphinx-exporter"
-image_version: "master"
+image_version: "v0.3.0"
 port: 9247
 liveness_probe_timeout_seconds: 3
 liveness_probe_period_seconds: 15
