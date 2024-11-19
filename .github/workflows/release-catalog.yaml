@@ -55,5 +55,8 @@ jobs:
           registry: quay.io
           username: ${{ secrets.REGISTRY_USER }}
 
-      - name: Build and push bundle container image
+      - name: Build and push the catalog container image
         run: make catalog-push
+
+      - name: Build and push the current catalog container image as latest
+        run: make catalog-retag-latest
