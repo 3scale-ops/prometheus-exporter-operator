@@ -181,7 +181,3 @@ Specific CR fields per exporter type:
 
 - Image, port, resources, liveness, readiness default values can be found at [ansible-sendgrid-vars](../roles/prometheusexporter/exporters/sendgrid/vars.yml)
 - Real `sendgrid` example can be found on [examples](../examples/README.md#sendgrid) directory.
-
-```
-
-```
