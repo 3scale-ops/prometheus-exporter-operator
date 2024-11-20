@@ -93,28 +93,16 @@ $ make mysql-delete
 
 ### Permission requirements
 
-- In addition, a database user with specific grants is needed*(this is just an example, go to official doc for latest information)*. To be able to collect metrics from `pg_stat_activity` and `pg_stat_replication` as `non-superuser` you have to create views as a `superuser`, and assign permissions separately to those. In PostgreSQL, views run with the permissions of the user that created them so they can act as security barriers _(this is just an example, go to official doc for latest information)_:
+- To be able to collect metrics from `pg_stat*` views as non-superuser in PostgreSQL
+server versions >= 10 you can grant the `pg_monitor` or `pg_read_all_stats` [built-in roles](https://www.postgresql.org/docs/current/predefined-roles.html) to the `postgres_exporter` user.
+
+Run following command if you use PostgreSQL versions >= 10
 
 ```sql
-CREATE USER postgres_exporter PASSWORD 'password';
-ALTER USER postgres_exporter SET SEARCH_PATH TO postgres_exporter,pg_catalog;
-
--- If deploying as non-superuser (for example in AWS RDS), uncomment the GRANT
--- line below and replace <MASTER_USER> with your root user.
--- GRANT postgres_exporter TO <MASTER_USER>
-CREATE SCHEMA postgres_exporter AUTHORIZATION postgres_exporter;
-
-CREATE VIEW postgres_exporter.pg_stat_activity
-AS
-  SELECT * from pg_catalog.pg_stat_activity;
-
-GRANT SELECT ON postgres_exporter.pg_stat_activity TO postgres_exporter;
-
-CREATE VIEW postgres_exporter.pg_stat_replication AS
-  SELECT * from pg_catalog.pg_stat_replication;
-
-GRANT SELECT ON postgres_exporter.pg_stat_replication TO postgres_exporter;
+GRANT pg_monitor to postgres_exporter;
 ```
+
+If you need to monitor older PostgreSQL servers, [check the official documentation](https://github.com/prometheus-community/postgres_exporter/blob/master/README.md).
 
 > **NOTE** > <br />Remember to use `postgres` database name in the connection string:
 >
