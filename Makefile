@@ -292,6 +292,12 @@ $(KUTTL):
 ####################################################
 ##@ Release Catalog
 
+prepare-release:
+	if echo $(VERSION) | grep -q 'alpha'; \
+		then $(MAKE) prepare-alpha-release; \
+		else $(MAKE) prepare-stable-release; \
+	fi
+
 prepare-alpha-release: bundle ## Prepare alpha release
 
 prepare-stable-release: bundle ## Prepare stable release
@@ -301,11 +307,11 @@ catalog-retag-latest:
 	$(MAKE) container-push \
 			IMG=$(CATALOG_BASE_IMG) CONTAINER_FILE=$(CATALOG_CONTAINER_FILE) CONTAINER_CTX=$(CATALOG_CONTAINER_CTX)
 
-bundle-publish: bundle-build bundle-push ## Publish new bundle
+bundle-publish: prepare-release bundle-push ## Publish new bundle
 
-catalog-publish: catalog-add-bundle catalog-build catalog-push catalog-retag-latest ## Builds and pushes the catalog image
+catalog-publish: catalog-add-bundle catalog-push catalog-retag-latest ## Builds and pushes the catalog image
 
-release-publish: container-push bundle-push catalog-publish ## Publish a new stable release (operator, catalog and bundle)
+release-publish: container-push bundle-publish catalog-publish ## Publish a new stable release (operator, catalog and bundle)
 
 get-new-release:
 	@hack/new-release.sh v$(VERSION)
