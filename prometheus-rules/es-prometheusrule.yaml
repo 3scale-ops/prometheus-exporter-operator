@@ -8,7 +8,7 @@ spec:
       rules:
         # Cluster status alerts
         - alert: ElasticsearchDown
-          expr: elasticsearch_cluster_health_up == 0
+          expr: elasticsearch_clusterinfo_up == 0
           for: 1m
           labels:
             severity: critical

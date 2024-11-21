@@ -96,11 +96,11 @@
       "tableColumn": "Value",
       "targets": [
         {
-          "expr": "elasticsearch_cluster_health_up{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
+          "expr": "elasticsearch_clusterinfo_up{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}",
           "format": "time_series",
           "instant": false,
           "intervalFactor": 1,
-          "legendFormat": "",
+          "legendFormat": "Value",
           "refId": "A"
         }
       ],
@@ -194,7 +194,7 @@
           "format": "time_series",
           "instant": false,
           "intervalFactor": 1,
-          "legendFormat": "",
+          "legendFormat": "{{ '{{' }} color {{ '}}' }}",
           "refId": "A"
         }
       ],
@@ -2764,14 +2764,14 @@
       {
         "allValue": null,
         "datasource": "$datasource",
-        "definition": "label_values(elasticsearch_cluster_health_up{namespace=\"$namespace\"}, prometheus_exporter)",
+        "definition": "label_values(elasticsearch_cluster_health_status{namespace=\"$namespace\"}, prometheus_exporter)",
         "hide": 0,
         "includeAll": false,
         "label": "Prometheus Exporter",
         "multi": false,
         "name": "prometheus_exporter",
         "options": [],
-        "query": "label_values(elasticsearch_cluster_health_up{namespace=\"$namespace\"}, prometheus_exporter)",
+        "query": "label_values(elasticsearch_cluster_health_status{namespace=\"$namespace\"}, prometheus_exporter)",
         "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
