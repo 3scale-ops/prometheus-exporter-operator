@@ -8,31 +8,10 @@ on:
       - catalog/**/stable-channel.yaml
 
 jobs:
-  check:
-    name: Check if it's a stable release
-    runs-on: ubuntu-24.04
-    outputs:
-      stable-release: ${{ env.NEW_RELEASE }}
-    steps:
-      - uses: actions/checkout@v4.2.2
-
-      - uses: actions/cache@v4.1.2
-        with:
-          key: ${{ runner.os }}-bin
-          path: ./bin
-
-      - id: new-release
-        name: Check if it's a stable release
-        run: |
-          echo "NEW_RELEASE=$(make get-new-release)" >> $GITHUB_ENV
-
-  build:
-    if: needs.check.outputs.stable-release != ''
+  catalog:
     name: Build and push the catalog release image
-    needs: check
     runs-on: ubuntu-24.04
     env:
-      RELEASE: ${{ needs.check.outputs.stable-release }}
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4.2.2
