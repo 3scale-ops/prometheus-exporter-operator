@@ -1739,7 +1739,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(pg_stat_bgwriter_buffers_backend{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval])",
+          "expr": "irate(pg_stat_bgwriter_buffers_backend_total{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval])",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "buffers_backend",
@@ -1747,7 +1747,7 @@
           "step": 20
         },
         {
-          "expr": "irate(pg_stat_bgwriter_buffers_alloc{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval])",
+          "expr": "irate(pg_stat_bgwriter_buffers_alloc_total{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval])",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "buffers_alloc",
@@ -1755,7 +1755,7 @@
           "step": 20
         },
         {
-          "expr": "irate(pg_stat_bgwriter_buffers_fsync{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval])",
+          "expr": "irate(pg_stat_bgwriter_buffers_fsync_total{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval])",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "backend_fsync",
@@ -1763,7 +1763,7 @@
           "step": 20
         },
         {
-          "expr": "irate(pg_stat_bgwriter_buffers_checkpoint{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval])",
+          "expr": "irate(pg_stat_bgwriter_buffers_checkpoint_total{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval])",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "buffers_checkpoint",
@@ -1771,7 +1771,7 @@
           "step": 20
         },
         {
-          "expr": "irate(pg_stat_bgwriter_buffers_clean{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval])",
+          "expr": "irate(pg_stat_bgwriter_buffers_clean_total{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval])",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "buffers_clean",
@@ -2130,7 +2130,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(pg_stat_bgwriter_checkpoint_write_time{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval])",
+          "expr": "irate(pg_stat_bgwriter_checkpoint_write_time_total{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval])",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "write_time - Total amount of time that has been spent in the portion of checkpoint processing where files are written to disk.",
@@ -2138,7 +2138,7 @@
           "step": 10
         },
         {
-          "expr": "irate(pg_stat_bgwriter_checkpoint_sync_time{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval])",
+          "expr": "irate(pg_stat_bgwriter_checkpoint_sync_time_total{namespace=\"$namespace\", prometheus_exporter=\"$prometheus_exporter\"}[$interval])",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "sync_time - Total amount of time that has been spent in the portion of checkpoint processing where files are synchronized to disk.",
