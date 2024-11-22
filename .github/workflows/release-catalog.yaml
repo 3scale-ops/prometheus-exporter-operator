@@ -38,4 +38,4 @@ jobs:
         run: make catalog-push
 
       - name: Build and push the current catalog container image as latest
-        run: make catalog-retag-latest
+        run: make catalog-push-latest

@@ -78,10 +78,6 @@ help: ## Display this help.
 
 ##@ Build
 
-.PHONY: run
-run: ansible-operator ## Run against the configured Kubernetes cluster in ~/.kube/config
-	ANSIBLE_ROLES_PATH="$(ANSIBLE_ROLES_PATH):$(shell pwd)/roles" $(ANSIBLE_OPERATOR) run
-
 .PHONY: container-build
 container-build: ## Build container  with the manager.
 	${CONTAINER_RUNTIME} buildx build \
@@ -94,11 +90,98 @@ container-push: ## Push container image with the manager.
 		--platform linux/arm64,linux/amd64 \
 		--tag $(IMG) --file $(CONTAINER_FILE) $(CONTAINER_CTX)
 
-.PHONY: container-image-name
-container-image-name: ## Outputs the container image
+.PHONY: container-image
+container-image: ## Outputs the container image name and tag.
 	@echo $(IMG)
 
+##@ Dependencies
+
+.PHONY: ansible-operator
+ANSIBLE_OPERATOR = $(shell pwd)/bin/ansible-operator
+ansible-operator: ## Download ansible-operator locally if necessary, preferring the $(pwd)/bin path over global if both exist.
+ifeq (,$(wildcard $(ANSIBLE_OPERATOR)))
+ifeq (,$(shell which ansible-operator 2>/dev/null))
+	@{ \
+	set -e ;\
+	mkdir -p $(dir $(ANSIBLE_OPERATOR)) ;\
+	curl -sSLo $(ANSIBLE_OPERATOR) https://github.com/operator-framework/operator-sdk/releases/download/v1.24.0/ansible-operator_$(OS)_$(ARCH) ;\
+	chmod +x $(ANSIBLE_OPERATOR) ;\
+	}
+else
+ANSIBLE_OPERATOR = $(shell which ansible-operator)
+endif
+endif
+
+.PHONY: kustomize
+KUSTOMIZE = $(shell pwd)/bin/kustomize
+kustomize: ## Download kustomize locally if necessary.
+ifeq (,$(wildcard $(KUSTOMIZE)))
+ifeq (,$(shell which kustomize 2>/dev/null))
+	@{ \
+	set -e ;\
+	mkdir -p $(dir $(KUSTOMIZE)) ;\
+	curl -sSLo - https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v4.5.5/kustomize_v4.5.5_$(OS)_$(ARCH).tar.gz | \
+	tar xzf - -C bin/ ;\
+	}
+else
+KUSTOMIZE = $(shell which kustomize)
+endif
+endif
+
+.PHONY: opm
+OPM = ./bin/opm
+opm: ## Download opm locally if necessary.
+ifeq (,$(wildcard $(OPM)))
+ifeq (,$(shell which opm 2>/dev/null))
+	@{ \
+	set -e ;\
+	mkdir -p $(dir $(OPM)) ;\
+	curl -sSLo $(OPM) https://github.com/operator-framework/operator-registry/releases/download/v1.23.0/$(OS)-$(ARCH)-opm ;\
+	chmod +x $(OPM) ;\
+	}
+else
+OPM = $(shell which opm)
+endif
+endif
+
+#############################################
+#### Custom Targets with extra binaries #####
+#############################################
+
+.PHONY: operator-sdk
+OPERATOR_SDK_RELEASE = v1.24.0
+OPERATOR_SDK = $(shell pwd)/bin/operator-sdk-$(OPERATOR_SDK_RELEASE)
+OPERATOR_SDK_DL_URL = https://github.com/operator-framework/operator-sdk/releases/download/$(OPERATOR_SDK_RELEASE)/operator-sdk_$(OS)_$(ARCH)
+operator-sdk: ## Download operator-sdk binary if necessary.
+	@if [ ! -f $(OPERATOR_SDK) ]; then\
+		mkdir -p $(shell pwd)/bin;\
+		curl -sL -o $(OPERATOR_SDK) $(OPERATOR_SDK_DL_URL);\
+		chmod +x $(OPERATOR_SDK);\
+	fi
+
+## Download kind locally if necessary.
+KIND_RELEASE = v0.11.1
+KIND = $(shell pwd)/bin/kind-$(KIND_RELEASE)
+KIND_DL_URL = https://github.com/kubernetes-sigs/kind/releases/download/$(KIND_RELEASE)/kind-$(OS)-$(ARCH)
+$(KIND):
+	mkdir -p $(shell pwd)/bin
+	curl -sL -o $(KIND) $(KIND_DL_URL)
+	chmod +x $(KIND)
+
+## Download kuttl locally if necessary for e2e tests.
+KUTTL_RELEASE = 0.9.0
+KUTTL = $(shell pwd)/bin/kuttl-v$(KUTTL_RELEASE)
+KUTTL_DL_URL = https://github.com/kudobuilder/kuttl/releases/download/v$(KUTTL_RELEASE)/kubectl-kuttl_$(KUTTL_RELEASE)_$(OS)_x86_64
+$(KUTTL):
+	mkdir -p $(shell pwd)/bin
+	curl -sL -o $(KUTTL) $(KUTTL_DL_URL)
+	chmod +x $(KUTTL)
+
 ##@ Deployment
+
+.PHONY: run
+run: ansible-operator ## Run against the configured Kubernetes cluster in ~/.kube/config.
+	ANSIBLE_ROLES_PATH="$(ANSIBLE_ROLES_PATH):$(shell pwd)/roles" $(ANSIBLE_OPERATOR) run
 
 .PHONY: install
 install: kustomize ## Install CRDs into the K8s cluster specified in ~/.kube/config.
@@ -120,37 +203,7 @@ undeploy: ## Undeploy controller from the K8s cluster specified in ~/.kube/confi
 OS := $(shell uname -s | tr '[:upper:]' '[:lower:]')
 ARCH := $(shell uname -m | sed 's/x86_64/amd64/' | sed 's/aarch64/arm64/')
 
-.PHONY: kustomize
-KUSTOMIZE = $(shell pwd)/bin/kustomize
-kustomize: ## Download kustomize locally if necessary.
-ifeq (,$(wildcard $(KUSTOMIZE)))
-ifeq (,$(shell which kustomize 2>/dev/null))
-	@{ \
-	set -e ;\
-	mkdir -p $(dir $(KUSTOMIZE)) ;\
-	curl -sSLo - https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v4.5.5/kustomize_v4.5.5_$(OS)_$(ARCH).tar.gz | \
-	tar xzf - -C bin/ ;\
-	}
-else
-KUSTOMIZE = $(shell which kustomize)
-endif
-endif
-
-.PHONY: ansible-operator
-ANSIBLE_OPERATOR = $(shell pwd)/bin/ansible-operator
-ansible-operator: ## Download ansible-operator locally if necessary, preferring the $(pwd)/bin path over global if both exist.
-ifeq (,$(wildcard $(ANSIBLE_OPERATOR)))
-ifeq (,$(shell which ansible-operator 2>/dev/null))
-	@{ \
-	set -e ;\
-	mkdir -p $(dir $(ANSIBLE_OPERATOR)) ;\
-	curl -sSLo $(ANSIBLE_OPERATOR) https://github.com/operator-framework/operator-sdk/releases/download/v1.24.0/ansible-operator_$(OS)_$(ARCH) ;\
-	chmod +x $(ANSIBLE_OPERATOR) ;\
-	}
-else
-ANSIBLE_OPERATOR = $(shell which ansible-operator)
-endif
-endif
+##@ Bundle
 
 .PHONY: bundle
 bundle: operator-sdk kustomize ## Generate bundle manifests and metadata, then validate generated files.
@@ -169,29 +222,14 @@ bundle-push: ## Push the bundle image.
 	$(MAKE) container-push \
 		IMG=$(BUNDLE_IMG) CONTAINER_FILE=$(BUNDLE_CONTAINER_FILE)
 
-bundle-image-name: ## Outputs the bundle image name
-	@$(MAKE) container-image-name IMG=$(BUNDLE_IMG)
-
-.PHONY: opm
-OPM = ./bin/opm
-opm: ## Download opm locally if necessary.
-ifeq (,$(wildcard $(OPM)))
-ifeq (,$(shell which opm 2>/dev/null))
-	@{ \
-	set -e ;\
-	mkdir -p $(dir $(OPM)) ;\
-	curl -sSLo $(OPM) https://github.com/operator-framework/operator-registry/releases/download/v1.23.0/$(OS)-$(ARCH)-opm ;\
-	chmod +x $(OPM) ;\
-	}
-else
-OPM = $(shell which opm)
-endif
-endif
-
+bundle-image: ## Outputs the bundle image name.
+	@$(MAKE) container-image IMG=$(BUNDLE_IMG)
 
 # A comma-separated list of bundle images (e.g. make catalog-build BUNDLE_IMGS=example.com/operator-bundle:v0.1.0,example.com/operator-bundle:v0.2.0).
 # These images MUST exist in a registry and be pull-able.
 BUNDLE_IMGS ?= $(BUNDLE_IMG)
+
+##@ Catalog
 
 # The image tag given to the resulting catalog image (e.g. make catalog-build CATALOG_IMG=example.com/operator-catalog:v0.2.0).
 CATALOG_IMG ?= $(IMAGE_TAG_BASE)-catalog:v$(VERSION)
@@ -213,108 +251,75 @@ ifneq ($(origin CATALOG_BASE_IMG), undefined)
 FROM_INDEX_OPT := --from-index $(CATALOG_BASE_IMG)
 endif
 
-catalog-render: opm ## Render the clusterserviceversion yaml
+.PHONY: catalog
+catalog: opm catalog-add-bundle catalog-validate  ## Update and validate the catalog with the current bundle.
+
+catalog-render-bundle: opm # Render the current clusterserviceversion yaml from the bundle container into the catalog.
 	$(OPM) render $(BUNDLE_IMGS) -oyaml > catalog/prometheus-exporter-operator/objects/prometheus-exporter-operator.v$(VERSION).clusterserviceversion.yaml
 
-catalog-add-entry: ## Add catalog entry if missing
+catalog-add-entry: # Adds a catalog entry if missing
 	grep -Eq 'name: prometheus-exporter-operator\.v$(VERSION)$$' $(CATALOG_CHANNEL_FILE) || \
 		yq -i '.entries += {"name": "prometheus-exporter-operator.v$(VERSION)","replaces":"$(shell yq '.entries[-1].name' $(CATALOG_CHANNEL_FILE))"}' $(CATALOG_CHANNEL_FILE)
 
 .PHONY: catalog-add-bundle-to-alpha
-catalog-add-bundle-to-alpha: opm catalog-render ## Adds the alpha bundle to a file based catalog
+catalog-add-bundle-to-alpha: opm catalog-render-bundle # Adds the alpha bundle to a file based catalog
 	$(MAKE) catalog-add-entry CATALOG_CHANNEL_FILE=catalog/prometheus-exporter-operator/alpha-channel.yaml
 
 .PHONY: catalog-add-bundle-to-stable
-catalog-add-bundle-to-stable: opm catalog-render catalog-add-bundle-to-alpha ## Adds a bundle to a file based catalog
+catalog-add-bundle-to-stable: opm catalog-render-bundle catalog-add-bundle-to-alpha # Adds a bundle to a file based catalog
 	$(MAKE) catalog-add-entry CATALOG_CHANNEL_FILE=catalog/prometheus-exporter-operator/stable-channel.yaml
 
 .PHONY: catalog-add-bundle
-catalog-add-bundle: opm catalog-render ## Adds a bundle to a file based catalog
+catalog-add-bundle: opm catalog-render-bundle # Adds a bundle to a file based catalog
 	if echo $(VERSION) | grep -q 'alpha'; \
 		then $(MAKE) catalog-add-bundle-to-alpha; \
 		else $(MAKE) catalog-add-bundle-to-stable; \
 	fi
 
-# Validate the catalog.
 .PHONY: catalog-validate
-catalog-validate: ## Push a catalog image.
+catalog-validate: # Validate the catalog files.
 	$(OPM) validate catalog/prometheus-exporter-operator
 
-.PHONY: catalog-update
-catalog-update: opm catalog-add-bundle catalog-validate  ## Update and generate new release catalog files
-
-catalog-build:  opm catalog-validate  ## Build the bundle image.
+catalog-build:  opm catalog-validate  ## Build the catalog image.
 	$(MAKE) container-build \
 		IMG=$(CATALOG_IMG) CONTAINER_FILE=$(CATALOG_CONTAINER_FILE) CONTAINER_CTX=$(CATALOG_CONTAINER_CTX)
 
-# Push the catalog image.
 .PHONY: catalog-push
 catalog-push: opm catalog-validate ## Push a catalog image.
 	$(MAKE) container-push\
 		IMG=$(CATALOG_IMG) CONTAINER_FILE=$(CATALOG_CONTAINER_FILE) CONTAINER_CTX=$(CATALOG_CONTAINER_CTX)
 
-#############################################
-#### Custom Targets with extra binaries #####
-#############################################
+catalog-image: ## Outputs the catalog image name.
+	@$(MAKE) container-image IMG=$(CATALOG_IMG)
 
-# Download operator-sdk binary if necessary
-.PHONY: operator-sdk
-OPERATOR_SDK_RELEASE = v1.24.0
-OPERATOR_SDK = $(shell pwd)/bin/operator-sdk-$(OPERATOR_SDK_RELEASE)
-OPERATOR_SDK_DL_URL = https://github.com/operator-framework/operator-sdk/releases/download/$(OPERATOR_SDK_RELEASE)/operator-sdk_$(OS)_$(ARCH)
-operator-sdk:
-	@if [ ! -f $(OPERATOR_SDK) ]; then\
-		mkdir -p $(shell pwd)/bin;\
-		curl -sL -o $(OPERATOR_SDK) $(OPERATOR_SDK_DL_URL);\
-		chmod +x $(OPERATOR_SDK);\
-	fi
-
-# Download kind locally if necessary
-KIND_RELEASE = v0.11.1
-KIND = $(shell pwd)/bin/kind-$(KIND_RELEASE)
-KIND_DL_URL = https://github.com/kubernetes-sigs/kind/releases/download/$(KIND_RELEASE)/kind-$(OS)-$(ARCH)
-$(KIND):
-	mkdir -p $(shell pwd)/bin
-	curl -sL -o $(KIND) $(KIND_DL_URL)
-	chmod +x $(KIND)
-
-# Download kuttl locally if necessary for e2e tests
-KUTTL_RELEASE = 0.9.0
-KUTTL = $(shell pwd)/bin/kuttl-v$(KUTTL_RELEASE)
-KUTTL_DL_URL = https://github.com/kudobuilder/kuttl/releases/download/v$(KUTTL_RELEASE)/kubectl-kuttl_$(KUTTL_RELEASE)_$(OS)_x86_64
-$(KUTTL):
-	mkdir -p $(shell pwd)/bin
-	curl -sL -o $(KUTTL) $(KUTTL_DL_URL)
-	chmod +x $(KUTTL)
+catalog-push-latest: ## Push the catalog with the `latest` image tag.
+	$(MAKE) container-push \
+			IMG=$(CATALOG_BASE_IMG) CONTAINER_FILE=$(CATALOG_CONTAINER_FILE) CONTAINER_CTX=$(CATALOG_CONTAINER_CTX)
 
 ####################################################
-#### Custom Targets to publish release catalog #####
+##### Custom Targets to release a new version ######
 ####################################################
-##@ Release Catalog
+##@ Release
 
-prepare-release:
+get-new-release:
+	@hack/new-release.sh v$(VERSION)
+
+prepare-release: ## Prepare bundle release files.
 	if echo $(VERSION) | grep -q 'alpha'; \
 		then $(MAKE) prepare-alpha-release; \
 		else $(MAKE) prepare-stable-release; \
 	fi
 
-prepare-alpha-release: bundle ## Prepare alpha release
+prepare-alpha-release: bundle # Prepare alpha release.
 
-prepare-stable-release: bundle ## Prepare stable release
+prepare-stable-release: bundle # Prepare stable release.
 	$(MAKE) bundle CHANNELS=alpha,stable DEFAULT_CHANNEL=alpha
 
-catalog-retag-latest:
-	$(MAKE) container-push \
-			IMG=$(CATALOG_BASE_IMG) CONTAINER_FILE=$(CATALOG_CONTAINER_FILE) CONTAINER_CTX=$(CATALOG_CONTAINER_CTX)
+bundle-publish: prepare-release bundle-push ## Publish new bundle.
 
-bundle-publish: prepare-release bundle-push ## Publish new bundle
+catalog-publish: catalog-add-bundle catalog-push catalog-push-latest ## Build and push the catalog image.
 
-catalog-publish: catalog-add-bundle catalog-push catalog-retag-latest ## Builds and pushes the catalog image
-
-release-publish: container-push bundle-publish catalog-publish ## Publish a new stable release (operator, catalog and bundle)
-
-get-new-release:
-	@hack/new-release.sh v$(VERSION)
+release-publish: container-push bundle-publish catalog-publish ## Publish a new stable release (operator, catalog and bundle).
 
 ###################################################
 #### Custom Targets to manually test with Kind ####
@@ -322,14 +327,14 @@ get-new-release:
 ##@ Testing
 
 kind-create: export KUBECONFIG = ${PWD}/kubeconfig
-kind-create: $(KIND) ## Creates a k8s kind cluster
+kind-create: $(KIND) ## Creates a k8s kind cluster.
 	$(KIND) create cluster --wait 5m || true
 
-kind-delete: $(KIND) ## Deletes the k8s kind cluster
+kind-delete: $(KIND) ## Deletes the k8s kind cluster.
 	$(KIND) delete cluster
 
 kind-deploy: export KUBECONFIG = ${PWD}/kubeconfig
-kind-deploy: kustomize $(KIND) ## Deploys the operator in the k8s kind cluster
+kind-deploy: kustomize $(KIND) ## Deploys the operator in the k8s kind cluster.
 	${CONTAINER_RUNTIME} build --tag $(IMG) \
 		--file $(CONTAINER_FILE) $(CONTAINER_CTX)
 	$(KIND) load docker-image $(IMG)
@@ -337,5 +342,5 @@ kind-deploy: kustomize $(KIND) ## Deploys the operator in the k8s kind cluster
 	$(KUSTOMIZE) build config/testing | kubectl apply -f -
 
 test-e2e: export KUBECONFIG = ${PWD}/kubeconfig
-test-e2e: kind-create kustomize kind-deploy $(KUTTL) ## Run kuttl e2e tests in the k8s kind cluster
+test-e2e: kind-create kustomize kind-deploy $(KUTTL) ## Run kuttl e2e tests in the k8s kind cluster.
 	$(KUTTL)
