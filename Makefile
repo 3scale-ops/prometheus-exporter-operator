@@ -319,7 +319,7 @@ bundle-publish: prepare-release bundle-push ## Publish new bundle.
 
 catalog-publish: catalog-add-bundle catalog-push catalog-push-latest ## Build and push the catalog image.
 
-release-publish: container-push bundle-publish catalog-publish ## Publish a new stable release (operator, catalog and bundle).
+release-publish: container-push bundle-publish catalog-publish ## Publish a new release (operator, catalog and bundle).
 
 ###################################################
 #### Custom Targets to manually test with Kind ####
