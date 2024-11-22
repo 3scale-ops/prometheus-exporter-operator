@@ -6,13 +6,7 @@
 
 ## Alpha
 
-- If it is an **alpha** release, execute the following target to create appropiate `alpha` bundle files:
-
-```bash
-make prepare-alpha-release
-```
-
-- Then you can manually execute opeator, bundle and catalog build/push.
+Execute following target to generate, build and push the operator, bundle and catalog images.
 
 ```bash
 make release-publish
@@ -20,10 +14,11 @@ make release-publish
 
 ## Stable
 
-- But if it is an **stable** release, execute the following target to create appropiate `alpha` and `stable` bundle files:
+If it is an **stable** release, container images will be built in GitHub Actions,
+so you only need to create and commit appropiate bundle files executing:
 
 ```bash
-make prepare-stable-release
+make prepare-release
 ```
 
 - Then open a [Pull Request](https://github.com/3scale-ops/prometheus-exporter-operator/pulls), and the [Release GitHub Action](https://github.com/3scale-ops/prometheus-exporter-operator/actions/workflows/release.yaml) will automatically detect if it is new release or not, in order to create it by building/pushing new operator and bundle.

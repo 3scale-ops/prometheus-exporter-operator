@@ -61,12 +61,12 @@ jobs:
       - name: Build and push bundle container image
         run: make bundle-push
 
-      - id: bundle-image-name
+      - id: bundle-image
         name: Retrieves the bundle image name
-        run: echo  "BUNDLE_IMAGE=$(make -s bundle-image-name)" >> $GITHUB_OUTPUT
+        run: echo  "BUNDLE_IMAGE=$(make -s bundle-image)" >> $GITHUB_OUTPUT
 
       - name: Update catalog files with the new bundle
-        run: make catalog-update
+        run: make catalog
 
       - name: Create a new draft-release in github
         run: gh release create "${{ env.RELEASE }}" --draft --title "${{ env.RELEASE }}" --generate-notes
@@ -79,7 +79,7 @@ jobs:
           CATALOG_RELEASE_PR_BODY: |
             This PR updates the catalog inventory files with the new bundle [${{ needs.check.outputs.stable-release }}](https://github.com/${GITHUB_REPOSITORY}/releases/tag/${{ needs.check.outputs.stable-release }}).
 
-            [${{ steps.bundle-image-name.outputs.BUNDLE_IMAGE }}](https://${{ steps.bundle-image-name.outputs.BUNDLE_IMAGE }})
+            [${{ steps.bundle-image.outputs.BUNDLE_IMAGE }}](https://${{ steps.bundle-image.outputs.BUNDLE_IMAGE }})
 
             Please review and merge this PR to build and release the new catalog.
 
